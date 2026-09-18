@@ -1,0 +1,42 @@
+import React from "react";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import Page from "./pages/Page";
+import Expense from "./pages/Expense";
+import StockTrades from "./pages/StockTrades";
+import Stocks from "./pages/Stocks";
+import { Menu, Dropdown, DropdownMenu } from "semantic-ui-react";
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Menu>
+        <Menu.Item as={Link} to="/stocks">
+          股票基本資料
+        </Menu.Item>
+        <Menu.Item as={Link} to="/stock-trades">
+          股票交易
+        </Menu.Item>
+      </Menu>
+
+      {/* 導覽選單 (可選) */}
+      {/* <nav style={{ padding: "10px", marginBottom: "20px" }}>
+        <Link to="/page" style={{ marginRight: "10px" }}>
+          Page 頁面
+        </Link>
+        <Link to="/expense">Expense 頁面</Link>
+        <Link to="/stocks">股票基本資料</Link>
+        <Link to="/stock-trades">股票交易</Link>       
+      </nav> */}
+
+      {/* 依據網址路徑切換渲染對應組件 */}
+      <Routes>
+        <Route path="/page" element={<Page />} />
+        <Route path="/stocks" element={<Stocks />} />
+        <Route path="/stock-trades" element={<StockTrades />} />
+        <Route path="/expense" element={<Expense />} />
+        {/* 預設首頁 (當網址為 / 時顯示 Page) */}
+        <Route path="/" element={<Page />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
