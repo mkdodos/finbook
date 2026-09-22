@@ -1,7 +1,7 @@
 const isDev = process.env.NODE_ENV === "development";
 
 const HOST = isDev
-  ? "http://192.168.0.10" // 開發環境 (區網 IP 或 localhost)
+  ? "http://192.168.0.11" // 開發環境 (區網 IP 或 localhost)
   : "https://minisoft.acsite.org"; // 正式環境：必須是 HTTPS 網域
 
 export const API_HOST = isDev

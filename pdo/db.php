@@ -1,6 +1,18 @@
 <?php
 // db.php
+
+// 1. 設定全域 CORS 標頭
 header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+
+// 2. 💡 關鍵：若是預檢請求 (OPTIONS)，直接給 200 並結束，不需發起資料庫連線
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
+
 // 檢查 config.php 是否存在，不存在則提示
 $configFile = __DIR__ . '/config.php';
 

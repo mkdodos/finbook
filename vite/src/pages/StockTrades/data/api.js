@@ -5,6 +5,16 @@ import { API_HOST } from "@/global/constants";
 const FOLDER = "stock_trades";
 
 export const Api = {
+  // 載入股票下拉選單
+  getCategories: async (params) => {
+    const url = `${API_HOST}/stocks/readOptions.php`;
+
+    const response = await axios.get(url, { params });
+    console.log(response.data.data);
+    // console.log("fetchList result:", response, Array.isArray(response));
+    return response.data.data;
+  },
+
   // 載入列表
   fetchList: async (params) => {
     const url = `${API_HOST}/${FOLDER}/read.php`;

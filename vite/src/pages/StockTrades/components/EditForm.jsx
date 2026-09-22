@@ -8,6 +8,9 @@ const EditForm = ({ state, dispatch, columns }) => {
   const { editingRow, isEditFormOpen } = state;
   const isEdit = Boolean(editingRow);
 
+  // 儲存動態從 API 撈取到的 select options
+  const [selectOptions, setSelectOptions] = useState({});
+
   // 💡 根據 COLUMNS 動態產生 initState
   const getInitialState = () => {
     return columns.reduce(
@@ -71,6 +74,35 @@ const EditForm = ({ state, dispatch, columns }) => {
     }
   }, [editingRow, isEditFormOpen]);
 
+  // 2. 當彈窗開啟時，自動非同步載入「需要從其他資料表取得」的 select 選項
+  useEffect(() => {
+    if (!isEditFormOpen) return;
+
+    const fetchSelectOptions = async () => {
+      // 找出所有 formType 為 select 且有定義 fetchOptions API 的欄位
+      const selectColumns = columns.filter(
+        (col) =>
+          col.formType === "select" && typeof col.fetchOptions === "function",
+      );
+
+      for (const col of selectColumns) {
+        try {
+          const fieldName = col.name || col.key;
+          // 呼叫 API 取得資料（預期回傳格式：[{ text: '名稱', value: 'id' }]）
+          const options = await col.fetchOptions();
+          setSelectOptions((prev) => ({
+            ...prev,
+            [fieldName]: options,
+          }));
+        } catch (error) {
+          console.error(`載入 ${col.title} 選項失敗:`, error);
+        }
+      }
+    };
+
+    fetchSelectOptions();
+  }, [isEditFormOpen, columns]);
+
   const handleChange = (e, { name, value }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -133,19 +165,38 @@ const EditForm = ({ state, dispatch, columns }) => {
             .filter((col) => !col.hideInForm)
             // 💡 2. 渲染剩餘的表單欄位
             .map((col) => {
-              // 💡 判斷是否為下拉選單欄位
+              const fieldName = col.name || col.key;
+              // 下拉選單處理
               if (col.formType === "select") {
+                // 優先採用非同步載入的 options，若無則使用原本的 col.options
+                const currentOptions =
+                  selectOptions[fieldName] || col.options || [];
+
                 return (
                   <Form.Select
+                    search
                     key={col.key}
                     label={col.title}
-                    name={col.name}
-                    value={formData[col.name] || ""}
+                    name={fieldName}
+                    value={formData[fieldName] || ""}
                     onChange={handleChange}
-                    options={col.options || []} // 傳入選項陣列，例如 [{ label: '選項A', value: 'A' }]
+                    options={currentOptions}
                   />
                 );
               }
+              // 💡 判斷是否為下拉選單欄位
+              // if (col.formType === "select") {
+              //   return (
+              //     <Form.Select
+              //       key={col.key}
+              //       label={col.title}
+              //       name={col.name}
+              //       value={formData[col.name] || ""}
+              //       onChange={handleChange}
+              //       options={col.options || []} // 傳入選項陣列，例如 [{ label: '選項A', value: 'A' }]
+              //     />
+              //   );
+              // }
 
               return (
                 <Form.Input
