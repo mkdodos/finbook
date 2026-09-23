@@ -5,6 +5,16 @@ import { API_HOST } from "@/global/constants";
 const FOLDER = "stock_trades";
 
 export const Api = {
+  // 載入月合計
+  readMonthSum: async (params) => {
+    const url = `${API_HOST}/${FOLDER}/readMonthSum.php`;
+
+    const response = await axios.get(url, { params });
+    console.log(response.data.data);
+
+    return response.data.data;
+  },
+
   // 載入股票下拉選單
   getCategories: async (params) => {
     const url = `${API_HOST}/stocks/readOptions.php`;

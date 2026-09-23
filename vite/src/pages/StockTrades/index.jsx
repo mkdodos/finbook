@@ -44,6 +44,15 @@ export default function index() {
 
   const panes = [
     {
+      menuItem: "日期分組",
+      render: () => (
+        <Tab.Pane>
+          {" "}
+          <GroupedCardByDate data={state.groupedDataByDate} />
+        </Tab.Pane>
+      ),
+    },
+    {
       menuItem: "交易記錄",
       render: () => (
         <Tab.Pane>
@@ -58,15 +67,6 @@ export default function index() {
         <Tab.Pane>
           {" "}
           <GroupedCard data={state.groupedData} />
-        </Tab.Pane>
-      ),
-    },
-    {
-      menuItem: "日期分組",
-      render: () => (
-        <Tab.Pane>
-          {" "}
-          <GroupedCardByDate data={state.groupedDataByDate} />
         </Tab.Pane>
       ),
     },
