@@ -36,6 +36,14 @@ export default function CRUDTemplate({
     setModalOpen(false);
   };
 
+  // 💡 新增：表單內的刪除處理邏輯
+  const handleDelete = async () => {
+    if (formData.id && window.confirm("確定要刪除此筆資料嗎？")) {
+      await onDelete(formData.id); // 呼叫父組件傳入的刪除函式
+      setModalOpen(false); // 💡 刪除完成後關閉表單
+    }
+  };
+
   return (
     <Segment>
       <Button primary icon labelPosition="left" onClick={handleOpenCreate}>
@@ -68,12 +76,12 @@ export default function CRUDTemplate({
                     size="mini"
                     onClick={() => handleOpenEdit(item)}
                   />
-                  <Button
+                  {/* <Button
                     icon="trash"
                     color="red"
                     size="mini"
                     onClick={() => onDelete(item.id)}
-                  />
+                  /> */}
                 </Table.Cell>
               </Table.Row>
             ))}
@@ -98,6 +106,23 @@ export default function CRUDTemplate({
           </Form>
         </Modal.Content>
         <Modal.Actions>
+          {/* 只有在「編輯」狀態時才顯示刪除按鈕 */}
+          {isEditing && (
+            <Button
+              color="red"
+              icon
+              labelPosition="left"
+              onClick={handleDelete}
+            >
+              <Icon name="trash" /> 刪除此筆
+            </Button>
+          )}
+          {/* <Button
+            icon="trash"
+            color="red"
+            size="mini"
+            onClick={() => handleDelete(formData.id)}
+          /> */}
           <Button onClick={() => setModalOpen(false)}>取消</Button>
           <Button positive onClick={handleSubmit}>
             儲存

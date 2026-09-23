@@ -3,8 +3,11 @@ import axios from "axios";
 import { Container, Header } from "semantic-ui-react";
 import CRUDTemplate from "./CRUDTemplate";
 import "semantic-ui-css/semantic.min.css";
+import { API_HOST } from "@/global/constants";
 
-const API_URL = "http://localhost:8888/finbook/pdo/costco/api.php";
+// const API_URL = "http://localhost:8888/finbook/pdo/costco/api.php";
+
+const API_URL = `${API_HOST}/costco/api.php`;
 
 // Reducer 狀態定義與處理
 const initialState = {
