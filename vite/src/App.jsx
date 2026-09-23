@@ -4,12 +4,16 @@ import Page from "./pages/Page";
 import Expense from "./pages/Expense";
 import StockTrades from "./pages/StockTrades";
 import Stocks from "./pages/Stocks";
+import CRUD from "./pages/CURD";
 import { Menu, Dropdown, DropdownMenu } from "semantic-ui-react";
 
 export default function App() {
   return (
     <BrowserRouter>
       <Menu>
+        <Menu.Item as={Link} to="/crud">
+          CRUD
+        </Menu.Item>
         <Menu.Item as={Link} to="/stocks">
           股票基本資料
         </Menu.Item>
@@ -30,6 +34,7 @@ export default function App() {
 
       {/* 依據網址路徑切換渲染對應組件 */}
       <Routes>
+        <Route path="/crud" element={<CRUD />} />
         <Route path="/page" element={<Page />} />
         <Route path="/stocks" element={<Stocks />} />
         <Route path="/stock-trades" element={<StockTrades />} />
