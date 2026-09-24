@@ -70,7 +70,10 @@ export default function CRUDTemplate({
             data.map((item) => (
               <Table.Row key={item.id}>
                 {columns.map((col) => (
-                  <Table.Cell key={col.key}>{item[col.key]}</Table.Cell>
+                  <Table.Cell key={col.key}>
+                    {col.render ? col.render(item) : item[col.key]}
+                  </Table.Cell>
+                  // <Table.Cell key={col.key}>{item[col.key]}</Table.Cell>
                 ))}
                 <Table.Cell>
                   <Button
@@ -79,12 +82,6 @@ export default function CRUDTemplate({
                     size="mini"
                     onClick={() => handleOpenEdit(item)}
                   />
-                  {/* <Button
-                    icon="trash"
-                    color="red"
-                    size="mini"
-                    onClick={() => onDelete(item.id)}
-                  /> */}
                 </Table.Cell>
               </Table.Row>
             ))}
