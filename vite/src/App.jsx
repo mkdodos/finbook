@@ -8,12 +8,16 @@ import CRUD from "./pages/CURD";
 import Costco from "./pages/Costco";
 import Employee from "./pages/Employee";
 import ReceiptRecords from "./pages/ReceiptRecords";
+import GenericPage from "./pages/GenericPage";
 import { Menu, Dropdown, DropdownMenu } from "semantic-ui-react";
 
 export default function App() {
   return (
     <BrowserRouter>
       <Menu>
+        <Menu.Item as={Link} to="/generic-page">
+          通用頁面
+        </Menu.Item>
         <Menu.Item as={Link} to="/receipt-records">
           receipt-records
         </Menu.Item>
@@ -43,6 +47,7 @@ export default function App() {
 
       {/* 依據網址路徑切換渲染對應組件 */}
       <Routes>
+        <Route path="/generic-page" element={<GenericPage />} />
         <Route path="/receipt-records" element={<ReceiptRecords />} />
         <Route path="/employee" element={<Employee />} />
         <Route path="/costco" element={<Costco />} />
