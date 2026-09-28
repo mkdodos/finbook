@@ -69,12 +69,25 @@ export default function CRUDTemplate({
           {Array.isArray(data) &&
             data.map((item) => (
               <Table.Row key={item.id}>
-                {columns.map((col) => (
+                {columns.map((col) => {
+                  // 💡 加上這行測試 Console，看看 CRUDTemplate 有沒有發現 render 函式
+                  console.log(
+                    `欄位 ${col.key} 是否有 render:`,
+                    typeof col.render,
+                  );
+
+                  return (
+                    <Table.Cell key={col.key}>
+                      {col.render ? col.render(item) : item[col.key]}
+                    </Table.Cell>
+                  );
+                })}
+                {/* {columns.map((col) => (                  
                   <Table.Cell key={col.key}>
                     {col.render ? col.render(item) : item[col.key]}
                   </Table.Cell>
-                  // <Table.Cell key={col.key}>{item[col.key]}</Table.Cell>
-                ))}
+                 
+                ))} */}
                 <Table.Cell>
                   <Button
                     icon="edit"

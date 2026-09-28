@@ -24,7 +24,7 @@ export default function TableView({ state, dispatch }) {
             <Table.Cell>{item.id}</Table.Cell>
             <Table.Cell>{item.name}</Table.Cell>
             <Table.Cell>{item.type}</Table.Cell>
-            <Table.Cell>{item.category_id}</Table.Cell>
+            {/* <Table.Cell>{item.category_id}</Table.Cell> */}
             <Table.Cell>{item.cust_name}</Table.Cell>
             <Table.Cell>{item.work_name}</Table.Cell>
 
