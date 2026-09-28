@@ -4,7 +4,7 @@ import Page from "./pages/Page";
 import Expense from "./pages/Expense";
 import StockTrades from "./pages/StockTrades";
 import Stocks from "./pages/Stocks";
-import CRUD from "./pages/CURD";
+// import CRUD from "./pages/CURD";
 import Costco from "./pages/Costco";
 import Employee from "./pages/Employee";
 import ReceiptRecords from "./pages/ReceiptRecords";
@@ -24,9 +24,12 @@ export default function App() {
         <Menu.Item as={Link} to="/costco">
           好市多
         </Menu.Item>
-        <Menu.Item as={Link} to="/crud">
-          CRUD
+        <Menu.Item as={Link} to="/expense">
+          expense
         </Menu.Item>
+        {/* <Menu.Item as={Link} to="/crud">
+          CRUD
+        </Menu.Item> */}
         <Menu.Item as={Link} to="/stocks">
           股票基本資料
         </Menu.Item>
@@ -51,7 +54,7 @@ export default function App() {
         <Route path="/receipt-records" element={<ReceiptRecords />} />
         <Route path="/employee" element={<Employee />} />
         <Route path="/costco" element={<Costco />} />
-        <Route path="/crud" element={<CRUD />} />
+        {/* <Route path="/crud" element={<CRUD />} /> */}
         <Route path="/page" element={<Page />} />
         <Route path="/stocks" element={<Stocks />} />
         <Route path="/stock-trades" element={<StockTrades />} />

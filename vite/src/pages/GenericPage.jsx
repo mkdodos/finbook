@@ -1,8 +1,9 @@
 import React, { useReducer, useEffect, useState } from "react";
-import CRUDTemplate from "./CURD/CRUDTemplate";
+import CRUDTemplate from "@/components/templates/CRUDTemplate";
+// import CRUDTemplate from "./CURD/CRUDTemplate";
 import { API_HOST } from "@/global/constants";
 import { tables } from "@/global/tableColumns";
-import { Button, Input, Form } from "semantic-ui-react";
+import { Button, Input, Form, Dropdown } from "semantic-ui-react";
 import axios from "axios";
 
 const initialState = { items: [] };
@@ -35,19 +36,16 @@ export default function GenericPage() {
 
   // 1. 分離「輸入框輸入值」與「目前查詢的表名」
   const [searchTerm, setSearchTerm] = useState("receipt_records");
-  const [table, setTable] = useState("receipt_records");
-
-  console.log("當前 table 名稱:", table);
-  console.log("對應到的 columns 內容:", tables[table]);
+  // const [table, setTable] = useState("receipt_records");
+  const [selectedTable, setSelectedTable] = useState("employees");
 
   // 2. 正確從 tables 陣列中查詢 columns
   // const targetTable = tables.find((item) => item.tableName === table);
   // const columns = targetTable ? targetTable.columns : [];
 
-  const columns = tables[table] || [];
-  console.log(columns);
+  const columns = tables[selectedTable] || [];
 
-  const API_URL = `${API_HOST}/api.php?table=${table}`;
+  const API_URL = `${API_HOST}/api.php?table=${selectedTable}`;
 
   // 取得資料列表 (GET)
   const fetchData = async () => {
@@ -61,18 +59,10 @@ export default function GenericPage() {
   };
 
   useEffect(() => {
-    if (table) {
+    if (selectedTable) {
       fetchData();
     }
-  }, [table]);
-
-  const handleInputChange = (e, { value }) => {
-    setSearchTerm(value);
-  };
-
-  const handleSearch = () => {
-    setTable(searchTerm); // 觸發重新 Fetch
-  };
+  }, [selectedTable]);
 
   // 新增或更新資料 handler
   const handleSave = async (formData, isEditing) => {
@@ -103,12 +93,34 @@ export default function GenericPage() {
     }
   };
 
+  // 假設這是你的資料表選項清單
+  const tableOptions = [
+    { key: "users", text: "employees", value: "employees" },
+    { key: "orders", text: "receipt_records", value: "receipt_records" },
+    { key: "receipt_items", text: "receipt_items", value: "receipt_items" },
+    { key: "expense", text: "expense", value: "expense" },
+  ];
+
+  const handleDropdownChange = (e, { value }) => {
+    setSelectedTable(value);
+    console.log("選中的資料表:", value);
+  };
+
   return (
     <div>
       <div style={{ marginBottom: "16px" }}>
         {/* 包在 Form 裡面，按 Enter 鍵也能自動觸發 handleSearch */}
-        <Form onSubmit={handleSearch}>
-          <Input
+        <Form>
+          <Dropdown
+            placeholder="請選擇資料表名稱..."
+            fluid
+            search
+            selection
+            options={tableOptions}
+            value={selectedTable}
+            onChange={handleDropdownChange}
+          />
+          {/* <Input
             value={searchTerm}
             onChange={handleInputChange}
             type="text"
@@ -116,7 +128,7 @@ export default function GenericPage() {
             action={
               <Button type="submit" color="teal" icon="search" content="查詢" />
             }
-          />
+          /> */}
         </Form>
       </div>
 

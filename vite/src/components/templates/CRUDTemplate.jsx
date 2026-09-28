@@ -70,12 +70,6 @@ export default function CRUDTemplate({
             data.map((item) => (
               <Table.Row key={item.id}>
                 {columns.map((col) => {
-                  // 💡 加上這行測試 Console，看看 CRUDTemplate 有沒有發現 render 函式
-                  console.log(
-                    `欄位 ${col.key} 是否有 render:`,
-                    typeof col.render,
-                  );
-
                   return (
                     <Table.Cell key={col.key}>
                       {col.render ? col.render(item) : item[col.key]}
@@ -135,7 +129,7 @@ export default function CRUDTemplate({
                   <Form.Input
                     key={col.key}
                     label={col.label}
-                    type={col.formType || "text"} // 若沒設定 type 預設為 "text"
+                    type={col.type || "text"} // 若沒設定 type 預設為 "text"
                     name={col.key}
                     value={formData[col.key] || ""}
                     onChange={handleChange}
