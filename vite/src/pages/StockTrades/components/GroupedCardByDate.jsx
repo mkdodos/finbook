@@ -36,7 +36,7 @@ const GroupedCardByDate = ({ data }) => {
             <Header as="h3">月份彙整統計</Header>
           </Card.Header>
           <Card.Description style={{ marginTop: "15px" }}>
-            <Table celled striped compact align="center">
+            <Table celled unstackable striped compact align="center">
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell textAlign="center">年月</Table.HeaderCell>
@@ -119,7 +119,7 @@ const GroupedCardByDate = ({ data }) => {
               </Card.Header>
 
               <Card.Description style={{ marginTop: "15px" }}>
-                <Table celled striped compact>
+                <Table celled striped compact unstackable>
                   <Table.Header>
                     <Table.Row>
                       <Table.HeaderCell>名稱</Table.HeaderCell>

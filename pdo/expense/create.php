@@ -11,7 +11,7 @@ $transactionDate = $data['transaction_date'] ?? date('Y-m-d');
 $note            = $data['note'] ?? '';
 
 // 1. 撰寫 SQL 語法（使用命名占位符 :placeholder）
-$sql = "INSERT INTO transactions (category_id, amount, transaction_date, note) 
+$sql = "INSERT INTO expense (category_id, amount, transaction_date, note) 
         VALUES (:category_id, :amount, :transaction_date, :note)";
 
 try {

@@ -15,7 +15,7 @@ export default function TableView({ state, dispatch, columns }) {
     return acc + Math.round(item.price * item.shares); // 替換成你的屬性名稱，例如 item.amount 或 item.count
   }, 0);
   return (
-    <Table celled selectable>
+    <Table celled selectable unstackable>
       <Table.Header>
         <Table.Row>
           {columns.map((col) => (

@@ -1,9 +1,9 @@
 import React, { useReducer, useEffect, useState } from "react";
 import CRUDTemplate from "@/components/templates/CRUDTemplate";
-// import CRUDTemplate from "./CURD/CRUDTemplate";
+import Phone from "../components/templates/Phone";
 import { API_HOST } from "@/global/constants";
 import { tables } from "@/global/tableColumns";
-import { Button, Input, Form, Dropdown } from "semantic-ui-react";
+import { Button, Menu, Form, Dropdown } from "semantic-ui-react";
 import axios from "axios";
 
 const initialState = { items: [] };
@@ -95,9 +95,13 @@ export default function GenericPage() {
 
   // 假設這是你的資料表選項清單
   const tableOptions = [
-    { key: "users", text: "employees", value: "employees" },
-    { key: "orders", text: "receipt_records", value: "receipt_records" },
-    { key: "receipt_items", text: "receipt_items", value: "receipt_items" },
+    { key: "employees", text: "employees", value: "employees" },
+    {
+      key: "receipt_records",
+      text: "receipt_records",
+      value: "receipt_records",
+    },
+    { key: "costco", text: "好市多", value: "costco" },
     { key: "expense", text: "expense", value: "expense" },
   ];
 
@@ -108,9 +112,29 @@ export default function GenericPage() {
 
   return (
     <div>
+      <div style={{ textAlign: "center", marginBottom: "10px" }}>
+        <Menu compact secondary pointing>
+          {tableOptions.map((option) => {
+            return (
+              <Menu.Item
+                key={option.key}
+                onClick={() => setSelectedTable(option.value)}
+                active={selectedTable === option.key}
+                color="teal"
+              >
+                {option.text}
+              </Menu.Item>
+            );
+          })}
+
+          {/* <Menu.Item color="teal">通用頁面</Menu.Item>
+          <Menu.Item>通用頁面</Menu.Item>
+          <Menu.Item>通用頁面</Menu.Item> */}
+        </Menu>
+      </div>
       <div style={{ marginBottom: "16px" }}>
         {/* 包在 Form 裡面，按 Enter 鍵也能自動觸發 handleSearch */}
-        <Form>
+        {/* <Form>
           <Dropdown
             placeholder="請選擇資料表名稱..."
             fluid
@@ -120,18 +144,15 @@ export default function GenericPage() {
             value={selectedTable}
             onChange={handleDropdownChange}
           />
-          {/* <Input
-            value={searchTerm}
-            onChange={handleInputChange}
-            type="text"
-            placeholder="請輸入資料表名稱..."
-            action={
-              <Button type="submit" color="teal" icon="search" content="查詢" />
-            }
-          /> */}
-        </Form>
+        </Form> */}
       </div>
 
+      <Phone
+        columns={columns}
+        rows={state.items}
+        onSave={handleSave}
+        onDelete={handleDelete}
+      />
       <CRUDTemplate
         columns={columns}
         data={state.items}

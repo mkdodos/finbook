@@ -10,7 +10,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 switch ($method) {
     case 'GET':
         try {
-            $stmt = $pdo->query('SELECT * FROM receipt_items ORDER BY id DESC');
+            $stmt = $pdo->query('SELECT * FROM costco ORDER BY id DESC');
             echo json_encode($stmt->fetchAll());
         } catch (PDOException $e) {
             http_response_code(500);

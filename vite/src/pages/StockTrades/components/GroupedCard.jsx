@@ -28,14 +28,14 @@ const GroupedCard = ({ data }) => {
               </Card.Header>
 
               <Card.Description style={{ marginTop: "15px" }}>
-                <Table celled striped compact>
+                <Table celled striped compact unstackable>
                   <Table.Header>
                     <Table.Row>
-                      <Table.HeaderCell>交易日期</Table.HeaderCell>
+                      <Table.HeaderCell>日期</Table.HeaderCell>
                       <Table.HeaderCell>類型</Table.HeaderCell>
                       <Table.HeaderCell>股數</Table.HeaderCell>
                       <Table.HeaderCell>單價</Table.HeaderCell>
-                      <Table.HeaderCell>總金額</Table.HeaderCell>
+                      <Table.HeaderCell>金額</Table.HeaderCell>
                       {/* <Table.HeaderCell>備註</Table.HeaderCell> */}
                     </Table.Row>
                   </Table.Header>
@@ -43,10 +43,6 @@ const GroupedCard = ({ data }) => {
                   <Table.Body>
                     {trades.map((item) => {
                       const isBuy = item.trade_type === "buy";
-                      //   let totalAmount = (
-                      //     Number(item.shares) * Number(item.price)
-                      //   ).toLocaleString();
-                      //   totalAmount = Math.round(totalAmount);
 
                       // ✅ 先四捨五入再轉千分位
                       const rawTotal = Math.round(
@@ -58,10 +54,12 @@ const GroupedCard = ({ data }) => {
 
                       return (
                         <Table.Row key={item.id}>
-                          <Table.Cell>{item.trade_date}</Table.Cell>
+                          <Table.Cell>
+                            {item.trade_date.substring(5, 10)}
+                          </Table.Cell>
                           <Table.Cell>
                             <Label basic color={isBuy ? "red" : "green"}>
-                              {isBuy ? "買進" : "賣出"}
+                              {isBuy ? "買" : "賣"}
                             </Label>
                           </Table.Cell>
                           <Table.Cell>{item.shares}</Table.Cell>

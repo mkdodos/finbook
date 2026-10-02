@@ -14,29 +14,24 @@ import { Menu, Dropdown, DropdownMenu } from "semantic-ui-react";
 export default function App() {
   return (
     <BrowserRouter>
-      <Menu>
-        <Menu.Item as={Link} to="/generic-page">
-          通用頁面
-        </Menu.Item>
-        <Menu.Item as={Link} to="/receipt-records">
-          receipt-records
-        </Menu.Item>
-        <Menu.Item as={Link} to="/costco">
-          好市多
-        </Menu.Item>
-        <Menu.Item as={Link} to="/expense">
-          expense
-        </Menu.Item>
-        {/* <Menu.Item as={Link} to="/crud">
-          CRUD
-        </Menu.Item> */}
-        <Menu.Item as={Link} to="/stocks">
-          股票基本資料
-        </Menu.Item>
-        <Menu.Item as={Link} to="/stock-trades">
-          股票交易
-        </Menu.Item>
-      </Menu>
+      <div style={{ textAlign: "center", marginBottom: "10px" }}>
+        <Menu compact>
+          <Menu.Item as={Link} to="/generic-page">
+            通用頁面
+          </Menu.Item>
+
+          <Menu.Item as={Link} to="/costco">
+            好市多
+          </Menu.Item>
+
+          <Menu.Item as={Link} to="/stocks">
+            股票基本資料
+          </Menu.Item>
+          <Menu.Item as={Link} to="/stock-trades">
+            股票交易
+          </Menu.Item>
+        </Menu>
+      </div>
 
       {/* 導覽選單 (可選) */}
       {/* <nav style={{ padding: "10px", marginBottom: "20px" }}>

@@ -23,7 +23,8 @@ export const tables = {
     { key: "name", label: "姓名", type: "text" },
     { key: "title", label: "職稱", type: "text" },
   ],
-  receipt_items: [
+  costco: [
+    { key: "item_code", label: "品名", type: "text" },
     { key: "name", label: "品名", type: "text" },
     { key: "quantity", label: "quantity", type: "number" },
     { key: "price", label: "price", type: "number" },
