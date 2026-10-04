@@ -95,7 +95,8 @@ export default function GenericPage() {
 
   // 假設這是你的資料表選項清單
   const tableOptions = [
-    { key: "employees", text: "employees", value: "employees" },
+    { key: "notes", text: "notes", value: "notes" },
+    // { key: "employees", text: "employees", value: "employees" },
     {
       key: "receipt_records",
       text: "receipt_records",

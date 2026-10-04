@@ -9,16 +9,20 @@ export const tables = {
       key: "quantity",
       label: "數量",
       type: "number",
-      render: (row) => {
-        return (
-          <Label color={row.quantity > 1 ? "red" : "green"} size="medium">
-            {row.quantity ?? "無資料"}
-          </Label>
-        );
-      },
+      // render: (row) => {
+      //   return (
+      //     <Label basic color={row.quantity > 1 ? "red" : "green"} size="medium">
+      //       {row.quantity ?? "無資料"}
+      //     </Label>
+      //   );
+      // },
     },
   ],
 
+  notes: [
+    { key: "category", label: "category", type: "text" },
+    { key: "title", label: "title", type: "text" },
+  ],
   employees: [
     { key: "name", label: "姓名", type: "text" },
     { key: "title", label: "職稱", type: "text" },

@@ -15,7 +15,7 @@ header('Content-Type: application/json; charset=utf-8');
 require_once 'db.php';
 
 // 2. 安全白名單（請確認包含 receipt-records）
-$allowed_tables = ['employees', 'departments', 'expense', 'costco', 'receipt_records'];
+$allowed_tables = ['notes','employees', 'departments', 'expense', 'costco', 'receipt_records'];
 
 $table =$_GET['table'] ?? '';
 

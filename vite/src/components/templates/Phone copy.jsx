@@ -1,26 +1,20 @@
 import React, { useState } from "react";
 import {
-  Card,
+  Table,
+  Label,
+  Header,
+  Modal,
   Form,
   Button,
-  Modal,
   Icon,
-  Segment,
-  Header,
-  Grid,
-  Divider,
 } from "semantic-ui-react";
 
-export default function Phone({
-  columns = [],
-  data = [],
-  dispatch,
-  onSave,
-  onDelete,
-}) {
+export default function Phone({ rows, columns, onSave, onDelete }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [formData, setFormData] = useState({});
   const [isEditing, setIsEditing] = useState(false);
+
+  // 儲存動態從 API 撈取到的 select options
   const [selectOptions, setSelectOptions] = useState({});
 
   const handleOpenCreate = () => {
@@ -46,98 +40,36 @@ export default function Phone({
     setModalOpen(false);
   };
 
+  // 💡 新增：表單內的刪除處理邏輯
   const handleDelete = async () => {
     if (formData.id && window.confirm("確定要刪除此筆資料嗎？")) {
-      await onDelete(formData.id);
-      setModalOpen(false);
+      await onDelete(formData.id); // 呼叫父組件傳入的刪除函式
+      setModalOpen(false); // 💡 刪除完成後關閉表單
     }
   };
 
   return (
-    <Segment basic style={{ padding: "10px 5px" }}>
-      {/* 頂部操作列：滿版新增按鈕 */}
-      <Button
-        primary
-        fluid
-        size="large"
-        icon
-        labelPosition="left"
-        onClick={handleOpenCreate}
-        style={{ marginBottom: "15px" }}
-      >
-        <Icon name="add" /> 新增項目
-      </Button>
-
-      {/* 手機端列表：改用 Card 群組替代 Table */}
-      <Card.Group stackable itemsPerRow={1}>
-        {Array.isArray(data) &&
-          data.map((item) => (
-            <Card key={item.id} fluid color="blue">
-              <Card.Content>
-                <Grid columns={2} dividing>
-                  {columns.map((col) => (
-                    <Grid.Row key={col.key} style={{ padding: "8px 0" }}>
-                      <Grid.Column
-                        width={6}
-                        style={{ color: "#666", fontWeight: "bold" }}
-                      >
-                        {col.label}
-                      </Grid.Column>
-                      <Grid.Column
-                        width={10}
-                        style={{ wordBreak: "break-word" }}
-                      >
-                        {col.render ? col.render(item) : item[col.key]}
-                      </Grid.Column>
-                    </Grid.Row>
-                  ))}
-                </Grid>
-              </Card.Content>
-              <Card.Content extra>
-                <Button
-                  fluid
-                  basic
-                  color="blue"
-                  icon="edit"
-                  content="編輯此筆資料"
-                  onClick={() => handleOpenEdit(item)}
-                />
-              </Card.Content>
-            </Card>
-          ))}
-      </Card.Group>
-
-      {/* 手機適配 Modal 彈窗 */}
-      <Modal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        size="tiny"
-        closeIcon
-        style={{ margin: "10px auto", width: "95%" }}
-      >
-        <Modal.Header>
-          <Header as="h3" icon>
-            <Icon name={isEditing ? "edit" : "plus circle"} color="blue" />
-            <Header.Content>
-              {isEditing ? "編輯資料" : "新增資料"}
-            </Header.Content>
-          </Header>
-        </Modal.Header>
-
-        <Modal.Content scrolling style={{ maxHeight: "60vh" }}>
-          <Form size="large">
+    <div>
+      {/* 動態編輯/新增彈窗表單 */}
+      <Modal open={modalOpen} onClose={() => setModalOpen(false)} size="small">
+        <Modal.Header>{isEditing ? "編輯資料" : "新增資料"}</Modal.Header>
+        <Modal.Content>
+          <Form>
             {columns
+              // 💡 1. 濾除不需要出現在表單中的欄位
               .filter((col) => !col.hideInForm)
+              // 💡 2. 渲染剩餘的表單欄位
               .map((col) => {
                 const fieldName = col.name || col.key;
+                // 下拉選單處理
                 if (col.type === "select") {
+                  // 優先採用非同步載入的 options，若無則使用原本的 col.options
                   const currentOptions =
                     selectOptions[fieldName] || col.options || [];
 
                   return (
                     <Form.Select
                       search
-                      fluid
                       key={col.key}
                       label={col.label}
                       name={fieldName}
@@ -150,10 +82,9 @@ export default function Phone({
 
                 return (
                   <Form.Input
-                    fluid
                     key={col.key}
                     label={col.label}
-                    type={col.type || "text"}
+                    type={col.type || "text"} // 若沒設定 type 預設為 "text"
                     name={col.key}
                     value={formData[col.key] || ""}
                     onChange={handleChange}
@@ -162,36 +93,55 @@ export default function Phone({
               })}
           </Form>
         </Modal.Content>
-
-        <Modal.Actions style={{ padding: "10px" }}>
-          <Button
-            primary
-            fluid
-            size="large"
-            onClick={handleSubmit}
-            style={{ marginBottom: "10px" }}
-          >
-            儲存
-          </Button>
-
+        <Modal.Actions>
+          {/* 只有在「編輯」狀態時才顯示刪除按鈕 */}
           {isEditing && (
             <Button
               color="red"
-              fluid
-              basic
-              size="large"
+              icon
+              labelPosition="left"
               onClick={handleDelete}
-              style={{ marginBottom: "10px" }}
+              floated="left"
             >
-              <Icon name="trash" /> 刪除此筆資料
+              <Icon name="trash" /> 刪除此筆
             </Button>
           )}
 
-          <Button fluid onClick={() => setModalOpen(false)}>
-            取消
+          <Button positive onClick={handleSubmit}>
+            儲存
           </Button>
         </Modal.Actions>
       </Modal>
-    </Segment>
+      <Table unstackable>
+        <Table.Body>
+          {rows.map((row, index) => {
+            return (
+              <Table.Row
+                key={row.id}
+                onClick={() => {
+                  handleOpenEdit(row);
+                }}
+              >
+                <Table.Cell>
+                  <Header as="h4" style={{ marginBottom: 5 }}>
+                    {row.note || row.item_name || row.name}
+                  </Header>
+                  <span style={{ fontSize: "12px", marginTop: 0 }}>
+                    {row.transaction_date || row.created_at}
+                  </span>
+
+                  {row.cate && <Label>{row.cate}</Label>}
+                </Table.Cell>
+                <Table.Cell textAlign="right">
+                  <Label color="orange" basic size="large">
+                    $ {row.amount || row.price || row.title}
+                  </Label>
+                </Table.Cell>
+              </Table.Row>
+            );
+          })}
+        </Table.Body>
+      </Table>
+    </div>
   );
 }

@@ -8,110 +8,51 @@ import {
   Button,
   Icon,
 } from "semantic-ui-react";
+import EditForm from "./EditForm";
 
-export default function Phone({ rows, columns, onSave, onDelete }) {
-  const [modalOpen, setModalOpen] = useState(false);
+export default function Phone({ rows, columns = [], onSave, onDelete }) {
   const [formData, setFormData] = useState({});
   const [isEditing, setIsEditing] = useState(false);
-
-  // 儲存動態從 API 撈取到的 select options
-  const [selectOptions, setSelectOptions] = useState({});
-
-  const handleOpenCreate = () => {
-    const initialForm = {};
-    columns.forEach((col) => (initialForm[col.key] = ""));
-    setFormData(initialForm);
-    setIsEditing(false);
-    setModalOpen(true);
-  };
-
+  const [modalOpen, setModalOpen] = useState(false);
   const handleOpenEdit = (item) => {
     setFormData(item);
     setIsEditing(true);
     setModalOpen(true);
   };
 
-  const handleChange = (e, { name, value }) => {
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const formatRowValue = (row) => {
+    // 1. 取值（使用 ?? 避免 amount = 0 時被跳過）
+    const val = row.amount ?? row.price ?? row.title;
 
-  const handleSubmit = () => {
-    onSave(formData, isEditing);
-    setModalOpen(false);
-  };
+    if (val === undefined || val === null || val === "") return "";
 
-  // 💡 新增：表單內的刪除處理邏輯
-  const handleDelete = async () => {
-    if (formData.id && window.confirm("確定要刪除此筆資料嗎？")) {
-      await onDelete(formData.id); // 呼叫父組件傳入的刪除函式
-      setModalOpen(false); // 💡 刪除完成後關閉表單
+    // 2. 判斷 JS 原生型別 或 是否為數字字串
+    const isNumberType = typeof val === "number";
+    const isNumericString = typeof val === "string" && !isNaN(Number(val));
+
+    // 3. 型別為數字時加上 $
+    if (isNumberType || isNumericString) {
+      return `$ ${Number(val).toLocaleString()}`;
     }
+
+    // 4. 型別為文字（例如 title 的內容）不加 $
+    return val;
   };
 
   return (
     <div>
-      {/* 動態編輯/新增彈窗表單 */}
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)} size="small">
-        <Modal.Header>{isEditing ? "編輯資料" : "新增資料"}</Modal.Header>
-        <Modal.Content>
-          <Form>
-            {columns
-              // 💡 1. 濾除不需要出現在表單中的欄位
-              .filter((col) => !col.hideInForm)
-              // 💡 2. 渲染剩餘的表單欄位
-              .map((col) => {
-                const fieldName = col.name || col.key;
-                // 下拉選單處理
-                if (col.type === "select") {
-                  // 優先採用非同步載入的 options，若無則使用原本的 col.options
-                  const currentOptions =
-                    selectOptions[fieldName] || col.options || [];
+      {/* 彈窗表單 */}
+      <EditForm
+        columns={columns}
+        formData={formData}
+        setFormData={setFormData}
+        isEditing={isEditing}
+        setIsEditing={setIsEditing}
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
+        onSave={onSave}
+      />
 
-                  return (
-                    <Form.Select
-                      search
-                      key={col.key}
-                      label={col.label}
-                      name={fieldName}
-                      value={formData[fieldName] || ""}
-                      onChange={handleChange}
-                      options={currentOptions}
-                    />
-                  );
-                }
-
-                return (
-                  <Form.Input
-                    key={col.key}
-                    label={col.label}
-                    type={col.type || "text"} // 若沒設定 type 預設為 "text"
-                    name={col.key}
-                    value={formData[col.key] || ""}
-                    onChange={handleChange}
-                  />
-                );
-              })}
-          </Form>
-        </Modal.Content>
-        <Modal.Actions>
-          {/* 只有在「編輯」狀態時才顯示刪除按鈕 */}
-          {isEditing && (
-            <Button
-              color="red"
-              icon
-              labelPosition="left"
-              onClick={handleDelete}
-              floated="left"
-            >
-              <Icon name="trash" /> 刪除此筆
-            </Button>
-          )}
-
-          <Button positive onClick={handleSubmit}>
-            儲存
-          </Button>
-        </Modal.Actions>
-      </Modal>
       <Table unstackable>
         <Table.Body>
           {rows.map((row, index) => {
@@ -124,24 +65,19 @@ export default function Phone({ rows, columns, onSave, onDelete }) {
               >
                 <Table.Cell>
                   <Header as="h4" style={{ marginBottom: 5 }}>
-                    {row.note || row.item_name || row.name}
+                    {row.note || row.item_name || row.name || row.category}
                   </Header>
                   <span style={{ fontSize: "12px", marginTop: 0 }}>
                     {row.transaction_date || row.created_at}
                   </span>
 
-                  {/* <span>
-                    {dateExcludeCurrentYear(row.date)} ({getWeekDay(row.date)}
-                    ){" "}
-                  </span> */}
-                  {/* {!activeAccount && (
-                    <Label color="teal">{row.account?.name}</Label>
-                  )} */}
                   {row.cate && <Label>{row.cate}</Label>}
                 </Table.Cell>
                 <Table.Cell textAlign="right">
                   <Label color="orange" basic size="large">
-                    $ {row.amount || row.price || row.title}
+                    {/* $ {row.amount || row.price || row.title} */}
+                    {/* {formatValue(row, columns)} */}
+                    {formatRowValue(row)}
                   </Label>
                 </Table.Cell>
               </Table.Row>
