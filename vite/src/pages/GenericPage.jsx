@@ -34,10 +34,8 @@ function reducer(state, action) {
 export default function GenericPage() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  // 1. 分離「輸入框輸入值」與「目前查詢的表名」
-  const [searchTerm, setSearchTerm] = useState("receipt_records");
   // const [table, setTable] = useState("receipt_records");
-  const [selectedTable, setSelectedTable] = useState("employees");
+  const [selectedTable, setSelectedTable] = useState("expense");
 
   // 2. 正確從 tables 陣列中查詢 columns
   // const targetTable = tables.find((item) => item.tableName === table);
@@ -127,10 +125,6 @@ export default function GenericPage() {
               </Menu.Item>
             );
           })}
-
-          {/* <Menu.Item color="teal">通用頁面</Menu.Item>
-          <Menu.Item>通用頁面</Menu.Item>
-          <Menu.Item>通用頁面</Menu.Item> */}
         </Menu>
       </div>
       <div style={{ marginBottom: "16px" }}>

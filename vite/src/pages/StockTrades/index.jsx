@@ -7,10 +7,10 @@ import EditForm from "./components/EditForm";
 import SearchBar from "./components/SearchBar";
 import GroupedCard from "./components/GroupedCard";
 import GroupedCardByDate from "./components/GroupedCardByDate";
-import { Button } from "semantic-ui-react";
+
 // import data from "./data/data.json";
 
-import { Tab } from "semantic-ui-react";
+import { Tab, Form, Input } from "semantic-ui-react";
 
 import { COLUMNS } from "./data/columns";
 
@@ -42,45 +42,56 @@ export default function index() {
     console.log(state.groupedData);
   }, []);
 
+  // 1. 定義一個統一樣式的渲染函式
+  const renderPane = (children) => (
+    <Tab.Pane style={{ border: "none", boxShadow: "none" }}>
+      {children}
+    </Tab.Pane>
+  );
+
+  // 2. 簡化 panes 設定
   const panes = [
     {
       menuItem: "日期分組",
-      render: () => (
-        <Tab.Pane>
-          {" "}
-          <GroupedCardByDate data={state.groupedDataByDate} />
-        </Tab.Pane>
-      ),
+      render: () =>
+        renderPane(<GroupedCardByDate data={state.groupedDataByDate} />),
     },
     {
       menuItem: "交易記錄",
-      render: () => (
-        <Tab.Pane>
-          {" "}
-          <TableView state={state} dispatch={dispatch} columns={COLUMNS} />
-        </Tab.Pane>
-      ),
+      render: () =>
+        renderPane(
+          <TableView state={state} dispatch={dispatch} columns={COLUMNS} />,
+        ),
     },
     {
       menuItem: "股票分組",
-      render: () => (
-        <Tab.Pane>
-          {" "}
-          <GroupedCard data={state.groupedData} />
-        </Tab.Pane>
-      ),
+      render: () => renderPane(<GroupedCard data={state.groupedData} />),
     },
   ];
 
   return (
     <div>
-      <SearchBar
+      {/* <SearchBar
         state={state}
         dispatch={dispatch}
         columns={COLUMNS}
         fetchApiData={fetchApiData}
-      />
-      <Tab panes={panes} />
+      /> */}
+
+      <Form>
+        <Form.Group unstackable widths="2">
+          <Form.Field>
+            <label>項目</label>
+            <Input />
+          </Form.Field>
+          <Form.Field>
+            <label>項目</label>
+            <Input />
+          </Form.Field>
+        </Form.Group>
+      </Form>
+
+      <Tab panes={panes} menu={{ secondary: true, pointing: true }} />
 
       <EditForm state={state} dispatch={dispatch} columns={COLUMNS} />
     </div>

@@ -21,8 +21,10 @@ export default function Phone({ rows, columns = [], onSave, onDelete }) {
   };
 
   const formatRowValue = (row) => {
+    // console.log(columns[2])
     // 1. 取值（使用 ?? 避免 amount = 0 時被跳過）
-    const val = row.amount ?? row.price ?? row.title;
+    // const val = row.amount ?? row.price ?? row.title;
+    const val = row[columns[2]?.key];
 
     if (val === undefined || val === null || val === "") return "";
 
@@ -38,6 +40,15 @@ export default function Phone({ rows, columns = [], onSave, onDelete }) {
     // 4. 型別為文字（例如 title 的內容）不加 $
     return val;
   };
+
+  function getChineseWeekday(date = new Date(), prefix = "") {
+    const days = ["日", "一", "二", "三", "四", "五", "六"];
+    return `${prefix}${days[date.getDay()]}`;
+  }
+
+  // 使用方式：
+  console.log(getChineseWeekday()); // 預設輸出目前日期，例如：星期三
+  console.log(getChineseWeekday(new Date("2026-10-10"), "週")); // 輸出：週六
 
   return (
     <div>
@@ -65,20 +76,32 @@ export default function Phone({ rows, columns = [], onSave, onDelete }) {
               >
                 <Table.Cell>
                   <Header as="h4" style={{ marginBottom: 5 }}>
-                    {row.note || row.item_name || row.name || row.category}
+                    {/* columns[0].key 第0個欄位鍵值, 例: item_name , 再用此值取得資料  */}
+                    {row[columns[1].key]}
                   </Header>
-                  <span style={{ fontSize: "12px", marginTop: 0 }}>
-                    {row.transaction_date || row.created_at}
+                  {/* 日期 style={{ fontSize: "0.875rem" }} */}
+                  <span>
+                    {/* <Icon name="calendar  outline" /> */}
+                    {row[columns[0]?.key]?.substring(5, 10)} (
+                    {getChineseWeekday(new Date(row[columns[0]?.key]))})
                   </span>
 
                   {row.cate && <Label>{row.cate}</Label>}
                 </Table.Cell>
                 <Table.Cell textAlign="right">
-                  <Label color="orange" basic size="large">
-                    {/* $ {row.amount || row.price || row.title} */}
-                    {/* {formatValue(row, columns)} */}
+                  <div
+                    style={{
+                      // border: "none",
+                      color: "#F2711C",
+                      fontWeight: "bold",
+                      // background: "transparent",
+                      // padding: 10,
+                    }}
+                  >
+                    {" "}
                     {formatRowValue(row)}
-                  </Label>
+                  </div>
+                  {/* <Label color="orange" size="large"></Label> */}
                 </Table.Cell>
               </Table.Row>
             );

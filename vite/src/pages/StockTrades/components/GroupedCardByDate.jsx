@@ -119,19 +119,17 @@ const GroupedCardByDate = ({ data }) => {
               </Card.Header>
 
               <Card.Description style={{ marginTop: "15px" }}>
-                <Table celled striped compact unstackable>
+                <Table compact unstackable>
                   <Table.Header>
                     <Table.Row>
                       <Table.HeaderCell>名稱</Table.HeaderCell>
                       <Table.HeaderCell>類型</Table.HeaderCell>
-                      <Table.HeaderCell textAlign="right">
-                        股數
-                      </Table.HeaderCell>
+                      <Table.HeaderCell textAlign="right">股</Table.HeaderCell>
                       <Table.HeaderCell textAlign="right">
                         單價
                       </Table.HeaderCell>
                       <Table.HeaderCell textAlign="right">
-                        總金額
+                        金額
                       </Table.HeaderCell>
                     </Table.Row>
                   </Table.Header>
@@ -151,7 +149,7 @@ const GroupedCardByDate = ({ data }) => {
                           <Table.Cell>{item.name}</Table.Cell>
                           <Table.Cell>
                             <Label basic color={isBuy ? "red" : "green"}>
-                              {isBuy ? "買進" : "賣出"}
+                              {isBuy ? "買" : "賣"}
                             </Label>
                           </Table.Cell>
                           <Table.Cell textAlign="right">

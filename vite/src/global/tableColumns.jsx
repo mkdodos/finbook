@@ -28,9 +28,11 @@ export const tables = {
     { key: "title", label: "職稱", type: "text" },
   ],
   costco: [
-    { key: "item_code", label: "品名", type: "text" },
+    // { key: "item_code", label: "品名", type: "text" },
+    { key: "created_at", label: "created_at", type: "date" },
     { key: "name", label: "品名", type: "text" },
-    { key: "quantity", label: "quantity", type: "number" },
+    // { key: "quantity", label: "quantity", type: "number" },
+
     { key: "price", label: "price", type: "number" },
   ],
   expense: [

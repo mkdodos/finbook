@@ -79,21 +79,6 @@ function SearchBar({ columns, fetchApiData }) {
           </Button>
         </Form.Field>
       </Form.Group>
-      {/* <Form.Group>
-        <Form.Field>
-          <label>&nbsp;</label>
-          <Button type="submit" secondary>
-            查詢
-          </Button>
-        </Form.Field>
-        <Form.Field>
-          <label>&nbsp;</label>
-
-          <Button type="button" onClick={handleReset}>
-            清除
-          </Button>
-        </Form.Field>
-      </Form.Group> */}
     </Form>
   );
 }

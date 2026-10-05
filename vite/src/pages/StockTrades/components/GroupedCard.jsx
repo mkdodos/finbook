@@ -28,7 +28,7 @@ const GroupedCard = ({ data }) => {
               </Card.Header>
 
               <Card.Description style={{ marginTop: "15px" }}>
-                <Table celled striped compact unstackable>
+                <Table compact unstackable>
                   <Table.Header>
                     <Table.Row>
                       <Table.HeaderCell>日期</Table.HeaderCell>
