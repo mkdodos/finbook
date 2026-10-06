@@ -8,54 +8,23 @@ import {
   Button,
   Icon,
 } from "semantic-ui-react";
-import EditForm from "./EditForm";
+import EditForm from "../EditForm";
 
-export default function Phone({ rows, columns = [], onSave, onDelete }) {
+export default function Phone({
+  rows,
+  columns = [],
+  dispatch,
+  state,
+  onSave,
+  onDelete,
+}) {
   const [formData, setFormData] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  const handleOpenCreate = () => {
-    const initialForm = {};
-    columns.forEach((col) => (initialForm[col.key] = ""));
-    // 2. 針對特定欄位覆蓋預設值
-    initialForm.transaction_date = new Date().toISOString().substring(0, 10);
-    setFormData(initialForm);
-    setIsEditing(false);
-    setModalOpen(true);
-  };
   const handleOpenEdit = (item) => {
     setFormData(item);
     setIsEditing(true);
     setModalOpen(true);
-  };
-
-  // 💡 新增：表單內的刪除處理邏輯
-  const handleDelete = async () => {
-    if (formData.id && window.confirm("確定要刪除此筆資料嗎？")) {
-      await onDelete(formData.id); // 呼叫父組件傳入的刪除函式
-      setModalOpen(false); // 💡 刪除完成後關閉表單
-    }
-  };
-
-  const formatRowValue = (row) => {
-    // console.log(columns[2])
-    // 1. 取值（使用 ?? 避免 amount = 0 時被跳過）
-    // const val = row.amount ?? row.price ?? row.title;
-    const val = row[columns[2]?.key];
-
-    if (val === undefined || val === null || val === "") return "";
-
-    // 2. 判斷 JS 原生型別 或 是否為數字字串
-    const isNumberType = typeof val === "number";
-    const isNumericString = typeof val === "string" && !isNaN(Number(val));
-
-    // 3. 型別為數字時加上 $
-    if (isNumberType || isNumericString) {
-      return `$ ${Number(val).toLocaleString()}`;
-    }
-
-    // 4. 型別為文字（例如 title 的內容）不加 $
-    return val;
   };
 
   function getChineseWeekday(date = new Date(), prefix = "") {
@@ -64,17 +33,14 @@ export default function Phone({ rows, columns = [], onSave, onDelete }) {
   }
 
   // 使用方式：
-  // console.log(getChineseWeekday()); // 預設輸出目前日期，例如：星期三
-  // console.log(getChineseWeekday(new Date("2026-10-10"), "週")); // 輸出：週六
+  console.log(getChineseWeekday()); // 預設輸出目前日期，例如：星期三
+  console.log(getChineseWeekday(new Date("2026-10-10"), "週")); // 輸出：週六
 
   return (
     <div>
-      {/* {JSON.stringify(formData)} */}
-      <Button primary onClick={handleOpenCreate}>
-        新增
-      </Button>
       {/* 彈窗表單 */}
-      <EditForm
+      <EditForm state={state} dispatch={dispatch} columns={columns} />
+      {/* <EditForm
         columns={columns}
         formData={formData}
         setFormData={setFormData}
@@ -83,8 +49,7 @@ export default function Phone({ rows, columns = [], onSave, onDelete }) {
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
         onSave={onSave}
-        onDelete={handleDelete}
-      />
+      /> */}
 
       <Table unstackable>
         <Table.Body>
@@ -92,14 +57,21 @@ export default function Phone({ rows, columns = [], onSave, onDelete }) {
             return (
               <Table.Row
                 key={row.id}
-                onClick={() => {
-                  handleOpenEdit(row);
-                }}
+                onClick={() =>
+                  dispatch({
+                    type: "OPEN_EDIT",
+                    payload: { row },
+                  })
+                }
+                // onClick={() => {
+                //   handleOpenEdit(row);
+                // }}
               >
                 <Table.Cell>
                   <Header as="h4" style={{ marginBottom: 5 }}>
                     {/* columns[0].key 第0個欄位鍵值, 例: item_name , 再用此值取得資料  */}
-                    {row[columns[1].key]}
+                    {row[columns[1].key]}&nbsp;
+                    {row.name}
                   </Header>
                   {/* 日期 style={{ fontSize: "0.875rem" }} */}
                   <span>
@@ -111,6 +83,9 @@ export default function Phone({ rows, columns = [], onSave, onDelete }) {
                   {row.cate && <Label>{row.cate}</Label>}
                 </Table.Cell>
                 <Table.Cell textAlign="right">
+                  <div>{row.shares}</div>
+                </Table.Cell>
+                <Table.Cell textAlign="right">
                   <div
                     style={{
                       // border: "none",
@@ -120,10 +95,13 @@ export default function Phone({ rows, columns = [], onSave, onDelete }) {
                       // padding: 10,
                     }}
                   >
-                    {" "}
-                    {formatRowValue(row)}
+                    {row.price}
                   </div>
-                  {/* <Label color="orange" size="large"></Label> */}
+                </Table.Cell>
+                <Table.Cell textAlign="right">
+                  {/* <div>{JSON.stringify(columns[6].render(row))}</div> */}
+                  {/* <div>{columns[6].render(row)}</div> */}
+                  <div>{columns[6].render(row)}</div>
                 </Table.Cell>
               </Table.Row>
             );

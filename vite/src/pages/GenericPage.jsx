@@ -127,20 +127,6 @@ export default function GenericPage() {
           })}
         </Menu>
       </div>
-      <div style={{ marginBottom: "16px" }}>
-        {/* 包在 Form 裡面，按 Enter 鍵也能自動觸發 handleSearch */}
-        {/* <Form>
-          <Dropdown
-            placeholder="請選擇資料表名稱..."
-            fluid
-            search
-            selection
-            options={tableOptions}
-            value={selectedTable}
-            onChange={handleDropdownChange}
-          />
-        </Form> */}
-      </div>
 
       <Phone
         columns={columns}

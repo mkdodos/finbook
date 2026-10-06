@@ -7,8 +7,8 @@ import EditForm from "./components/EditForm";
 import SearchBar from "./components/SearchBar";
 import GroupedCard from "./components/GroupedCard";
 import GroupedCardByDate from "./components/GroupedCardByDate";
-
-// import data from "./data/data.json";
+import Phone from "./components/phone/Phone";
+import { Button, Divider } from "semantic-ui-react";
 
 import { Tab, Form, Input } from "semantic-ui-react";
 
@@ -52,9 +52,26 @@ export default function index() {
   // 2. 簡化 panes 設定
   const panes = [
     {
+      menuItem: "手機版",
+      render: () =>
+        renderPane(
+          <Phone
+            rows={state.data}
+            dispatch={dispatch}
+            state={state}
+            columns={COLUMNS}
+          />,
+        ),
+    },
+    {
       menuItem: "日期分組",
       render: () =>
         renderPane(<GroupedCardByDate data={state.groupedDataByDate} />),
+    },
+
+    {
+      menuItem: "股票分組",
+      render: () => renderPane(<GroupedCard data={state.groupedData} />),
     },
     {
       menuItem: "交易記錄",
@@ -63,20 +80,24 @@ export default function index() {
           <TableView state={state} dispatch={dispatch} columns={COLUMNS} />,
         ),
     },
-    {
-      menuItem: "股票分組",
-      render: () => renderPane(<GroupedCard data={state.groupedData} />),
-    },
   ];
 
   return (
-    <div>
+    <>
       {/* <SearchBar
         state={state}
         dispatch={dispatch}
         columns={COLUMNS}
         fetchApiData={fetchApiData}
       /> */}
+      <Button
+        style={{ marginTop: "10px" }}
+        primary
+        onClick={() => dispatch({ type: "OPEN_FORM" })}
+      >
+        新增
+      </Button>
+      <Divider />
 
       <Form>
         <Form.Group unstackable widths="2">
@@ -94,6 +115,6 @@ export default function index() {
       <Tab panes={panes} menu={{ secondary: true, pointing: true }} />
 
       <EditForm state={state} dispatch={dispatch} columns={COLUMNS} />
-    </div>
+    </>
   );
 }

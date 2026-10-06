@@ -3,7 +3,7 @@ import { Api } from "../data/api";
 import React from "react";
 import { Label } from "semantic-ui-react";
 export const COLUMNS = [
-  { key: "id", title: "id", name: "id", formType: "date", hideInForm: true },
+  // { key: "id", title: "id", name: "id", formType: "date", hideInForm: true },
   { key: "trade_date", title: "交易日", name: "trade_date", formType: "date" },
   {
     key: "stock_id",

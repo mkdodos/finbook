@@ -9,7 +9,6 @@ export default function EditForm({
   formData,
   setFormData,
   onSave,
-  onDelete,
 }) {
   // 儲存動態從 API 撈取到的 select options
   const [selectOptions, setSelectOptions] = useState({});
@@ -52,7 +51,7 @@ export default function EditForm({
                     <Form.Select
                       search
                       key={col.key}
-                      label={col.label}
+                      label={col.title}
                       name={fieldName}
                       value={formData[fieldName] || ""}
                       onChange={handleChange}
@@ -64,7 +63,7 @@ export default function EditForm({
                 return (
                   <Form.Input
                     key={col.key}
-                    label={col.label}
+                    label={col.title}
                     type={col.type || "text"} // 若沒設定 type 預設為 "text"
                     name={col.key}
                     value={formData[col.key] || ""}
