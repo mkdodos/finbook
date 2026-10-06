@@ -97,7 +97,7 @@ export default function GenericPage() {
     // { key: "employees", text: "employees", value: "employees" },
     {
       key: "receipt_records",
-      text: "receipt_records",
+      text: "石二鍋",
       value: "receipt_records",
     },
     { key: "costco", text: "好市多", value: "costco" },
@@ -112,7 +112,7 @@ export default function GenericPage() {
   return (
     <div>
       <div style={{ textAlign: "center", marginBottom: "10px" }}>
-        <Menu compact secondary pointing>
+        <Menu secondary pointing widths={4}>
           {tableOptions.map((option) => {
             return (
               <Menu.Item
@@ -127,13 +127,15 @@ export default function GenericPage() {
           })}
         </Menu>
       </div>
+      {selectedTable !== "notes" && (
+        <Phone
+          columns={columns}
+          rows={state.items}
+          onSave={handleSave}
+          onDelete={handleDelete}
+        />
+      )}
 
-      <Phone
-        columns={columns}
-        rows={state.items}
-        onSave={handleSave}
-        onDelete={handleDelete}
-      />
       <CRUDTemplate
         columns={columns}
         data={state.items}

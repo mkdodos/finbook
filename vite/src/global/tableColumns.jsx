@@ -3,6 +3,7 @@ import { Label } from "semantic-ui-react";
 
 export const tables = {
   receipt_records: [
+    { key: "created_at", label: "created_at", type: "date" },
     { key: "item_name", label: "品名", type: "text" },
     { key: "amount", label: "金額", type: "text" },
     {
@@ -20,6 +21,7 @@ export const tables = {
   ],
 
   notes: [
+    { key: "date", label: "date", type: "date" },
     { key: "category", label: "category", type: "text" },
     { key: "title", label: "title", type: "text" },
   ],
