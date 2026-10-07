@@ -4,20 +4,17 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
 
-// 處理 OPTIONS 預檢請求
+// // 處理 OPTIONS 預檢請求
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
 }
 
 header('Content-Type: application/json; charset=utf-8');
-
 require_once 'db.php';
-
 // 2. 安全白名單（請確認包含 receipt-records）
 $allowed_tables = ['notes','employees', 'departments', 'expense', 'costco', 'receipt_records'];
 
-// $table =$_GET['table'] ?? '';
 $table = isset($_GET['table']) ? $_GET['table'] : '';
 
 if (!in_array($table,$allowed_tables, true)) {
@@ -25,7 +22,7 @@ if (!in_array($table,$allowed_tables, true)) {
     echo json_encode(['error' => 'Invalid or unauthorized table name']);
     exit;
 }
-
+// echo "OK";
 $method =$_SERVER['REQUEST_METHOD'];
 
 switch ($method) {
@@ -38,11 +35,11 @@ switch ($method) {
             echo json_encode(['error' => $e->getMessage()]);
         }
         break;
-
-    case 'POST':
-           $json = json_decode(file_get_contents('php://input'), true);
-$input = is_array($json) ? $json : [];
+        case 'POST':
+            // $input = is_array($json) ? $json : [];
         // $input = json_decode(file_get_contents('php://input'), true) ?? [];
+        $json = json_decode(file_get_contents('php://input'), true);
+$input = is_array($json) ? $json : [];
         unset($input['id']);
 
         if (empty($input)) {
@@ -69,60 +66,8 @@ $input = is_array($json) ? $json : [];
             echo json_encode(['error' => $e->getMessage()]);
         }
         break;
-
-    case 'PUT':
-          $json = json_decode(file_get_contents('php://input'), true);
-$input = is_array($json) ? $json : [];
-        // $input = json_decode(file_get_contents('php://input'), true) ?? [];
-        // $id =$input['id'] ?? null;
-        $id =$input['id'] ;
-        unset($input['id']);
-
-        if (!$id || empty($input)) {
-            http_response_code(400);
-            echo json_encode(['error' => 'Missing ID or update data']);
-            break;
-        }
-
-        try {
-            // 改用相容舊版 PHP 的匿名函數寫法
-            $setParts = array_map(function($col) {
-                return "`$col` = ?";
-            }, array_keys($input));$sql = "UPDATE `$table` SET " . implode(', ', $setParts) . " WHERE id = ?";
-
-            $params = array_values($input);
-            $params[] =$id;
-
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute($params);
-
-            echo json_encode(['message' => 'Record updated']);
-        } catch (PDOException $e) {
-            http_response_code(500);
-            echo json_encode(['error' => $e->getMessage()]);
-        }
-        break;
-
-    case 'DELETE':
-        // $id =$_GET['id'] ?? null;
-        $id =$_GET['id'] ;
-        if ($id) {
-            try {
-                $stmt =$pdo->prepare("DELETE FROM `$table` WHERE id = ?");
-                $stmt->execute([$id]);
-                echo json_encode(['message' => 'Record deleted']);
-            } catch (PDOException $e) {
-                http_response_code(500);
-                echo json_encode(['error' => $e->getMessage()]);
-            }
-        } else {
-            http_response_code(400);
-            echo json_encode(['error' => 'Missing ID parameter']);
-        }
-        break;
-
-    default:
-        http_response_code(405);
-        echo json_encode(['error' => 'Method Not Allowed']);
-        break;
 }
+
+
+
+?>

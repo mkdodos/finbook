@@ -24,7 +24,7 @@ set BACKUP_FILE=%BACKUP_DIR%\%DB_NAME%_!DATE_STAMP!.sql
 if not exist "%BACKUP_DIR%" mkdir "%BACKUP_DIR%"
 
 echo 開始進行 MySQL 備份...
-%MYSQL_BIN%\mysqldump.exe -u%DB_USER% -p%DB_PASS% --single-transaction --quick --routines --triggers %DB_NAME% > "!BACKUP_FILE!"
+%MYSQL_BIN%\mysqldump.exe -u%DB_USER% -p%DB_PASS% --databases %DB_NAME% --single-transaction --quick --routines --triggers > "!BACKUP_FILE!"
 
 if %ERRORLEVEL% equ 0 (
     echo [!DATE_STAMP!] 備份成功: !BACKUP_FILE! >> "%BACKUP_DIR%\backup.log"

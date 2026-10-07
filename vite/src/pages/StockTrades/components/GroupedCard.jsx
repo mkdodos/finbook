@@ -14,17 +14,24 @@ const GroupedCard = ({ data }) => {
         return (
           <Card key={key} fluid color="blue">
             <Card.Content>
-              <Card.Header>
-                <Header as="h3">
-                  {stockName}
-                  <Label
-                    color="teal"
-                    size="small"
-                    style={{ marginLeft: "10px" }}
-                  >
-                    {stockId}
-                  </Label>
-                </Header>
+              {/* <Card.Header>
+                <Label color="teal" size="small" style={{ marginLeft: "10px" }}>
+                  {stockId}
+                </Label>
+                {stockName}
+              
+              </Card.Header> */}
+              <Card.Header
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px", // 自動處理間隔，不需要再設定 marginLeft
+                }}
+              >
+                <Label color="teal" style={{ margin: 0 }}>
+                  {stockId}
+                </Label>
+                <span>{stockName}</span>
               </Card.Header>
 
               <Card.Description style={{ marginTop: "15px" }}>

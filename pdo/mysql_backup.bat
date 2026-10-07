@@ -10,7 +10,7 @@ set MYSQL_BIN="C:\xampp\mysql\bin"
 set DB_USER=root
 set DB_PASS=123
 set DB_NAME=minisoft_finbook
-set BACKUP_DIR=D:\database\MySQLBackup\Backups
+set BACKUP_DIR=C:\Users\user\Dropbox\database
 set RETENTION_DAYS=7
 
 :: 取得當前日期與時間 (格式: YYYYMMDD_HHMMSS)

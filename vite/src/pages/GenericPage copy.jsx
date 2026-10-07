@@ -1,7 +1,6 @@
-import React, { useReducer, useEffect, useState, useMemo } from "react";
+import React, { useReducer, useEffect, useState } from "react";
 import CRUDTemplate from "@/components/templates/CRUDTemplate";
 import Phone from "../components/templates/Phone";
-import GroupedView from "../components/templates/GroupedView";
 import { API_HOST } from "@/global/constants";
 import { tables } from "@/global/tableColumns";
 import { Button, Menu, Form, Dropdown } from "semantic-ui-react";
@@ -12,7 +11,19 @@ const initialState = { items: [] };
 function reducer(state, action) {
   switch (action.type) {
     case "SET_ITEMS":
-      return { ...state, items: action.payload };
+      //以日期群組
+      const groupedData = action.payload?.reduce((acc, item) => {
+        const dateKey =
+          typeof item.transaction_date === "string"
+            ? item.transaction_date.slice(0, 10)
+            : item.transaction_date?.format?.("YYYY-MM-DD") || "未知日期";
+
+        if (!acc[dateKey]) acc[dateKey] = [];
+        acc[dateKey].push(item);
+        return acc;
+      }, {});
+      console.log(groupedData);
+      return { ...state, items: action.payload, groupedData };
     case "ADD_ITEM":
       return { ...state, items: [action.payload, ...state.items] };
     case "UPDATE_ITEM":
@@ -34,46 +45,20 @@ function reducer(state, action) {
 
 export default function GenericPage() {
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  // const [table, setTable] = useState("receipt_records");
   const [selectedTable, setSelectedTable] = useState("expense");
 
   const columns = tables[selectedTable] || [];
+
   const API_URL = `${API_HOST}/api.php?table=${selectedTable}`;
-
-  // 自動同步計算 groupedData，解決新增/刪除時不同步的問題
-  const groupedData = useMemo(() => {
-    return state.items.reduce((acc, item) => {
-      const dateKey =
-        typeof item.transaction_date === "string"
-          ? item.transaction_date.slice(0, 10)
-          : item.transaction_date?.format?.("YYYY-MM-DD") || "未知日期";
-
-      if (!acc[dateKey]) {
-        acc[dateKey] = {
-          total: 0,
-          items: [],
-        };
-      }
-
-      // if (!acc[dateKey]) acc[dateKey] = [];
-      // acc[dateKey].push(item);
-      acc[dateKey].items.push(item);
-      acc[dateKey].total += Number(item.amount || 0); // 累加金額（轉為數字）
-      return acc;
-    }, {});
-  }, [state.items]);
-
-  // 轉成 entries 陣列並依日期降序排序
-  const groupedList = useMemo(() => {
-    return Object.entries(groupedData).sort(
-      ([dateA], [dateB]) => new Date(dateB) - new Date(dateA),
-    );
-  }, [groupedData]);
 
   // 取得資料列表 (GET)
   const fetchData = async () => {
     try {
       const res = await axios.get(API_URL);
       const dataArray = Array.isArray(res.data) ? res.data : [];
+
       dispatch({ type: "SET_ITEMS", payload: dataArray });
     } catch (err) {
       console.error("Fetch error:", err.response?.data?.error || err.message);
@@ -108,55 +93,57 @@ export default function GenericPage() {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`${API_URL}&id=${id}`);
+      // await axios.delete(`${API_URL}?id=${id}`);
       dispatch({ type: "DELETE_ITEM", payload: id });
     } catch (err) {
       console.error("Delete error:", err);
     }
   };
 
+  // menu 選項清單
   const tableOptions = [
     { key: "notes", text: "notes", value: "notes" },
-    { key: "receipt_records", text: "石二鍋", value: "receipt_records" },
+    // { key: "employees", text: "employees", value: "employees" },
+    {
+      key: "receipt_records",
+      text: "石二鍋",
+      value: "receipt_records",
+    },
     { key: "costco", text: "好市多", value: "costco" },
     { key: "expense", text: "expense", value: "expense" },
   ];
 
+  const handleDropdownChange = (e, { value }) => {
+    setSelectedTable(value);
+    console.log("選中的資料表:", value);
+  };
+
   return (
     <div>
-      {/* 渲染日期分組範例 */}
-      {/* <div style={{ padding: "10px", background: "#f5f5f5" }}>
-        <h4>交易紀錄 (按日期分組)：</h4>
-        {groupedList.map(([date, trades]) => (
-          <div key={date} style={{ marginBottom: "10px" }}>
-            <strong>{date}</strong>
-            <ul>
-              {trades.map((trade) => (
-                <li key={trade.id}>
-                  {trade.note || "無備註"} - ${trade.amount}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div> */}
-
-      <GroupedView data={groupedList} />
-
+      {/* {JSON.stringify(Object.entries(state?.groupedData || {}))} */}
+      {/* {JSON.stringify(state.groupedData)} */}
+      {/* {JSON.stringify(Object.entries(state?.groupedData) || {})} */}
+      {Object.entries(state?.groupedData || {}).map(([key, trades]) => {
+        {
+          key;
+        }
+      }, 0)}
       <div style={{ textAlign: "center", marginBottom: "10px" }}>
         <Menu secondary pointing widths={4}>
-          {tableOptions.map((option) => (
-            <Menu.Item
-              key={option.key}
-              onClick={() => setSelectedTable(option.value)}
-              active={selectedTable === option.key}
-              color="teal"
-            >
-              {option.text}
-            </Menu.Item>
-          ))}
+          {tableOptions.map((option) => {
+            return (
+              <Menu.Item
+                key={option.key}
+                onClick={() => setSelectedTable(option.value)}
+                active={selectedTable === option.key}
+                color="teal"
+              >
+                {option.text}
+              </Menu.Item>
+            );
+          })}
         </Menu>
       </div>
-
       {selectedTable !== "notes" && (
         <Phone
           columns={columns}
