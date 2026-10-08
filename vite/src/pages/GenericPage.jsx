@@ -123,23 +123,6 @@ export default function GenericPage() {
 
   return (
     <div>
-      {/* 渲染日期分組範例 */}
-      {/* <div style={{ padding: "10px", background: "#f5f5f5" }}>
-        <h4>交易紀錄 (按日期分組)：</h4>
-        {groupedList.map(([date, trades]) => (
-          <div key={date} style={{ marginBottom: "10px" }}>
-            <strong>{date}</strong>
-            <ul>
-              {trades.map((trade) => (
-                <li key={trade.id}>
-                  {trade.note || "無備註"} - ${trade.amount}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div> */}
-
       <GroupedView data={groupedList} />
 
       <div style={{ textAlign: "center", marginBottom: "10px" }}>

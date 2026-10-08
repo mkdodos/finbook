@@ -78,6 +78,7 @@ export const reducer = (state, action) => {
       };
     // 按下表格列的編輯鈕,開啟編輯表單
     case "OPEN_EDIT":
+      console.log(action.payload.row);
       return {
         ...state,
         isEditFormOpen: true,

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useReducer } from "react";
+import React, { useEffect, useState, useReducer, useMemo } from "react";
 import { initialState, reducer } from "./data/reducer";
 import { Api } from "./data/api";
 // import SearchBar from "./components/SearchBar";
@@ -8,6 +8,7 @@ import SearchBar from "./components/SearchBar";
 import GroupedCard from "./components/GroupedCard";
 import GroupedCardByDate from "./components/GroupedCardByDate";
 import Phone from "./components/phone/Phone";
+import GroupedView from "./components/GroupedView";
 import { Button, Divider } from "semantic-ui-react";
 
 import { Tab, Form, Input } from "semantic-ui-react";
@@ -49,24 +50,64 @@ export default function index() {
     </Tab.Pane>
   );
 
+  const groupedData = useMemo(() => {
+    return state.data.reduce((acc, item) => {
+      const dateKey =
+        typeof item.trade_date === "string"
+          ? item.trade_date.slice(0, 10)
+          : item.trade_date?.format?.("YYYY-MM-DD") || "未知日期";
+
+      if (!acc[dateKey]) {
+        acc[dateKey] = {
+          total: 0,
+          items: [],
+        };
+      }
+
+      acc[dateKey].items.push(item);
+      const isBuy = item.trade_type === "buy";
+
+      if (isBuy) {
+        acc[dateKey].total -= Math.round(Number(item.price * item.shares) || 0);
+      } else {
+        acc[dateKey].total += Math.round(Number(item.price * item.shares) || 0);
+      }
+
+      return acc;
+    }, {});
+  }, [state.data]);
+
+  // 轉成 entries 陣列並依日期降序排序
+  const groupedList = useMemo(() => {
+    return Object.entries(groupedData).sort(
+      ([dateA], [dateB]) => new Date(dateB) - new Date(dateA),
+    );
+  }, [groupedData]);
+
   // 2. 簡化 panes 設定
   const panes = [
     {
       menuItem: "手機版",
       render: () =>
-        renderPane(
-          <Phone
-            rows={state.data}
-            dispatch={dispatch}
-            state={state}
-            columns={COLUMNS}
-          />,
-        ),
+        renderPane(<GroupedView data={groupedList} dispatch={dispatch} />),
+      // renderPane(
+      //   <Phone
+      //     rows={state.data}
+      //     dispatch={dispatch}
+      //     state={state}
+      //     columns={COLUMNS}
+      //   />,
+      // ),
     },
     {
       menuItem: "日期分組",
       render: () =>
-        renderPane(<GroupedCardByDate data={state.groupedDataByDate} />),
+        renderPane(
+          <GroupedCardByDate
+            data={state.groupedDataByDate}
+            dispatch={dispatch}
+          />,
+        ),
     },
 
     {

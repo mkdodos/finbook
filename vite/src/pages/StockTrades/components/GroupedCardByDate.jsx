@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Table, Label, Divider, Header, Icon } from "semantic-ui-react";
 import { Api } from "../data/api";
 
-const GroupedCardByDate = ({ data }) => {
+const GroupedCardByDate = ({ data, dispatch }) => {
   const [monthSum, setMonthSum] = useState([]);
 
   useEffect(() => {
@@ -93,13 +93,17 @@ const GroupedCardByDate = ({ data }) => {
 
       {/* 2. 每日明細表格 */}
       {Object.entries(data).map(([key, trades]) => {
+        // 日合計
         const groupTotal = trades.reduce((sum, item) => {
+          const isBuy = item.trade_type === "buy";
           const rawTotal = Math.round(Number(item.shares) * Number(item.price));
+          // 依買或賣,做加或減
+          if (isBuy) return sum - (isNaN(rawTotal) ? 0 : rawTotal);
           return sum + (isNaN(rawTotal) ? 0 : rawTotal);
         }, 0);
 
         return (
-          <>
+          <Fragment key={key}>
             <Divider horizontal>
               <Header as="h4">
                 {/* <Icon name="tag" /> */}
@@ -122,15 +126,35 @@ const GroupedCardByDate = ({ data }) => {
               <Table.Body>
                 {trades.map((item, idx) => {
                   const isBuy = item.trade_type === "buy";
-                  const rawTotal = Math.round(
-                    Number(item.shares) * Number(item.price),
-                  );
+                  // const rawTotal = Math.round(
+                  //   Number(item.shares) * Number(item.price),
+                  // );
+
+                  let rawTotal = 0;
+                  if (isBuy) {
+                    rawTotal = Math.round(
+                      Number(item.shares) * Number(item.price) * -1,
+                    );
+                  } else {
+                    rawTotal = Math.round(
+                      Number(item.shares) * Number(item.price),
+                    );
+                  }
+
                   const totalAmount = (
                     isNaN(rawTotal) ? 0 : rawTotal
                   ).toLocaleString();
 
                   return (
-                    <Table.Row key={item.id || `${key}-${idx}`}>
+                    <Table.Row
+                      key={item.id || `${key}-${idx}`}
+                      onClick={() =>
+                        dispatch({
+                          type: "OPEN_EDIT",
+                          payload: { row: item },
+                        })
+                      }
+                    >
                       <Table.Cell>{item.name}</Table.Cell>
                       <Table.Cell>
                         <Label basic color={isBuy ? "red" : "green"}>
@@ -139,7 +163,15 @@ const GroupedCardByDate = ({ data }) => {
                       </Table.Cell>
                       <Table.Cell textAlign="right">{item.shares}</Table.Cell>
                       <Table.Cell textAlign="right">{item.price}</Table.Cell>
-                      <Table.Cell textAlign="right">${totalAmount}</Table.Cell>
+                      <Table.Cell
+                        textAlign="right"
+                        // style={{
+                        //   fontWeight: "bold",
+                        //   color: isBuy ? "#DB2828" : "#21BA45",
+                        // }}
+                      >
+                        {totalAmount}
+                      </Table.Cell>
                     </Table.Row>
                   );
                 })}
@@ -157,13 +189,13 @@ const GroupedCardByDate = ({ data }) => {
                       }}
                     >
                       <span>合計</span>
-                      <span>${groupTotal.toLocaleString()}</span>
+                      <span>{groupTotal.toLocaleString()}</span>
                     </div>
                   </Table.HeaderCell>
                 </Table.Row>
               </Table.Footer>
             </Table>
-          </>
+          </Fragment>
         );
       })}
     </>

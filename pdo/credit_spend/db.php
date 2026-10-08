@@ -21,8 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // 3. 檢查 config.php
-// __DIR__ 目前這個 PHP 檔案所在目錄的「絕對路徑」。
-// 傳回該檔案所在資料夾的完整檔案系統路徑（例如：C:\xampp\htdocs\app）。
 $configFile = __DIR__ . '/config.php';
 
 if (!file_exists($configFile)) {
