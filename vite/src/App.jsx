@@ -9,6 +9,7 @@ import Costco from "./pages/Costco";
 import Employee from "./pages/Employee";
 import ReceiptRecords from "./pages/ReceiptRecords";
 import GenericPage from "./pages/GenericPage";
+import Game from "./pages/Game";
 import { Menu, Dropdown, DropdownMenu } from "semantic-ui-react";
 
 export default function App() {
@@ -45,6 +46,7 @@ export default function App() {
 
       {/* 依據網址路徑切換渲染對應組件 */}
       <Routes>
+        <Route path="/game" element={<Game />} />
         <Route path="/generic-page" element={<GenericPage />} />
         <Route path="/receipt-records" element={<ReceiptRecords />} />
         <Route path="/employee" element={<Employee />} />
