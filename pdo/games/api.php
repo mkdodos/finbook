@@ -74,6 +74,29 @@ elseif ($method === 'GET' && $action === 'get_game_details') {
     ]);
 }
 
+// 取得[所有遊戲]的分數紀錄
+elseif ($method === 'GET' && $action === 'get_game_scores') {
+   
+    
+   
+
+  
+
+    // 查詢該場次中所有玩家的得分細項，並關聯玩家姓名
+    $scoreStmt = $pdo->prepare("
+        SELECT gs.*, p.name AS player_name 
+        FROM game_scores gs
+        JOIN players p ON gs.player_id = p.id
+        
+    ");
+    $scoreStmt->execute();
+    $scores = $scoreStmt->fetchAll();
+
+    echo json_encode(        
+         $scores
+    );
+}
+
 
 if ($method === 'GET' && $action === 'get_players') {
     $stmt = $pdo->query("SELECT * FROM players ORDER BY id DESC");
@@ -126,6 +149,43 @@ elseif ($method === 'POST' && $action === 'delete_game') {
         $stmt->execute([$gameId]);
         echo json_encode(['success' => true]);
     } catch (Exception $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    }
+}
+
+// 更新遊戲成績紀錄
+elseif ($method === 'POST' && $action === 'update_game') {
+    $data = json_decode(file_get_contents('php://input'), true);
+    $gameId = $data['game_id'] ?? 0;
+    $gameName = $data['game_name'];
+    $playedDate = $data['played_date'];
+    $records = $data['records']; // 陣列：[{player_id, role, score}, ...]
+
+    if (!$gameId) {
+        echo json_encode(['success' => false, 'error' => '缺少遊戲 ID']);
+        exit;
+    }
+
+    $pdo->beginTransaction();
+    try {
+        // 1. 更新遊戲基本資料
+        $stmt = $pdo->prepare("UPDATE games SET game_name = ?, played_date = ? WHERE id = ?");
+        $stmt->execute([$gameName, $playedDate, $gameId]);
+
+        // 2. 刪除該場次原有的分數細項
+        $delStmt = $pdo->prepare("DELETE FROM game_scores WHERE game_id = ?");
+        $delStmt->execute([$gameId]);
+
+        // 3. 重新插入更新後的各角色分數
+        $scoreStmt = $pdo->prepare("INSERT INTO game_scores (game_id, player_id, round_or_role, score) VALUES (?, ?, ?, ?)");
+        foreach ($records as $record) {
+            $scoreStmt->execute([$gameId, $record['player_id'], $record['role'], $record['score']]);
+        }
+
+        $pdo->commit();
+        echo json_encode(['success' => true]);
+    } catch (Exception $e) {
+        $pdo->rollBack();
         echo json_encode(['success' => false, 'error' => $e->getMessage()]);
     }
 }

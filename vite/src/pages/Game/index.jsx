@@ -12,11 +12,13 @@ import {
 } from "semantic-ui-react";
 import axios from "axios";
 import "semantic-ui-css/semantic.min.css";
-
 import { API_HOST } from "@/global/constants";
+
+import TableView from "./components/TableView";
+
 const API_URL = `${API_HOST}/games/api.php`;
 
-const ROLES = ["遊俠", "喵", "森林", "角色 D"];
+const ROLES = ["角色 A", "角色 B", "角色 C", "角色 D"];
 
 function App() {
   const [players, setPlayers] = useState([]);
@@ -39,6 +41,9 @@ function App() {
   );
 
   const [message, setMessage] = useState(null);
+
+  // 編輯狀態：若有值代表目前正在修改某個 game_id
+  const [editingGameId, setEditingGameId] = useState(null);
 
   // 歷史紀錄相關狀態
   const [gamesList, setGamesList] = useState([]);
@@ -80,7 +85,66 @@ function App() {
     }
   };
 
-  // --- 新增：刪除遊戲成績處理函式 ---
+  // --- 新進：點擊編輯按鈕，將資料載入到上方表單準備修改 ---
+  const handleStartEdit = async (gameId) => {
+    try {
+      const res = await axios.get(
+        `${API_URL}?action=get_game_details&game_id=${gameId}`,
+      );
+      const { game, scores: detailScores } = res.data;
+
+      setEditingGameId(game.id);
+      setGameName(game.game_name);
+      setPlayedDate(game.played_date);
+
+      // 取得該場次的 4 位不重複玩家 ID
+      const uniquePlayers = [
+        ...new Set(detailScores.map((s) => String(s.player_id))),
+      ];
+      while (uniquePlayers.length < 4) uniquePlayers.push(""); // 確保長度為 4
+      setSelectedPlayers(uniquePlayers.slice(0, 4));
+
+      // 組合回 scores 矩陣 [playerIndex][roleIndex]
+      let newScores = Array(4)
+        .fill(0)
+        .map(() => Array(4).fill(0));
+      uniquePlayers.forEach((pId, pIdx) => {
+        ROLES.forEach((role, rIdx) => {
+          const match = detailScores.find(
+            (s) =>
+              String(s.player_id) === String(pId) && s.round_or_role === role,
+          );
+          if (match) {
+            newScores[pIdx][rIdx] = parseInt(match.score) || 0;
+          }
+        });
+      });
+      setScores(newScores);
+
+      // 如果 Modal 有開著就順便關閉
+      if (isModalOpen) setIsModalOpen(false);
+
+      // 捲動至畫面最上方填寫區
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (err) {
+      console.error(err);
+      setMessage({ type: "error", content: "載入編輯資料失敗" });
+    }
+  };
+
+  // 取消編輯狀態
+  const handleCancelEdit = () => {
+    setEditingGameId(null);
+    setGameName("我的桌遊");
+    setPlayedDate(new Date().toISOString().split("T")[0]);
+    setSelectedPlayers(["", "", "", ""]);
+    setScores(
+      Array(4)
+        .fill(0)
+        .map(() => Array(4).fill(0)),
+    );
+  };
+
   const handleDeleteGame = async (gameId) => {
     if (!window.confirm("確定要刪除這場遊戲的成績嗎？此動作無法復原。")) {
       return;
@@ -92,10 +156,9 @@ function App() {
       });
       if (res.data.success) {
         setMessage({ type: "success", content: "遊戲成績已成功刪除！" });
-        fetchGames(); // 重新整理歷史列表
-        if (isModalOpen) {
-          setIsModalOpen(false); // 若當前正開著該場次的 Modal 則關閉
-        }
+        fetchGames();
+        if (isModalOpen) setIsModalOpen(false);
+        if (editingGameId === gameId) handleCancelEdit(); // 若剛好在編輯這筆則清除編輯狀態
       } else {
         setMessage({ type: "error", content: "刪除失敗：" + res.data.error });
       }
@@ -153,16 +216,33 @@ function App() {
     });
 
     try {
-      const res = await axios.post(`${API_URL}?action=save_game`, {
-        game_name: gameName,
-        played_date: playedDate,
-        records: records,
-      });
-      if (res.data.success) {
-        setMessage({ type: "success", content: "遊戲成績儲存成功！" });
-        fetchGames();
+      let res;
+      if (editingGameId) {
+        // 執行更新
+        res = await axios.post(`${API_URL}?action=update_game`, {
+          game_id: editingGameId,
+          game_name: gameName,
+          played_date: playedDate,
+          records: records,
+        });
       } else {
-        setMessage({ type: "error", content: "儲存失敗：" + res.data.error });
+        // 執行新增
+        res = await axios.post(`${API_URL}?action=save_game`, {
+          game_name: gameName,
+          played_date: playedDate,
+          records: records,
+        });
+      }
+
+      if (res.data.success) {
+        setMessage({
+          type: "success",
+          content: editingGameId ? "遊戲成績修改成功！" : "遊戲成績儲存成功！",
+        });
+        fetchGames();
+        handleCancelEdit(); // 儲存/更新後重設表單
+      } else {
+        setMessage({ type: "error", content: "操作失敗：" + res.data.error });
       }
     } catch (err) {
       setMessage({ type: "error", content: "網路連線錯誤" });
@@ -171,6 +251,7 @@ function App() {
 
   return (
     <Container style={{ marginTop: "2em", marginBottom: "4em" }}>
+      <TableView data={selectedGameDetail} />
       <Header as="h1" dividing>
         桌遊多玩家計分系統
       </Header>
@@ -194,9 +275,13 @@ function App() {
         </Form>
       </Segment>
 
-      {/* 遊戲紀錄表單 */}
-      <Segment>
-        <Header as="h3">記錄新的一場遊戲 (4位玩家 / 4個角色)</Header>
+      {/* 遊戲紀錄表單 (兼具新增與修改功能) */}
+      <Segment color={editingGameId ? "orange" : undefined}>
+        <Header as="h3">
+          {editingGameId
+            ? `修改遊戲成績 (代號: #${editingGameId})`
+            : "記錄新的一場遊戲 (4位玩家 / 4個角色)"}
+        </Header>
         <Form>
           <Form.Group widths="equal">
             <Form.Input
@@ -265,9 +350,23 @@ function App() {
           </Table.Body>
         </Table>
 
-        <Button color="green" fluid size="large" onClick={handleSubmitGame}>
-          儲存本場遊戲成績
-        </Button>
+        <Button.Group fluid size="large">
+          <Button
+            color={editingGameId ? "orange" : "green"}
+            onClick={handleSubmitGame}
+          >
+            {editingGameId ? "確認修改成績" : "儲存本場遊戲成績"}
+          </Button>
+          {editingGameId && (
+            <>
+              <Button.Or />
+              basic{" "}
+              <Button color="grey" onClick={handleCancelEdit}>
+                取消編輯
+              </Button>
+            </>
+          )}
+        </Button.Group>
       </Segment>
 
       {/* 歷史戰績列表區塊 */}
@@ -300,6 +399,13 @@ function App() {
                         onClick={() => handleViewDetails(g.id)}
                       >
                         詳情
+                      </Button>
+                      <Button.Or />
+                      <Button
+                        color="orange"
+                        onClick={() => handleStartEdit(g.id)}
+                      >
+                        編輯
                       </Button>
                       <Button.Or />
                       <Button
@@ -385,13 +491,22 @@ function App() {
         </Modal.Content>
         <Modal.Actions>
           {selectedGameDetail && (
-            <Button
-              color="red"
-              floated="left"
-              onClick={() => handleDeleteGame(selectedGameDetail.game.id)}
-            >
-              刪除此場紀錄
-            </Button>
+            <>
+              <Button
+                color="orange"
+                floated="left"
+                onClick={() => handleStartEdit(selectedGameDetail.game.id)}
+              >
+                修改此場紀錄
+              </Button>
+              <Button
+                color="red"
+                floated="left"
+                onClick={() => handleDeleteGame(selectedGameDetail.game.id)}
+              >
+                刪除此場紀錄
+              </Button>
+            </>
           )}
           <Button primary onClick={() => setIsModalOpen(false)}>
             關閉
