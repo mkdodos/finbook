@@ -18,20 +18,31 @@ export default function App() {
     <BrowserRouter>
       <div style={{ textAlign: "center", marginBottom: "10px" }}>
         <Menu compact>
-          <Menu.Item as={Link} to="/generic-page">
-            通用頁面
+          <Menu.Item as={Link} to="/game">
+            Game
           </Menu.Item>
 
-          <Menu.Item as={Link} to="/costco">
-            好市多
+          <Menu.Item as={Link} to="/game2">
+            Game2
           </Menu.Item>
+          <Dropdown item text="Manager">
+            <DropdownMenu>
+              <Menu.Item as={Link} to="/generic-page">
+                通用頁面
+              </Menu.Item>
 
-          <Menu.Item as={Link} to="/stocks">
-            股票基本資料
-          </Menu.Item>
-          <Menu.Item as={Link} to="/stock-trades">
-            股票交易
-          </Menu.Item>
+              <Menu.Item as={Link} to="/costco">
+                好市多
+              </Menu.Item>
+
+              <Menu.Item as={Link} to="/stocks">
+                股票基本資料
+              </Menu.Item>
+              <Menu.Item as={Link} to="/stock-trades">
+                股票交易
+              </Menu.Item>
+            </DropdownMenu>
+          </Dropdown>
         </Menu>
       </div>
 
