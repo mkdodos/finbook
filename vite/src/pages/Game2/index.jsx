@@ -20,10 +20,13 @@ export default function Index() {
     handleViewDetails(8);
   }, []);
 
+  // {  "id", "game_name" , "played_date"}
+
   const fetchGames = async () => {
     try {
       const res = await axios.get(`${API_URL}?action=get_games`);
       setGamesList(res.data);
+      console.log(res.data);
     } catch (err) {
       console.error(err);
     }
@@ -38,10 +41,13 @@ export default function Index() {
     }
   };
 
+  // {  "id", "game_id", "player_id", "round_or_role",  "score", "player_name"}
+
   const fetchScores = async () => {
     try {
       const res = await axios.get(`${API_URL}?action=get_game_scores`);
       setScoresList(res.data);
+      console.log(res.data);
     } catch (err) {
       console.error(err);
     }
@@ -58,10 +64,41 @@ export default function Index() {
     }
   };
 
+  const handleDeleteGame = async (gameId) => {
+    if (!window.confirm("確定要刪除這場遊戲的成績嗎？此動作無法復原。")) {
+      return;
+    }
+
+    try {
+      const res = await axios.post(`${API_URL}?action=delete_game`, {
+        game_id: gameId,
+      });
+      if (res.data.success) {
+        // setMessage({ type: "success", content: "遊戲成績已成功刪除！" });
+        fetchGames();
+        // if (isModalOpen) setIsModalOpen(false);
+        // if (editingGameId === gameId) handleCancelEdit(); // 若剛好在編輯這筆則清除編輯狀態
+      } else {
+        setMessage({ type: "error", content: "刪除失敗：" + res.data.error });
+      }
+    } catch (err) {
+      setMessage({ type: "error", content: "網路連線錯誤" });
+    }
+  };
+
   return (
     <div>
-      <EditForm players={players} />
-      <Scores players={players} gamesList={gamesList} scoresList={scoresList} />
+      <EditForm
+        players={players}
+        setGamesList={setGamesList}
+        setScoresList={setScoresList}
+      />
+      <Scores
+        handleDeleteGame={handleDeleteGame}
+        players={players}
+        gamesList={gamesList}
+        scoresList={scoresList}
+      />
     </div>
   );
 }

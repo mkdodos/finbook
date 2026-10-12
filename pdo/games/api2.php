@@ -108,6 +108,22 @@ elseif ($method === 'POST' && $action === 'add_player') {
     $stmt->execute([$data['name']]);
     echo json_encode(['success' => true, 'id' => $pdo->lastInsertId()]);
 }
+
+// 新增場次
+elseif ($method === 'POST' && $action === 'add_game') {
+    $data = json_decode(file_get_contents('php://input'), true);
+    $stmt = $pdo->prepare("INSERT INTO games (played_date) VALUES (?)");
+    $stmt->execute([$data['played_date']]);
+    $gameId = $pdo->lastInsertId();
+
+    $records = $data['records']; // 陣列：[{player_id, role, score}, ...]
+    $scoreStmt = $pdo->prepare("INSERT INTO game_scores (game_id, player_id, round_or_role, score) VALUES (?, ?, ?, ?)");
+        foreach ($records as $record) {
+            $scoreStmt->execute([$gameId, $record['player_id'], $record['round_or_role'], $record['score']]);
+        }
+    echo json_encode(['success' => true, 'id' => $gameId]);
+}
+
 elseif ($method === 'POST' && $action === 'save_game') {
     // 儲存整場遊戲記錄 (包含 4 個角色/回合的分數)
     $data = json_decode(file_get_contents('php://input'), true);

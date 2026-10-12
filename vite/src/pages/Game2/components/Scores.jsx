@@ -1,12 +1,20 @@
 import React from "react";
 import { Button, Table, Segment, Header } from "semantic-ui-react";
 
-export default function Scores({ players, gamesList, scoresList }) {
+export default function Scores({
+  players,
+  gamesList,
+  scoresList,
+  handleDeleteGame,
+}) {
+  // const handleDeleteGame = (gameId) => {
+  //   console.log(gameId);
+  // };
   return (
     <div>
       <Segment>
         <Header as="h3">歷史戰績列表</Header>
-        <Table celled striped textAlign="center">
+        <Table celled unstackable textAlign="center">
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>日期</Table.HeaderCell>
@@ -37,7 +45,9 @@ export default function Scores({ players, gamesList, scoresList }) {
 
                 return (
                   <Table.Row key={g.id}>
-                    <Table.Cell>{g.played_date}</Table.Cell>
+                    <Table.Cell>
+                      {g.played_date}({g.id})
+                    </Table.Cell>
 
                     {/* 依照 PLAYERS 順序對應每一位玩家的分數 */}
                     {players.map((player) => {
@@ -72,10 +82,10 @@ export default function Scores({ players, gamesList, scoresList }) {
                     <Table.Cell>
                       <Button
                         size="small"
-                        color="blue"
-                        onClick={() => handleViewDetails(g.id)}
+                        color="red"
+                        onClick={() => handleDeleteGame(g.id)}
                       >
-                        詳情
+                        刪除
                       </Button>
                     </Table.Cell>
                   </Table.Row>
