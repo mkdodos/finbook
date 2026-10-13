@@ -6,10 +6,10 @@ import { API_HOST } from "@/global/constants";
 const API_URL = `${API_HOST}/games/api2.php`;
 
 const initialPlayers = [
-  { id: 1, round_or_role: "喵咪", score: "" },
-  { id: 2, round_or_role: "飛原", score: "" },
-  { id: 3, round_or_role: "森林", score: "" },
-  { id: 4, round_or_role: "遊俠", score: "" },
+  { player_id: 1, round_or_role: "喵咪", score: "" },
+  { player_id: 2, round_or_role: "飛原", score: "" },
+  { player_id: 3, round_or_role: "森林", score: "" },
+  { player_id: 4, round_or_role: "遊俠", score: "" },
 ];
 
 export default function EditForm({
@@ -19,6 +19,7 @@ export default function EditForm({
   playedDate,
   setPlayedDate,
   editingGameScores,
+  editingGameId,
 }) {
   const ROLES = ["喵咪", "飛原", "森林", "遊俠"];
 
@@ -42,16 +43,16 @@ export default function EditForm({
     } else {
       setPlayerScore(initialPlayers);
     }
-  }, [editingGameScores]);
+  }, [editingGameId]);
 
   // console.log(playerScore);
 
   const handleChange = (targetPlayer, e) => {
     const value = Number(e.target.value); // 取得輸入框的值並轉成數字
-
+    console.log(targetPlayer);
     setPlayerScore((prevScores) =>
       prevScores.map((item) =>
-        item.id === targetPlayer
+        item.player_id === targetPlayer
           ? { ...item, score: value, player_id: targetPlayer }
           : item,
       ),
@@ -64,10 +65,11 @@ export default function EditForm({
 
   // 角色下拉選取
   const handleRoleChange = (e, { value }, targetPlayer) => {
-    console.log(value);
+    // console.log(value);
+    console.log(targetPlayer);
     setPlayerScore((prevScores) =>
       prevScores.map((item) =>
-        item.id === targetPlayer
+        item.player_id === targetPlayer
           ? { ...item, round_or_role: value, player_id: targetPlayer }
           : item,
       ),
@@ -77,6 +79,7 @@ export default function EditForm({
   const handleSave = async () => {
     // 將資料傳給後端,取得新增後的id
 
+    console.log(playerScore);
     const res = await axios.post(`${API_URL}?action=add_game`, {
       played_date: playedDate,
       records: playerScore,
@@ -92,8 +95,9 @@ export default function EditForm({
       game_id: newId,
     }));
     setScoresList((prev) => [...prev, ...newScores]);
-    console.log("playerScore", newScores);
-    console.log(players);
+    setPlayerScore(initialPlayers);
+    // console.log("playerScore", newScores);
+    // console.log(players);
   };
 
   return (
@@ -114,7 +118,7 @@ export default function EditForm({
             {/* 改成對 playerScore 進行 map，確保資料與畫面同步 */}
             {playerScore?.map((item) => {
               return (
-                <Table.Cell key={item.id}>
+                <Table.Cell key={item.player_id}>
                   <Dropdown
                     placeholder="-- 選擇角色 --"
                     fluid
@@ -124,13 +128,16 @@ export default function EditForm({
                       text: role,
                       value: role,
                     }))}
-                    onChange={(e, data) => handleRoleChange(e, data, item.id)}
+                    onChange={(e, data) =>
+                      handleRoleChange(e, data, item.player_id)
+                    }
+                    value={item.round_or_role || ""} // 🔍 這裡剛剛漏掉了！加上這行才能正確把資料庫或狀態中的角色顯示在畫面上
                   />
 
                   <Input
                     type="number"
                     value={item.score ?? ""} // 綁定狀態中的 score，避免 undefined 警告
-                    onChange={(e) => handleChange(item.id, e)}
+                    onChange={(e) => handleChange(item.player_id, e)}
                   />
                 </Table.Cell>
               );

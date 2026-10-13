@@ -108,7 +108,7 @@ export default function Index() {
         playedDate={playedDate}
         setPlayedDate={setPlayedDate}
         editingGameScores={editingGameScores}
-        // editingGameId={editingGameId}
+        editingGameId={editingGameId}
       />
       <Scores
         handleDeleteGame={handleDeleteGame}

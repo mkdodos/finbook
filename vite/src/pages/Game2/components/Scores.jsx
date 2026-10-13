@@ -33,7 +33,7 @@ export default function Scores({
                   {player.name}
                 </Table.HeaderCell>
               ))}
-              <Table.HeaderCell>操作</Table.HeaderCell>
+              <Table.HeaderCell colSpan={2}>操作</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -79,15 +79,14 @@ export default function Scores({
                         編輯
                       </Button>
                     </Table.Cell>
-                    {/* <Table.Cell>
+                    <Table.Cell>
                       <Button
                         size="small"
-                        color="red"
                         onClick={() => handleDeleteGame(g.id)}
                       >
                         刪除
                       </Button>
-                    </Table.Cell> */}
+                    </Table.Cell>
                   </Table.Row>
                 );
               })
