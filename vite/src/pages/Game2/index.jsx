@@ -98,9 +98,17 @@ export default function Index() {
 
   return (
     <div>
-      {editingGameId}
-      {JSON.stringify(editingGameScores)}
+      {/* {editingGameId} */}
+      {/* {JSON.stringify(editingGameScores)} */}
 
+      <Scores
+        handleDeleteGame={handleDeleteGame}
+        players={players}
+        gamesList={gamesList}
+        scoresList={scoresList}
+        setPlayedDate={setPlayedDate}
+        setEditingGameId={setEditingGameId}
+      />
       <EditForm
         players={players}
         setGamesList={setGamesList}
@@ -109,13 +117,6 @@ export default function Index() {
         setPlayedDate={setPlayedDate}
         editingGameScores={editingGameScores}
         editingGameId={editingGameId}
-      />
-      <Scores
-        handleDeleteGame={handleDeleteGame}
-        players={players}
-        gamesList={gamesList}
-        scoresList={scoresList}
-        setPlayedDate={setPlayedDate}
         setEditingGameId={setEditingGameId}
       />
     </div>

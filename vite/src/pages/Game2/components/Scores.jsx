@@ -53,9 +53,7 @@ export default function Scores({
 
                 return (
                   <Table.Row key={g.id}>
-                    <Table.Cell>
-                      {g.played_date}({g.id})
-                    </Table.Cell>
+                    <Table.Cell>{g.played_date}</Table.Cell>
 
                     {/* 依照 PLAYERS 順序對應每一位玩家的分數 */}
                     {players.map((player) => {
