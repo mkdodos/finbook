@@ -40,7 +40,7 @@ $action = $_GET['action'] ?? '';
 
 // 取得所有歷史遊戲場次列表
 if ($method === 'GET' && $action === 'get_games') {
-    $stmt = $pdo->query("SELECT * FROM games ORDER BY played_date DESC, id DESC");
+    $stmt = $pdo->query("SELECT * FROM games ORDER BY played_date");
     echo json_encode($stmt->fetchAll());
 }
 

@@ -7,9 +7,12 @@ export default function Scores({
   scoresList,
   handleDeleteGame,
 }) {
-  // const handleDeleteGame = (gameId) => {
-  //   console.log(gameId);
-  // };
+  const handleEditGame = (gameId) => {
+    // 篩選該場次的所有得分
+    const data = scoresList.filter((item) => item.game_id === gameId);
+    console.log(data);
+  };
+  console.log(scoresList);
   return (
     <div>
       <Segment>
@@ -51,35 +54,27 @@ export default function Scores({
 
                     {/* 依照 PLAYERS 順序對應每一位玩家的分數 */}
                     {players.map((player) => {
-                      // 篩選出該玩家在這場遊戲中的所有角色得分
-                      //   const playerRecords = gameScores.filter(
-                      //     (item) => String(item.player_id) === String(player.id),
-                      //   );
-                      const playerRecords = gameScores.find(
+                      // 篩選出該玩家在這場遊戲中的得分
+                      const playerRecord = gameScores.find(
                         (item) => String(item.player_id) === String(player.id),
                       );
-
-                      //   if (playerRecords.length === 0) {
-                      //     return <Table.Cell key={player.id}>-</Table.Cell>;
-                      //   }
-
-                      // 計算該玩家 4 個角色的總分（若只需顯示各角色細項也可自行調整）
-                      //   const totalScore = playerRecords.reduce(
-                      //     (sum, cur) => sum + (parseInt(cur.score) || 0),
-                      //     0,
-                      //   );
 
                       return (
                         <Table.Cell key={player.id}>
                           <strong>
-                            {playerRecords?.round_or_role}/
-                            {playerRecords?.score} 分
+                            {playerRecord?.round_or_role}/{playerRecord?.score}{" "}
+                            分
                           </strong>
                         </Table.Cell>
                       );
                     })}
 
                     <Table.Cell>
+                      <Button size="small" onClick={() => handleEditGame(g.id)}>
+                        編輯
+                      </Button>
+                    </Table.Cell>
+                    {/* <Table.Cell>
                       <Button
                         size="small"
                         color="red"
@@ -87,7 +82,7 @@ export default function Scores({
                       >
                         刪除
                       </Button>
-                    </Table.Cell>
+                    </Table.Cell> */}
                   </Table.Row>
                 );
               })

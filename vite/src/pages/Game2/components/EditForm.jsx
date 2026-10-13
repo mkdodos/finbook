@@ -17,6 +17,7 @@ export default function EditForm({ players, setGamesList, setScoresList }) {
 
   // 初始化狀態
   //   const [playerScore, setPlayerScore] = useState(players);
+  // 單場4筆得分[]
   const [playerScore, setPlayerScore] = useState(initialPlayers);
   const [playedDate, setPlayedDate] = useState(
     new Date().toISOString().substring(0, 10),
@@ -32,6 +33,10 @@ export default function EditForm({ players, setGamesList, setScoresList }) {
           : item,
       ),
     );
+  };
+
+  const handleDateChange = (e) => {
+    setPlayedDate(e.target.value);
   };
 
   // 角色下拉選取
@@ -75,22 +80,17 @@ export default function EditForm({ players, setGamesList, setScoresList }) {
         <Table.Body>
           <Table.Row>
             <Table.Cell>
-              <Input type="date" value={playedDate} />
+              <Input
+                type="date"
+                value={playedDate}
+                onChange={handleDateChange}
+              />
             </Table.Cell>
 
             {/* 改成對 playerScore 進行 map，確保資料與畫面同步 */}
             {playerScore.map((item) => {
               return (
                 <Table.Cell key={item.id}>
-                  {/* <select className="ui dropdown" onChange={handleRoleChange}>
-                    <option value="">-- 選擇角色 --</option>
-                    {ROLES.map((role, idx) => (
-                      <option key={idx} value={role}>
-                        {role}
-                      </option>
-                    ))}
-                  </select> */}
-
                   <Dropdown
                     placeholder="-- 選擇角色 --"
                     fluid
