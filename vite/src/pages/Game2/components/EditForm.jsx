@@ -12,16 +12,21 @@ const initialPlayers = [
   { id: 4, round_or_role: "遊俠", score: "" },
 ];
 
-export default function EditForm({ players, setGamesList, setScoresList }) {
+export default function EditForm({
+  players,
+  setGamesList,
+  setScoresList,
+  playedDate,
+  setPlayedDate,
+  editingGameScores,
+}) {
   const ROLES = ["喵咪", "飛原", "森林", "遊俠"];
 
   // 初始化狀態
   //   const [playerScore, setPlayerScore] = useState(players);
   // 單場4筆得分[]
-  const [playerScore, setPlayerScore] = useState(initialPlayers);
-  const [playedDate, setPlayedDate] = useState(
-    new Date().toISOString().substring(0, 10),
-  );
+  // const [playerScore, setPlayerScore] = useState(initialPlayers);
+  const [playerScore, setPlayerScore] = useState(editingGameScores);
 
   const handleChange = (targetPlayer, e) => {
     const value = Number(e.target.value); // 取得輸入框的值並轉成數字
@@ -75,7 +80,8 @@ export default function EditForm({ players, setGamesList, setScoresList }) {
 
   return (
     <div>
-      {JSON.stringify(playerScore)}
+      {/* {editingGameId} */}
+      {/* {JSON.stringify(playerScore)} */}
       <Table celled>
         <Table.Body>
           <Table.Row>
@@ -88,7 +94,7 @@ export default function EditForm({ players, setGamesList, setScoresList }) {
             </Table.Cell>
 
             {/* 改成對 playerScore 進行 map，確保資料與畫面同步 */}
-            {playerScore.map((item) => {
+            {editingGameScores?.map((item) => {
               return (
                 <Table.Cell key={item.id}>
                   <Dropdown

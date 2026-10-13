@@ -6,18 +6,23 @@ export default function Scores({
   gamesList,
   scoresList,
   handleDeleteGame,
+  setPlayedDate,
+  setEditingGameId,
 }) {
-  const handleEditGame = (gameId) => {
+  const handleEditGame = (game) => {
     // 篩選該場次的所有得分
-    const data = scoresList.filter((item) => item.game_id === gameId);
+    const data = scoresList.filter((item) => item.game_id === game.id);
     console.log(data);
+    console.log(game.played_date);
+    setPlayedDate(game.played_date);
+    setEditingGameId(game.id);
   };
-  console.log(scoresList);
+
   return (
     <div>
       <Segment>
         <Header as="h3">歷史戰績列表</Header>
-        <Table celled unstackable textAlign="center">
+        <Table celled unstackable selectable textAlign="center">
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>日期</Table.HeaderCell>
@@ -70,7 +75,7 @@ export default function Scores({
                     })}
 
                     <Table.Cell>
-                      <Button size="small" onClick={() => handleEditGame(g.id)}>
+                      <Button size="small" onClick={() => handleEditGame(g)}>
                         編輯
                       </Button>
                     </Table.Cell>

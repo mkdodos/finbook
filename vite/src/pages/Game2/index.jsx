@@ -13,6 +13,16 @@ export default function Index() {
   const [scoresList, setScoresList] = useState([]);
   const [selectedGameDetail, setSelectedGameDetail] = useState(null);
 
+  const [playedDate, setPlayedDate] = useState(
+    new Date().toISOString().substring(0, 10),
+  );
+
+  // 編輯中的場次id
+  const [editingGameId, setEditingGameId] = useState(0);
+  const editingGameScores = scoresList.filter(
+    (item) => item.game_id === editingGameId,
+  );
+
   useEffect(() => {
     fetchGames();
     fetchPlayers();
@@ -88,16 +98,25 @@ export default function Index() {
 
   return (
     <div>
+      {editingGameId}
+      {JSON.stringify(editingGameScores)}
+
       <EditForm
         players={players}
         setGamesList={setGamesList}
         setScoresList={setScoresList}
+        playedDate={playedDate}
+        setPlayedDate={setPlayedDate}
+        editingGameScores={editingGameScores}
+        // editingGameId={editingGameId}
       />
       <Scores
         handleDeleteGame={handleDeleteGame}
         players={players}
         gamesList={gamesList}
         scoresList={scoresList}
+        setPlayedDate={setPlayedDate}
+        setEditingGameId={setEditingGameId}
       />
     </div>
   );
