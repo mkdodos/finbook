@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Table, Input, Button, Dropdown } from "semantic-ui-react";
 import axios from "axios";
 
@@ -26,7 +26,25 @@ export default function EditForm({
   //   const [playerScore, setPlayerScore] = useState(players);
   // 單場4筆得分[]
   // const [playerScore, setPlayerScore] = useState(initialPlayers);
-  const [playerScore, setPlayerScore] = useState(editingGameScores);
+  // const [playerScore, setPlayerScore] = useState(editingGameScores);
+
+  // 初始化狀態：如果有帶入 editingGameScores 則使用它，否則使用 initialPlayers (空表單)
+  const [playerScore, setPlayerScore] = useState(
+    editingGameScores && editingGameScores.length > 0
+      ? editingGameScores
+      : initialPlayers,
+  );
+
+  // 🔥 關鍵修正：當點擊不同歷史紀錄進行編輯（editingGameScores 改變）時，同步更新表單狀態
+  useEffect(() => {
+    if (editingGameScores && editingGameScores.length > 0) {
+      setPlayerScore(editingGameScores);
+    } else {
+      setPlayerScore(initialPlayers);
+    }
+  }, [editingGameScores]);
+
+  // console.log(playerScore);
 
   const handleChange = (targetPlayer, e) => {
     const value = Number(e.target.value); // 取得輸入框的值並轉成數字
@@ -94,7 +112,7 @@ export default function EditForm({
             </Table.Cell>
 
             {/* 改成對 playerScore 進行 map，確保資料與畫面同步 */}
-            {editingGameScores?.map((item) => {
+            {playerScore?.map((item) => {
               return (
                 <Table.Cell key={item.id}>
                   <Dropdown

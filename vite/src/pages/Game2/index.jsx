@@ -18,7 +18,7 @@ export default function Index() {
   );
 
   // 編輯中的場次id
-  const [editingGameId, setEditingGameId] = useState(0);
+  const [editingGameId, setEditingGameId] = useState(null);
   const editingGameScores = scoresList.filter(
     (item) => item.game_id === editingGameId,
   );
