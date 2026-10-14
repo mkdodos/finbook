@@ -11,6 +11,7 @@ import ReceiptRecords from "./pages/ReceiptRecords";
 import GenericPage from "./pages/GenericPage";
 import Game from "./pages/Game";
 import Game2 from "./pages/Game2";
+import Boardgame from "./pages/Boardgame";
 import { Menu, Dropdown, DropdownMenu } from "semantic-ui-react";
 
 export default function App() {
@@ -18,6 +19,9 @@ export default function App() {
     <BrowserRouter>
       <div style={{ textAlign: "center", marginBottom: "10px" }}>
         <Menu compact>
+          <Menu.Item as={Link} to="/boardgame">
+            Boardgame
+          </Menu.Item>
           <Menu.Item as={Link} to="/game">
             Game
           </Menu.Item>
@@ -58,6 +62,7 @@ export default function App() {
 
       {/* 依據網址路徑切換渲染對應組件 */}
       <Routes>
+        <Route path="/boardgame" element={<Boardgame />} />
         <Route path="/game" element={<Game />} />
         <Route path="/game2" element={<Game2 />} />
         <Route path="/generic-page" element={<GenericPage />} />

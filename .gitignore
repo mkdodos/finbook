@@ -25,4 +25,5 @@ dist-ssr
 
 # 排除真實設定檔
 pdo/config.php
+pdo/boardgame/config.php
 
