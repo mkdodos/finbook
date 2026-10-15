@@ -11,15 +11,31 @@ const apiClient = axios.create({
 });
 
 // 取得所有計分卡與戰績資料
-export const getScorecards = async () => {
+// src/api.js
+
+// 取得所有計分卡與戰績資料（支援選擇性傳入遊戲名稱進行過濾）
+export const getScorecards = async (gameName = "") => {
   try {
-    const response = await apiClient.get("?action=get_scorecards");
+    const url = gameName
+      ? `?action=get_scorecards&game=${encodeURIComponent(gameName)}`
+      : "?action=get_scorecards";
+
+    const response = await apiClient.get(url);
     return response.data;
   } catch (error) {
     console.error("取得戰績資料失敗:", error);
     throw error;
   }
 };
+// export const getScorecards = async () => {
+//   try {
+//     const response = await apiClient.get("?action=get_scorecards");
+//     return response.data;
+//   } catch (error) {
+//     console.error("取得戰績資料失敗:", error);
+//     throw error;
+//   }
+// };
 
 // 新增遊戲資料範例
 export const addGame = async (gameName) => {

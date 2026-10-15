@@ -24,6 +24,8 @@ $input = json_decode($inputJSON, true) ?? [];
 try {
     switch ($action) {
         case 'get_scorecards':
+            // 接收前端傳來的搜尋關鍵字
+            $searchGame = $_GET['game'] ?? '';
             // 查詢所有戰績資料
             $sql = "SELECT 
                         scorecard.id AS scorecard_id,
@@ -40,7 +42,17 @@ try {
                     JOIN game ON session.game_id = game.id
                     JOIN player ON scorecard.player_id = player.id
                     JOIN role ON scorecard.role_id = role.id";
-            $stmt = $pdo->query($sql);
+
+          if (!empty($searchGame)) {
+                // 使用問號 ? 佔位符進行模糊查詢
+                $sql .= " WHERE game.name LIKE ?";
+                $stmt = $pdo->prepare($sql);
+                // 透過陣列依序傳入參數與萬用字元
+                $stmt->execute(['%' . $searchGame . '%']);
+            } else {
+                $stmt = $pdo->query($sql);
+            }
+            // $stmt = $pdo->query($sql);
             $records = $stmt->fetchAll();
             
             echo json_encode($records, JSON_UNESCAPED_UNICODE);

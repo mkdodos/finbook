@@ -8,20 +8,38 @@ import {
   Segment,
   Button,
   Icon,
+  Input,
 } from "semantic-ui-react";
 import { getScorecards, deleteScorecard } from "./api";
 import ScorecardForm from "./ScorecardForm";
+import Phone from "./components/Phone";
+import Game from "./game";
 
 function index() {
   const [scorecards, setScorecards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false); // 控制 Modal 顯示狀態
   const [editingData, setEditingData] = useState(null); // 紀錄目前正在編輯的資料
+  // 新增：搜尋關鍵字狀態
+  const [searchGame, setSearchGame] = useState("");
 
   // 取得戰績資料的函式
-  const fetchScorecards = async () => {
+  // const fetchScorecards = async () => {
+  //   try {
+  //     const data = await getScorecards();
+  //     setScorecards(data);
+  //   } catch (err) {
+  //     console.error("載入戰績失敗:", err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // 修改：載入資料時可帶入遊戲名稱進行後端過濾
+  const fetchScorecards = async (gameFilter = "") => {
+    setLoading(true);
     try {
-      const data = await getScorecards();
+      const data = await getScorecards(gameFilter);
       setScorecards(data);
     } catch (err) {
       console.error("載入戰績失敗:", err);
@@ -33,6 +51,11 @@ function index() {
   useEffect(() => {
     fetchScorecards();
   }, []);
+
+  // 新增：點擊搜尋按鈕或按下 Enter 的處理函式
+  const handleSearch = () => {
+    fetchScorecards(searchGame);
+  };
 
   // 點擊新增按鈕
   const handleAddClick = () => {
@@ -60,14 +83,41 @@ function index() {
     // }
   };
 
+  // 根據遊戲名稱進行過濾篩選
+  // const filteredScorecards = scorecards.filter((item) =>
+  //   item.game_name.toLowerCase().includes(searchGame.toLowerCase()),
+  // );
+
   return (
     <Container style={{ marginTop: "40px" }}>
+      {/* <Phone rows={scorecards} /> */}
+      <Game />
+
+      {/* 新增：後端過濾搜尋列 */}
+      <Segment style={{ marginTop: "20px" }}>
+        <Input
+          action={{
+            icon: "search",
+            content: "搜尋",
+            onClick: handleSearch,
+          }}
+          placeholder="輸入遊戲名稱後端搜尋..."
+          value={searchGame}
+          onChange={(e) => setSearchGame(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleSearch();
+          }}
+          fluid
+        />
+      </Segment>
+
       {/* 傳入 fetchScorecards 讓新增成功後自動更新表格 */}
       {/* 放置 Modal 表單 */}
       <ScorecardForm
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSuccess={fetchScorecards}
+        onSuccess={() => fetchScorecards(searchGame)} // 儲存成功後維持搜尋條件更新
+        // onSuccess={fetchScorecards}
         editData={editingData}
       />
 
