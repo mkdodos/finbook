@@ -12,8 +12,9 @@ import {
 } from "semantic-ui-react";
 import { getScorecards, deleteScorecard } from "./api";
 import ScorecardForm from "./ScorecardForm";
-import Phone from "./components/Phone";
+
 import Game from "./game";
+import Session from "./session";
 
 function index() {
   const [scorecards, setScorecards] = useState([]);
@@ -22,18 +23,6 @@ function index() {
   const [editingData, setEditingData] = useState(null); // 紀錄目前正在編輯的資料
   // 新增：搜尋關鍵字狀態
   const [searchGame, setSearchGame] = useState("");
-
-  // 取得戰績資料的函式
-  // const fetchScorecards = async () => {
-  //   try {
-  //     const data = await getScorecards();
-  //     setScorecards(data);
-  //   } catch (err) {
-  //     console.error("載入戰績失敗:", err);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   // 修改：載入資料時可帶入遊戲名稱進行後端過濾
   const fetchScorecards = async (gameFilter = "") => {
@@ -83,15 +72,10 @@ function index() {
     // }
   };
 
-  // 根據遊戲名稱進行過濾篩選
-  // const filteredScorecards = scorecards.filter((item) =>
-  //   item.game_name.toLowerCase().includes(searchGame.toLowerCase()),
-  // );
-
   return (
     <Container style={{ marginTop: "40px" }}>
-      {/* <Phone rows={scorecards} /> */}
       <Game />
+      <Session />
 
       {/* 新增：後端過濾搜尋列 */}
       <Segment style={{ marginTop: "20px" }}>
