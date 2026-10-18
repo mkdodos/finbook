@@ -1,29 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Modal, Item } from "semantic-ui-react";
 import { addGame, update, getGames } from "../api";
+import { useGameOptions } from "./useGameOptions";
 
-function EditForm({ isOpen, onClose, onSuccess, editData }) {
+function EditForm({ isOpen, onClose, onSuccess, editData, setIsModalOpen }) {
   const initialFormData = {
-    play_date: "",
+    play_date: new Date().toISOString().substring(0, 10),
     game_id: "",
   };
   const [formData, setFormData] = useState(initialFormData);
 
-  const [gameOptions, setGameOptions] = useState([]);
+  // const [gameOptions, setGameOptions] = useState([]);
+  // 一行程式碼搞定資料與載入狀態
+  const { options, loading } = useGameOptions();
 
   useEffect(() => {
     if (isOpen) {
-      getGames().then((data) => {
-        const options = data.map((p) => ({
-          key: p.id,
-          text: p.name,
-          value: p.id,
-        }));
-        setGameOptions(options);
-      });
+      // getGames().then((data) => {
+      //   const options = data.map((p) => ({
+      //     key: p.id,
+      //     text: p.name,
+      //     value: p.id,
+      //   }));
+      //   setGameOptions(options);
+      // });
 
       if (editData) {
-        console.log(editData);
+        // console.log(editData);
         setFormData({
           play_date: editData.play_date || "",
           game_id: editData.game_id || "",
@@ -50,47 +53,19 @@ function EditForm({ isOpen, onClose, onSuccess, editData }) {
       }
 
       if (onSuccess) onSuccess();
-      if (onClose) onClose();
+      setIsModalOpen(false);
+      // if (onClose) onClose();
     } catch (err) {
       console.log(err);
       alert("儲存失敗，請檢查輸入內容");
     }
   };
 
-  // console.log(getGames);
-
-  // const options = getGames.map((item) => ({
-  //   key: item.id,
-  //   text: item.text,
-  //   value: item.value,
-  // }));
-
-  // const options = [
-  //   {
-  //     key: 1,
-  //     text: "d",
-  //     value: "13",
-  //   },
-  //   {
-  //     key: 2,
-  //     text: "c",
-  //     value: "12",
-  //   },
-  // ];
-
   return (
     <Modal open={isOpen} onClose={onClose} size="small">
       <Modal.Header>{editData ? "✏️ 編輯" : "📝 新增"}</Modal.Header>
       <Modal.Content>
         <Form onSubmit={handleSubmit} id="scorecard-form">
-          <Form.Select
-            search
-            label="game_name"
-            name="game_id"
-            value={formData.game_id || ""}
-            onChange={handleChange}
-            options={gameOptions}
-          />
           <Form.Input
             label="日期"
             name="play_date"
@@ -99,6 +74,16 @@ function EditForm({ isOpen, onClose, onSuccess, editData }) {
             onChange={handleChange}
             required
           />
+          <Form.Select
+            search
+            label="game_name"
+            name="game_id"
+            value={formData.game_id || ""}
+            onChange={handleChange}
+            options={options}
+            loading={loading}
+          />
+
           <Form.Input
             label="遊戲名稱"
             name="game_id"
@@ -109,7 +94,7 @@ function EditForm({ isOpen, onClose, onSuccess, editData }) {
         </Form>
       </Modal.Content>
       <Modal.Actions>
-        <Button onClick={onClose}>取消</Button>
+        <Button onClick={() => setIsModalOpen(false)}>取消</Button>
         <Button primary type="submit" form="scorecard-form">
           儲存
         </Button>

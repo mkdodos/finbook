@@ -75,7 +75,8 @@ export default function Game() {
       {/* 放置 Modal 表單 */}
       <EditForm
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        setIsModalOpen={setIsModalOpen}
+        // onClose={() => setIsModalOpen(false)}
         onSuccess={() => fetchData()} // 儲存成功後維持搜尋條件更新
         // onSuccess={fetchScorecards}
         editData={editingData}

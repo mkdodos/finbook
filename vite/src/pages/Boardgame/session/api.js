@@ -72,7 +72,7 @@ export const deleteRow = async (id) => {
     });
     return response.data;
   } catch (error) {
-    console.error("刪除戰績失敗:", error);
+    console.error("刪除失敗:", error);
     throw error;
   }
 };

@@ -103,7 +103,7 @@ try {
                 throw new Exception("缺少要刪除的 ID");
             }
             
-            $sql = "DELETE FROM game WHERE id = :id";
+            $sql = "DELETE FROM $table WHERE id = :id";
             $stmt = $pdo->prepare($sql);
             $stmt->execute(['id' => $id]);
             
