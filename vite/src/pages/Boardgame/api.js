@@ -27,15 +27,6 @@ export const getScorecards = async (gameName = "") => {
     throw error;
   }
 };
-// export const getScorecards = async () => {
-//   try {
-//     const response = await apiClient.get("?action=get_scorecards");
-//     return response.data;
-//   } catch (error) {
-//     console.error("取得戰績資料失敗:", error);
-//     throw error;
-//   }
-// };
 
 // 新增遊戲資料範例
 export const addGame = async (gameName) => {
@@ -59,6 +50,12 @@ export const addScorecard = async (data) => {
     console.error("新增戰績失敗:", error);
     throw error;
   }
+};
+
+// 取得所有場次
+export const getSessions = async () => {
+  const response = await apiClient.get("?action=get_sessions");
+  return response.data;
 };
 
 // 取得所有玩家列表

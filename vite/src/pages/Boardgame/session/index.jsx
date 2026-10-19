@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { getData, deleteRow } from "./api";
 import TableView from "./components/TableView";
 import EditForm from "./components/EditForm";
+import ScoreForm from "./components/ScoreForm";
 import { Header, Button, Icon } from "semantic-ui-react";
 
 export default function Game() {
@@ -53,6 +54,11 @@ export default function Game() {
     // }
   };
 
+  const handleAddScore = (item) => {
+    console.log(item);
+    setEditingData(item);
+  };
+
   return (
     <>
       <div
@@ -72,7 +78,7 @@ export default function Game() {
           新增
         </Button>
       </div>
-      {/* 放置 Modal 表單 */}
+      {/* 編輯表單 */}
       <EditForm
         isOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
@@ -81,10 +87,14 @@ export default function Game() {
         // onSuccess={fetchScorecards}
         editData={editingData}
       />
+
+      {/* 分數表單 */}
+      <ScoreForm editData={editingData} />
       <TableView
         data={data}
         loading={loading}
         handleEdit={handleEdit}
+        handleAddScore={handleAddScore}
         handleDelete={handleDelete}
       />
     </>

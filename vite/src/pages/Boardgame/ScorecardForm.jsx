@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Modal } from "semantic-ui-react";
-import { getPlayers, getRoles, addScorecard, updateScorecard } from "./api";
+import {
+  getPlayers,
+  getRoles,
+  getSessions,
+  addScorecard,
+  updateScorecard,
+} from "./api";
 
 function ScorecardForm({ isOpen, onClose, onSuccess, editData }) {
   const [formData, setFormData] = useState({
@@ -10,11 +16,21 @@ function ScorecardForm({ isOpen, onClose, onSuccess, editData }) {
     points: "",
   });
 
+  const [sessionOptions, setSessionOptions] = useState([]);
   const [playerOptions, setPlayerOptions] = useState([]);
   const [roleOptions, setRoleOptions] = useState([]);
 
   useEffect(() => {
     if (isOpen) {
+      getSessions().then((data) => {
+        const options = data.map((p) => ({
+          key: p.id,
+          text: `${p.play_date}${p.name}`,
+          value: p.id,
+        }));
+        setSessionOptions(options);
+      });
+
       getPlayers().then((data) => {
         const options = data.map((p) => ({
           key: p.id,
@@ -77,8 +93,18 @@ function ScorecardForm({ isOpen, onClose, onSuccess, editData }) {
       <Modal.Content>
         <Form onSubmit={handleSubmit} id="scorecard-form">
           <Form.Input
-            label="場次 ID (Session ID)"
-            placeholder="例如: 1"
+            label="場次"
+            name="session_id"
+            value={formData.session_id}
+            onChange={handleChange}
+            required
+          />
+
+          <Form.Dropdown
+            label="選擇場次"
+            fluid
+            selection
+            options={sessionOptions}
             name="session_id"
             value={formData.session_id}
             onChange={handleChange}
@@ -106,7 +132,7 @@ function ScorecardForm({ isOpen, onClose, onSuccess, editData }) {
             name="role_id"
             value={formData.role_id}
             onChange={handleChange}
-            required
+            clearable
           />
 
           <Form.Input

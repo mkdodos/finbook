@@ -10,7 +10,13 @@ import {
   Input,
 } from "semantic-ui-react";
 
-export default function TableView({ data, loading, handleEdit, handleDelete }) {
+export default function TableView({
+  data,
+  loading,
+  handleEdit,
+  handleDelete,
+  handleAddScore,
+}) {
   return (
     <div>
       {loading ? (
@@ -44,7 +50,17 @@ export default function TableView({ data, loading, handleEdit, handleDelete }) {
                     {item.game_name}
                   </Table.Cell>
 
-                  <Table.Cell textAlign="center">
+                  <Table.Cell width={3} textAlign="center">
+                    {/* 新增按鈕 */}
+                    <Button
+                      size="mini"
+                      icon
+                      onClick={() => handleAddScore(item)}
+                      title="新增"
+                      style={{ marginRight: "5px" }}
+                    >
+                      <Icon name="plus" />
+                    </Button>
                     {/* 編輯按鈕 */}
                     <Button
                       color="yellow"

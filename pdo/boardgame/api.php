@@ -38,10 +38,10 @@ try {
                         role.name AS role_name,
                         scorecard.points
                     FROM scorecard
-                    JOIN session ON scorecard.session_id = session.id
-                    JOIN game ON session.game_id = game.id
-                    JOIN player ON scorecard.player_id = player.id
-                    JOIN role ON scorecard.role_id = role.id";
+                    LEFT JOIN session ON scorecard.session_id = session.id
+                    LEFT JOIN game ON session.game_id = game.id
+                    LEFT JOIN player ON scorecard.player_id = player.id
+                    LEFT JOIN role ON scorecard.role_id = role.id";
 
           if (!empty($searchGame)) {
                 // 使用問號 ? 佔位符進行模糊查詢
@@ -82,7 +82,7 @@ try {
             $role_id = $input['role_id'] ?? null;
             $points = $input['points'] ?? 0;
 
-            if (!$session_id || !$player_id || !$role_id) {
+            if (!$session_id || !$player_id ) {
                 throw new Exception("必要的關聯 ID 不能為空");
             }
 
@@ -102,10 +102,15 @@ try {
             ], JSON_UNESCAPED_UNICODE);
             break;
             
-        case 'get_players':
-            $stmt = $pdo->query("SELECT id, name FROM player");
+        case 'get_sessions':
+            $stmt = $pdo->query("SELECT session.id, play_date,game.name FROM `session` JOIN game ON game.id = session.game_id");
             echo json_encode($stmt->fetchAll(), JSON_UNESCAPED_UNICODE);
             break;
+
+        case 'get_players':
+        $stmt = $pdo->query("SELECT id, name FROM player");
+        echo json_encode($stmt->fetchAll(), JSON_UNESCAPED_UNICODE);
+        break;
 
         case 'get_roles':
             $stmt = $pdo->query("SELECT id, name, game_id FROM role");
@@ -136,7 +141,7 @@ try {
             $role_id = $input['role_id'] ?? null;
             $points = $input['points'] ?? 0;
 
-            if (!$id || !$session_id || !$player_id || !$role_id) {
+            if (!$id || !$session_id || !$player_id ) {
                 throw new Exception("必要的 ID 或關聯欄位不能為空");
             }
 
