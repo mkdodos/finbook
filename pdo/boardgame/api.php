@@ -41,15 +41,19 @@ try {
                     LEFT JOIN session ON scorecard.session_id = session.id
                     LEFT JOIN game ON session.game_id = game.id
                     LEFT JOIN player ON scorecard.player_id = player.id
-                    LEFT JOIN role ON scorecard.role_id = role.id";
+                    LEFT JOIN role ON scorecard.role_id = role.id
+                  
+                    
+                    ";
 
           if (!empty($searchGame)) {
                 // 使用問號 ? 佔位符進行模糊查詢
-                $sql .= " WHERE game.name LIKE ?";
+                $sql .= " WHERE game.name LIKE ?   ORDER BY game.id, session.play_date";
                 $stmt = $pdo->prepare($sql);
                 // 透過陣列依序傳入參數與萬用字元
                 $stmt->execute(['%' . $searchGame . '%']);
             } else {
+                $sql .= "   ORDER BY game.id, session.play_date";
                 $stmt = $pdo->query($sql);
             }
             // $stmt = $pdo->query($sql);
