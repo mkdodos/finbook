@@ -87,9 +87,7 @@ function ScorecardForm({ isOpen, onClose, onSuccess, editData }) {
 
   return (
     <Modal open={isOpen} onClose={onClose} size="small">
-      <Modal.Header>
-        {editData ? "✏️ 編輯戰績資料" : "📝 新增戰績資料"}
-      </Modal.Header>
+      <Modal.Header>{editData ? "✏️ 編輯" : "📝 新增戰績資料"}</Modal.Header>
       <Modal.Content>
         <Form onSubmit={handleSubmit} id="scorecard-form">
           <Form.Input

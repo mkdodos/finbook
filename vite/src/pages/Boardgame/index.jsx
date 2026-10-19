@@ -9,12 +9,15 @@ import {
   Button,
   Icon,
   Input,
+  Tab,
 } from "semantic-ui-react";
 import { getScorecards, deleteScorecard } from "./api";
 import ScorecardForm from "./ScorecardForm";
 
 import Game from "./game";
 import Session from "./session";
+
+import PivotTable from "./components/PivotTable";
 
 function index() {
   const [scorecards, setScorecards] = useState([]);
@@ -72,39 +75,143 @@ function index() {
     // }
   };
 
+  const panes = [
+    {
+      menuItem: "Pivot",
+      render: () => (
+        <Tab.Pane>
+          <PivotTable data={scorecards} />
+        </Tab.Pane>
+      ),
+    },
+    {
+      menuItem: "Game",
+      render: () => (
+        <Tab.Pane>
+          {" "}
+          <Game />
+        </Tab.Pane>
+      ),
+    },
+    {
+      menuItem: "場次",
+      render: () => (
+        <Tab.Pane>
+          {" "}
+          <Session />
+        </Tab.Pane>
+      ),
+    },
+    {
+      menuItem: "計分版",
+      render: () => (
+        <Tab.Pane>
+          {/* 新增：後端過濾搜尋列 */}
+          <Segment style={{ marginTop: "20px" }}>
+            <Input
+              action={{
+                icon: "search",
+                content: "搜尋",
+                onClick: handleSearch,
+              }}
+              placeholder="輸入遊戲名稱後端搜尋..."
+              value={searchGame}
+              onChange={(e) => setSearchGame(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleSearch();
+              }}
+              fluid
+            />
+          </Segment>
+
+          {/* 放置 Modal 表單 */}
+          <ScorecardForm
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            onSuccess={() => fetchScorecards(searchGame)} // 儲存成功後維持搜尋條件更新
+            // onSuccess={fetchScorecards}
+            editData={editingData}
+          />
+
+          {loading ? (
+            <Segment basic style={{ minHeight: "150px" }}>
+              <Loader active inline="centered">
+                載入戰績資料中...
+              </Loader>
+            </Segment>
+          ) : (
+            <Table celled striped selectable sortable>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell>遊戲名稱</Table.HeaderCell>
+                  <Table.HeaderCell>遊玩日期</Table.HeaderCell>
+                  <Table.HeaderCell>玩家</Table.HeaderCell>
+                  <Table.HeaderCell>角色</Table.HeaderCell>
+                  <Table.HeaderCell textAlign="right">分數</Table.HeaderCell>
+                  <Table.HeaderCell
+                    textAlign="center"
+                    style={{ width: "100px" }}
+                  >
+                    操作
+                  </Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+
+              <Table.Body>
+                {scorecards.length > 0 ? (
+                  scorecards.map((item) => (
+                    <Table.Row key={item.scorecard_id}>
+                      <Table.Cell>{item.game_name}</Table.Cell>
+                      <Table.Cell>{item.play_date}</Table.Cell>
+                      <Table.Cell>{item.player_name}</Table.Cell>
+                      <Table.Cell>{item.role_name}</Table.Cell>
+                      <Table.Cell textAlign="right">
+                        <strong>{item.points}</strong>
+                      </Table.Cell>
+                      <Table.Cell textAlign="center">
+                        {/* 編輯按鈕 */}
+                        <Button
+                          color="yellow"
+                          size="mini"
+                          icon
+                          onClick={() => handleEditClick(item)}
+                          title="編輯"
+                          style={{ marginRight: "5px" }}
+                        >
+                          <Icon name="edit" />
+                        </Button>
+                        {/* 刪除按鈕 */}
+                        <Button
+                          color="red"
+                          size="mini"
+                          icon
+                          onClick={() => handleDelete(item.scorecard_id)}
+                          title="刪除"
+                        >
+                          <Icon name="trash" />
+                        </Button>
+                      </Table.Cell>
+                    </Table.Row>
+                  ))
+                ) : (
+                  <Table.Row>
+                    <Table.Cell colSpan="5" textAlign="center">
+                      目前沒有任何戰績紀錄
+                    </Table.Cell>
+                  </Table.Row>
+                )}
+              </Table.Body>
+            </Table>
+          )}
+        </Tab.Pane>
+      ),
+    },
+  ];
+
+  const tabList = () => <Tab panes={panes} />;
+
   return (
     <Container style={{ marginTop: "40px" }}>
-      <Game />
-      <Session />
-
-      {/* 新增：後端過濾搜尋列 */}
-      <Segment style={{ marginTop: "20px" }}>
-        <Input
-          action={{
-            icon: "search",
-            content: "搜尋",
-            onClick: handleSearch,
-          }}
-          placeholder="輸入遊戲名稱後端搜尋..."
-          value={searchGame}
-          onChange={(e) => setSearchGame(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") handleSearch();
-          }}
-          fluid
-        />
-      </Segment>
-
-      {/* 傳入 fetchScorecards 讓新增成功後自動更新表格 */}
-      {/* 放置 Modal 表單 */}
-      <ScorecardForm
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSuccess={() => fetchScorecards(searchGame)} // 儲存成功後維持搜尋條件更新
-        // onSuccess={fetchScorecards}
-        editData={editingData}
-      />
-
       <div
         style={{
           display: "flex",
@@ -120,74 +227,9 @@ function index() {
           新增戰績
         </Button>
       </div>
-
-      {loading ? (
-        <Segment basic style={{ minHeight: "150px" }}>
-          <Loader active inline="centered">
-            載入戰績資料中...
-          </Loader>
-        </Segment>
-      ) : (
-        <Table celled striped selectable sortable>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>遊戲名稱</Table.HeaderCell>
-              <Table.HeaderCell>遊玩日期</Table.HeaderCell>
-              <Table.HeaderCell>玩家</Table.HeaderCell>
-              <Table.HeaderCell>角色</Table.HeaderCell>
-              <Table.HeaderCell textAlign="right">分數</Table.HeaderCell>
-              <Table.HeaderCell textAlign="center" style={{ width: "100px" }}>
-                操作
-              </Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-
-          <Table.Body>
-            {scorecards.length > 0 ? (
-              scorecards.map((item) => (
-                <Table.Row key={item.scorecard_id}>
-                  <Table.Cell>{item.game_name}</Table.Cell>
-                  <Table.Cell>{item.play_date}</Table.Cell>
-                  <Table.Cell>{item.player_name}</Table.Cell>
-                  <Table.Cell>{item.role_name}</Table.Cell>
-                  <Table.Cell textAlign="right">
-                    <strong>{item.points}</strong>
-                  </Table.Cell>
-                  <Table.Cell textAlign="center">
-                    {/* 編輯按鈕 */}
-                    <Button
-                      color="yellow"
-                      size="mini"
-                      icon
-                      onClick={() => handleEditClick(item)}
-                      title="編輯"
-                      style={{ marginRight: "5px" }}
-                    >
-                      <Icon name="edit" />
-                    </Button>
-                    {/* 刪除按鈕 */}
-                    <Button
-                      color="red"
-                      size="mini"
-                      icon
-                      onClick={() => handleDelete(item.scorecard_id)}
-                      title="刪除"
-                    >
-                      <Icon name="trash" />
-                    </Button>
-                  </Table.Cell>
-                </Table.Row>
-              ))
-            ) : (
-              <Table.Row>
-                <Table.Cell colSpan="5" textAlign="center">
-                  目前沒有任何戰績紀錄
-                </Table.Cell>
-              </Table.Row>
-            )}
-          </Table.Body>
-        </Table>
-      )}
+      {tabList()}
+      {/* <Game />
+      <Session /> */}
     </Container>
   );
 }
