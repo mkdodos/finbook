@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Table, Header, Input } from "semantic-ui-react";
+import {
+  Table,
+  Header,
+  Input,
+  Dropdown,
+  Form,
+  Button,
+} from "semantic-ui-react";
 import { updateScorecard } from "../api";
+import { useRoleOptions } from "./useRoleOptions";
 
 export default function PivotEdit({ data = [], onPointsChange }) {
+  const { options, loading } = useRoleOptions();
   //   console.log(data);
   // 1. 本地狀態：記錄哪些資料被修改了，或者追蹤正在編輯的儲存格
   // 格式預期為 "sessionId_playerId"
@@ -13,6 +22,9 @@ export default function PivotEdit({ data = [], onPointsChange }) {
 
   // 為了讓畫面可以即時反應修改，我們將傳入的 data 存入本地 state（也可以透過 callback 回傳給父元件）
   const [tableData, setTableData] = useState(data);
+
+  // 用一組 state 存 formData
+  const [formData, setFormData] = useState(null);
 
   // 2. 當外部的 data 改變時（例如 API 載入完成），同步更新本地 state
   useEffect(() => {
@@ -49,8 +61,6 @@ export default function PivotEdit({ data = [], onPointsChange }) {
       onPointsChange(updatedData);
     }
 
-    // console.log({ id: playerRecord.scorecard_id, ...playerRecord });
-
     // 3. 呼叫後端 API 更新資料庫
     try {
       await updateScorecard(
@@ -60,19 +70,75 @@ export default function PivotEdit({ data = [], onPointsChange }) {
           points: newPoints, // 第二個參數：data 物件
         },
       );
-      //   await updateScorecard({
-      //     id: playerRecord.scorecard_id,
-      //     ...playerRecord,
-      //     points: newPoints, // 確保帶入最新的分數！
-      //   });
     } catch (error) {
       console.error("更新分數失敗:", error);
       // 可以在這裡處理失敗邏輯（例如跳出錯誤提示，或重新整理資料）
       alert("更新分數失敗，請稍後再試");
     }
-
-    // await updateScorecard({ id: playerRecord.scorecard_id, ...playerRecord });
   };
+
+  const handleCellClick = (playerRecord, cellKey) => {
+    setFormData(playerRecord);
+    setEditingCell(cellKey);
+    console.log("cell click");
+  };
+
+  const handleChange = (e, { value }) => {
+    // 從 options 裡面找出被選中的那一個選項
+    const selectedOption = options.find((opt) => opt.value === value);
+
+    setFormData({
+      ...formData,
+      role_id: value,
+      role_name: selectedOption ? selectedOption.text : "", // 同時更新 role_name
+    });
+  };
+  //   const handleInputChange = (e, { value }) => {
+  //     setFormData({ ...formData, points: value });
+  //     console.log(value);
+  //   };
+
+  const handleInputChange = (e, { value }) => {
+    // 必須使用函式寫法 (prev) =>，確保只更新 points，絕對不要動到其他欄位！
+    setFormData((prev) => ({
+      ...prev,
+      points: value,
+    }));
+  };
+
+  const handleSave = async () => {
+    try {
+      // 1. 呼叫後端 API 更新（確保後端也有收到 role_id）
+      await updateScorecard(formData.scorecard_id, formData);
+
+      // 2. 更新前端本地狀態
+      const updatedData = tableData.map((item) => {
+        if (formData.scorecard_id === item.scorecard_id) {
+          return formData; // 包含最新的 role_id, role_name, points
+        }
+        return item;
+      });
+      setTableData(updatedData);
+
+      // 3. 關閉編輯狀態
+      setEditingCell(null);
+      setFormData(null);
+    } catch (error) {
+      console.error("儲存失敗:", error);
+      alert("儲存失敗，請稍後再試");
+    }
+  };
+  //   const handleSave = () => {
+  //     const updatedData = tableData.map((item) => {
+  //       if (formData.scorecard_id === item.scorecard_id) {
+  //         return formData;
+  //       }
+  //       return item;
+  //     });
+  //     setTableData(updatedData);
+  //     setEditingCell(null);
+  //     console.log(formData);
+  //   };
 
   const renderGamePivotTable = (gameName, gameRecords) => {
     const playersObj = Object.groupBy(gameRecords, (item) => item.player_id);
@@ -87,7 +153,7 @@ export default function PivotEdit({ data = [], onPointsChange }) {
           🎮 遊戲：{gameName}
         </Header>
 
-        <Table celled striped selectable>
+        <Table celled>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>日期 / 場次</Table.HeaderCell>
@@ -123,34 +189,102 @@ export default function PivotEdit({ data = [], onPointsChange }) {
                       <Table.Cell
                         key={playerId}
                         textAlign="center"
-                        onClick={() => playerRecord && setEditingCell(cellKey)}
+                        // onClick={() => playerRecord && setEditingCell(cellKey)}
+                        onClick={() => handleCellClick(playerRecord, cellKey)}
                         style={{ cursor: playerRecord ? "pointer" : "default" }}
                       >
                         {isEditing ? (
                           /* 編輯狀態：顯示輸入框 */
-                          <Input
-                            autoFocus
-                            size="mini"
-                            value={playerRecord.points}
-                            onChange={(e) =>
-                              handlePointChange(
-                                sId,
-                                playerId,
-                                e.target.value,
-                                playerRecord,
-                              )
-                            }
-                            onBlur={() => setEditingCell(null)} // 點擊外面時結束編輯
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter") setEditingCell(null); // 按 Enter 也可以結束編輯
-                            }}
-                            style={{ width: "80px" }}
-                          />
+                          <>
+                            {/* 「阻止事件往上傳遞（Stop Propagation）」。才不會點擊form時,觸發上層 onClick */}
+                            <div onClick={(e) => e.stopPropagation()}>
+                              <Form>
+                                <Form.Group widths="equal">
+                                  {/* 遊戲選擇 Dropdown */}
+                                  <Form.Field>
+                                    <label>遊戲名稱</label>
+                                    <Dropdown
+                                      search
+                                      selection
+                                      fluid
+                                      name="game_id"
+                                      options={options}
+                                      value={formData.role_id || ""}
+                                      onChange={handleChange}
+                                      placeholder="請選擇遊戲..."
+                                    />
+                                  </Form.Field>
+
+                                  {/* 分數輸入 Input */}
+                                  <Form.Field>
+                                    <label>分數調整</label>
+                                    <Input
+                                      // autoFocus
+                                      // value={playerRecord.points}
+                                      value={formData.points}
+                                      onChange={handleInputChange}
+                                      // onChange={(e) =>
+                                      //   handlePointChange(
+                                      //     sId,
+                                      //     playerId,
+                                      //     e.target.value,
+                                      //     playerRecord,
+                                      //   )
+                                      // }
+                                      // onKeyDown={(e) => {
+                                      //   if (e.key === "Enter")
+                                      //     setEditingCell(null);
+                                      // }}
+                                      placeholder="輸入分數"
+                                    />
+                                  </Form.Field>
+                                  <Form.Field>
+                                    <Button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation(); // 阻止事件冒泡
+                                        handleSave();
+                                      }}
+                                    >
+                                      儲存
+                                    </Button>
+                                  </Form.Field>
+                                </Form.Group>
+                              </Form>
+                            </div>
+                            {/* <Dropdown
+                              search
+                              label="game_name"
+                              name="game_id"
+                              selection
+                              options={options}
+                            />
+                            <Input
+                              autoFocus
+                              value={playerRecord.points}
+                              onChange={(e) =>
+                                handlePointChange(
+                                  sId,
+                                  playerId,
+                                  e.target.value,
+                                  playerRecord,
+                                )
+                              }
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") setEditingCell(null); // 按 Enter 也可以結束編輯
+                              }}
+                              style={{ width: "80px" }}
+                            /> */}
+                          </>
                         ) : (
                           /* 一般狀態：顯示分數 */
                           <div>
                             {playerRecord ? (
-                              <strong>{playerRecord.points} 分</strong>
+                              <strong>
+                                {playerRecord.role_name}
+                                {playerRecord.role_name && " / "}
+                                {playerRecord.points} 分
+                              </strong>
                             ) : (
                               <span style={{ color: "#ccc" }}>-</span>
                             )}
