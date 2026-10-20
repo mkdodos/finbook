@@ -85,8 +85,10 @@ export const deleteScorecard = async (id) => {
 
 // 更新戰績紀錄
 export const updateScorecard = async (id, data) => {
+  console.log(id);
+  console.log(data);
   try {
-    const response = await apiClient.post("crud.php?action=update_scorecard", {
+    const response = await apiClient.post("?action=update_scorecard", {
       id,
       ...data,
     });

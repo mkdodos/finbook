@@ -18,6 +18,7 @@ import Game from "./game";
 import Session from "./session";
 
 import PivotTable from "./components/PivotTable";
+import PivotEdit from "./components/PivotEdit";
 
 function index() {
   const [scorecards, setScorecards] = useState([]);
@@ -80,6 +81,7 @@ function index() {
       menuItem: "Pivot",
       render: () => (
         <Tab.Pane>
+          <PivotEdit data={scorecards} />
           <PivotTable data={scorecards} />
         </Tab.Pane>
       ),
