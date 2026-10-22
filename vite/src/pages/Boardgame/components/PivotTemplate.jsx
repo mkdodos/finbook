@@ -1,54 +1,58 @@
-import { Table } from "semantic-ui-react";
+import React from "react";
+import { Table, Header } from "semantic-ui-react";
 
-export default function PivotTemplate({ rows, rowkey, columns, colkey, data }) {
+export default function PivotTemplate({ data }) {
+  // 接收資料
+  // const game_name = "茂林"
+  const game_name = "現代藝術";
+  data = data.filter((item) => item.game_name == game_name);
+  // 欄列鍵值
+  const colkey = "player_id";
+  const rowkey = "play_date";
+  // 將資料依鍵值群組
+  const columnGroups = Object.groupBy(data, (item) => item[colkey]);
+  const rowGroups = Object.groupBy(data, (item) => item[rowkey]);
+
+  const columnArray = Object.entries(columnGroups);
+  const rowArray = Object.entries(rowGroups);
+  console.log(columnArray);
   return (
     <div>
+      {/* 顯示遊戲標題 */}
+      <Header as="h3" color="blue">
+        {game_name}
+      </Header>
       <Table celled striped selectable>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>rows / columns</Table.HeaderCell>
-            {/* 橫軸 */}
-            {columns.map((col) => (
-              <Table.HeaderCell key={col.id} textAlign="center">
-                {col[colkey]}
+            <Table.HeaderCell>
+              {rowkey} / {colkey}
+            </Table.HeaderCell>
+            {/* 横欄,玩家 */}
+            {columnArray.map(([gId, gData]) => (
+              <Table.HeaderCell key={gId} textAlign="center">
+                {gData[0].player_name}
               </Table.HeaderCell>
             ))}
           </Table.Row>
+          {/* 直列,日期 */}
+          {rowArray.map(([rId, rData]) => (
+            <Table.Row key={rId}>
+              <Table.Cell>{rId}</Table.Cell>
+              {/* 資料格,玩家 */}
+              {columnArray.map(([gId, gData]) => {
+                const matched = gData.find((item) => item[rowkey] === rId);
+                return (
+                  <Table.Cell key={gId} textAlign="center">
+                    {matched?.points}
+                  </Table.Cell>
+                );
+              })}
+            </Table.Row>
+          ))}
         </Table.Header>
 
-        <Table.Body>
-          {/* 縱軸：顯示該遊戲的所有 Session (場次) */}
-          {rows.map((row) => {
-            return (
-              <Table.Row key={row.id}>
-                {/* 第一欄 */}
-                <Table.Cell style={{ fontWeight: "bold" }}>
-                  {row[rowkey]}
-                </Table.Cell>
-                {/* 資料欄,欄迴圈 */}
-                {columns.map((col) => {
-                  // 尋找對應欄列資料
-                  const rowData = row[rowkey];
-                  const colData = col[colkey];
-                  const matchData = data.find(
-                    (item) =>
-                      item[rowkey] == rowData && item[colkey] == colData,
-                  );
-                  return (
-                    <Table.Cell key={col.id}>
-                      {matchData?.score}
-                      {/* {row[rowkey]}
-                      {col[colkey]} */}
-                    </Table.Cell>
-                  );
-                })}
-                {/* <Table.Cell style={{ fontWeight: "bold" }}>
-                  {row[rowkey]}
-                </Table.Cell> */}
-              </Table.Row>
-            );
-          })}
-        </Table.Body>
+        <Table.Body></Table.Body>
       </Table>
     </div>
   );
