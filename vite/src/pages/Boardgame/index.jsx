@@ -20,6 +20,7 @@ import Session from "./session";
 import PivotTable from "./components/PivotTable";
 import PivotEdit from "./components/PivotEdit";
 import PivotTemplate from "./components/PivotTemplate";
+import PivotRole from "./components/PivotRole";
 // import { rows, columns, data } from "./data/score";
 import { rows, columns, data } from "./data/game";
 
@@ -80,6 +81,14 @@ function index() {
   };
 
   const panes = [
+    {
+      menuItem: "PivotRole",
+      render: () => (
+        <Tab.Pane>
+          <PivotRole data={scorecards} />
+        </Tab.Pane>
+      ),
+    },
     {
       menuItem: "PivotTemplate",
       render: () => (
