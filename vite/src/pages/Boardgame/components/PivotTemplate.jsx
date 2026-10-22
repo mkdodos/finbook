@@ -16,13 +16,16 @@ export default function PivotTemplate({ data }) {
   const columnArray = Object.entries(columnGroups);
   const rowArray = Object.entries(rowGroups);
   console.log(columnArray);
+  const total = data.reduce((acc, item) => {
+    return acc + Number(item.points);
+  }, 0);
   return (
     <div>
       {/* 顯示遊戲標題 */}
       <Header as="h3" color="blue">
         {game_name}
       </Header>
-      <Table celled striped selectable>
+      <Table celled>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>
@@ -34,25 +37,51 @@ export default function PivotTemplate({ data }) {
                 {gData[0].player_name}
               </Table.HeaderCell>
             ))}
+            <Table.HeaderCell textAlign="center">列合計</Table.HeaderCell>
           </Table.Row>
-          {/* 直列,日期 */}
-          {rowArray.map(([rId, rData]) => (
-            <Table.Row key={rId}>
-              <Table.Cell>{rId}</Table.Cell>
-              {/* 資料格,玩家 */}
-              {columnArray.map(([gId, gData]) => {
-                const matched = gData.find((item) => item[rowkey] === rId);
-                return (
-                  <Table.Cell key={gId} textAlign="center">
-                    {matched?.points}
-                  </Table.Cell>
-                );
-              })}
-            </Table.Row>
-          ))}
         </Table.Header>
 
-        <Table.Body></Table.Body>
+        <Table.Body>
+          {/* 直列,日期 */}
+          {rowArray.map(([rId, rData]) => {
+            const sum = rData.reduce((acc, item) => {
+              return acc + Number(item.points);
+            }, 0);
+
+            return (
+              <Table.Row key={rId}>
+                <Table.Cell>{rId}</Table.Cell>
+                {/* 資料格,玩家 */}
+                {columnArray.map(([gId, gData]) => {
+                  const matched = gData.find((item) => item[rowkey] === rId);
+                  return (
+                    <Table.Cell key={gId} textAlign="center">
+                      {matched?.points}
+                    </Table.Cell>
+                  );
+                })}
+                <Table.Cell textAlign="center">{sum}</Table.Cell>
+              </Table.Row>
+            );
+          })}
+        </Table.Body>
+        <Table.Footer>
+          {/* 欄合計 */}
+          <Table.Row>
+            <Table.HeaderCell>欄合計</Table.HeaderCell>
+            {columnArray.map(([gId, gData]) => {
+              const sum = gData.reduce((acc, item) => {
+                return (acc += Number(item.points));
+              }, 0);
+              return (
+                <Table.HeaderCell key={gId} textAlign="center">
+                  {sum}
+                </Table.HeaderCell>
+              );
+            })}
+            <Table.HeaderCell textAlign="center">{total}</Table.HeaderCell>
+          </Table.Row>
+        </Table.Footer>
       </Table>
     </div>
   );
