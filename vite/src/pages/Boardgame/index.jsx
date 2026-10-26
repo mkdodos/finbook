@@ -22,6 +22,7 @@ import PivotEdit from "./components/PivotEdit";
 import PivotTemplate from "./components/PivotTemplate";
 import PivotRole from "./components/PivotRole";
 import PivotEasy from "./components/PivotEasy";
+import Pivot1026 from "./components/Pivot1026";
 // import { rows, columns, data } from "./data/score";
 import { rows, columns, data } from "./data/game";
 
@@ -82,6 +83,14 @@ function index() {
   };
 
   const panes = [
+    {
+      menuItem: "Pivot1026",
+      render: () => (
+        <Tab.Pane>
+          <Pivot1026 data={scorecards} />
+        </Tab.Pane>
+      ),
+    },
     {
       menuItem: "PivotEasy",
       render: () => (

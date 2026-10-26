@@ -27,7 +27,7 @@ export default function PivotRole({ data }) {
             <Table.HeaderCell>
               {rowkey} / {colkey}
             </Table.HeaderCell>
-            {/* 横欄,玩家 */}
+            {/* 横欄,角色 */}
             {columnArray.map(([gId, gData]) => (
               <Table.HeaderCell key={gId} textAlign="center">
                 {gData[0].role_name}
