@@ -15,6 +15,7 @@ import { getScorecards, deleteScorecard } from "./api";
 import ScorecardForm from "./ScorecardForm";
 
 import Game from "./game";
+import Role from "./role";
 import Session from "./session";
 
 import PivotTable from "./components/PivotTable";
@@ -84,6 +85,15 @@ function index() {
 
   const panes = [
     {
+      menuItem: "Role",
+      render: () => (
+        <Tab.Pane>
+          {" "}
+          <Role />
+        </Tab.Pane>
+      ),
+    },
+    {
       menuItem: "Pivot1026",
       render: () => (
         <Tab.Pane>
@@ -140,6 +150,7 @@ function index() {
         </Tab.Pane>
       ),
     },
+
     {
       menuItem: "場次",
       render: () => (

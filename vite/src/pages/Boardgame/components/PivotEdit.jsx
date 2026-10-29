@@ -209,6 +209,7 @@ export default function PivotEdit({ data = [], onPointsChange }) {
                                       fluid
                                       name="game_id"
                                       options={options}
+                                      loading={loading}
                                       value={formData.role_id || ""}
                                       onChange={handleChange}
                                       placeholder="請選擇遊戲..."

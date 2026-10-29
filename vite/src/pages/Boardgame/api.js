@@ -58,6 +58,12 @@ export const getSessions = async () => {
   return response.data;
 };
 
+// 取得所有遊戲列表
+export const getGames = async () => {
+  const response = await apiClient.get("?action=get_games");
+  return response.data;
+};
+
 // 取得所有玩家列表
 export const getPlayers = async () => {
   const response = await apiClient.get("?action=get_players");

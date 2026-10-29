@@ -111,6 +111,13 @@ try {
             echo json_encode($stmt->fetchAll(), JSON_UNESCAPED_UNICODE);
             break;
 
+        
+        
+        case 'get_games':
+        $stmt = $pdo->query("SELECT id, name FROM game");
+        echo json_encode($stmt->fetchAll(), JSON_UNESCAPED_UNICODE);
+        break;
+        
         case 'get_players':
         $stmt = $pdo->query("SELECT id, name FROM player");
         echo json_encode($stmt->fetchAll(), JSON_UNESCAPED_UNICODE);
