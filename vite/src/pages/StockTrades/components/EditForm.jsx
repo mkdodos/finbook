@@ -184,19 +184,6 @@ const EditForm = ({ state, dispatch, columns }) => {
                   />
                 );
               }
-              // 💡 判斷是否為下拉選單欄位
-              // if (col.formType === "select") {
-              //   return (
-              //     <Form.Select
-              //       key={col.key}
-              //       label={col.title}
-              //       name={col.name}
-              //       value={formData[col.name] || ""}
-              //       onChange={handleChange}
-              //       options={col.options || []} // 傳入選項陣列，例如 [{ label: '選項A', value: 'A' }]
-              //     />
-              //   );
-              // }
 
               return (
                 <Form.Input

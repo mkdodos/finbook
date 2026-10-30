@@ -38,8 +38,8 @@ export default function TableView({ data, loading, handleEdit, handleDelete }) {
               data.map((item) => (
                 <Table.Row key={item.id}>
                   <Table.Cell>{item.id}</Table.Cell>
-                  <Table.Cell>{item.name}</Table.Cell>
-                  <Table.Cell>{item.game_id}</Table.Cell>
+                  <Table.Cell>{item.role_name}</Table.Cell>
+                  <Table.Cell>{item.game_name}</Table.Cell>
 
                   <Table.Cell textAlign="center">
                     {/* 編輯按鈕 */}

@@ -28,8 +28,12 @@ try {
             $searchGame = $_GET['game'] ?? '';
             // 查詢所有戰績資料
             $sql = "SELECT 
-                        *
-                    FROM `role`";
+            role.id as id,
+                        role.name as role_name,
+                        role.game_id as game_id,
+                        game.name as game_name
+                        
+                    FROM `role` LEFT JOIN game ON role.game_id=game.id";
                     
 
           if (!empty($searchGame)) {
@@ -47,15 +51,16 @@ try {
             echo json_encode($records, JSON_UNESCAPED_UNICODE);
             break;
 
-        case 'add_game':
+        case 'create':
             // 新增遊戲範例
-            $name = $input['name'] ?? '';
+            $name = $input['role_name'] ?? '';
+            $game_id = $input['game_id'] ?? null;
             if (empty($name)) {
                 throw new Exception("遊戲名稱不能為空");
             }
-            $sql = "INSERT INTO `role` (name) VALUES (:name)";
+            $sql = "INSERT INTO `role` (name,game_id) VALUES (:name,:game_id)";
             $stmt = $pdo->prepare($sql);
-            $stmt->execute(['name' => $name]);
+            $stmt->execute(['name' => $name,'game_id'=>$game_id]);
             
             echo json_encode([
                 "status" => "success", 
@@ -88,7 +93,7 @@ try {
 
         case 'update':
             $id = $input['id'] ?? null;
-            $name = $input['name'] ?? null;
+            $name = $input['role_name'] ?? null;
             $game_id = $input['game_id'] ?? null;
             
             if (!$id || !$name) {

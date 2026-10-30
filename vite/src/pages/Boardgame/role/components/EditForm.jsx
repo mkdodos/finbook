@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Modal, Icon } from "semantic-ui-react";
-import { getPlayers, getRoles, addGame, update } from "../api";
+import { getRoles, create, update } from "../api";
 import GameSelect from "../../components/dropdown/GameSelect";
 
 function EditForm({ isOpen, onClose, onSuccess, editData, handleDelete }) {
@@ -9,16 +9,17 @@ function EditForm({ isOpen, onClose, onSuccess, editData, handleDelete }) {
   // 否則會出現上述警告
 
   const initialFormData = {
-    name: "",
+    role_name: "",
     game_id: "",
   };
   const [formData, setFormData] = useState(initialFormData);
 
-  const [playerOptions, setPlayerOptions] = useState([]);
+  // const [playerOptions, setPlayerOptions] = useState([]);
   const [roleOptions, setRoleOptions] = useState([]);
 
   useEffect(() => {
     if (editData) {
+      console.log(editData);
       setFormData(
         editData,
         // name: editData.name || "",
@@ -26,7 +27,7 @@ function EditForm({ isOpen, onClose, onSuccess, editData, handleDelete }) {
     } else {
       setFormData(initialFormData);
     }
-  }, [editData]);
+  }, [isOpen, editData]);
 
   const handleChange = (e, { name, value }) => {
     setFormData({ ...formData, [name]: value });
@@ -39,7 +40,7 @@ function EditForm({ isOpen, onClose, onSuccess, editData, handleDelete }) {
         // alert("戰績更新成功！");
       } else {
         console.log(formData);
-        await addGame(formData.name);
+        await create(formData);
         // alert("戰績新增成功！");
       }
 
@@ -66,17 +67,18 @@ function EditForm({ isOpen, onClose, onSuccess, editData, handleDelete }) {
         <Form onSubmit={handleSubmit} id="scorecard-form">
           <Form.Input
             label="角色名稱"
-            name="name"
-            value={formData.name}
+            name="role_name"
+            value={formData.role_name}
             onChange={handleChange}
             required
           />
-          <Form.Input
+          {/* <Form.Input
             label="遊戲名稱"
             name="game_id"
             value={formData.game_id}
             onChange={handleChange}
-          />
+          /> */}
+          <label>遊戲</label>
           <GameSelect onChange={handleGameChange} value={formData.game_id} />
         </Form>
       </Modal.Content>

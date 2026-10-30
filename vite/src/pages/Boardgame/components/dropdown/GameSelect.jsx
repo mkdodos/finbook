@@ -50,24 +50,17 @@ export default function GameSelect({ onChange, value }) {
   }
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h3>
-        請選擇遊戲 (RoleSelect)
-        {/* {JSON.stringify(games)} */}
-      </h3>
-
-      <Dropdown
-        placeholder="請選擇遊戲"
-        fluid
-        selection
-        search
-        clearable
-        options={games}
-        // value={selectedGame}
-        value={value}
-        onChange={onChange}
-        // onChange={handleChange}
-      />
-    </div>
+    <Dropdown
+      placeholder="請選擇遊戲"
+      fluid
+      selection
+      search
+      clearable
+      options={games}
+      // value={selectedGame}
+      value={value}
+      onChange={onChange}
+      // onChange={handleChange}
+    />
   );
 }

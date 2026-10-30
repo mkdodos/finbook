@@ -29,11 +29,9 @@ export const getData = async (gameName = "") => {
 };
 
 // 新增遊戲資料範例
-export const addGame = async (gameName) => {
+export const create = async (formData) => {
   try {
-    const response = await apiClient.post("?action=add_game", {
-      name: gameName,
-    });
+    const response = await apiClient.post("?action=create", formData);
     return response.data;
   } catch (error) {
     console.error("新增遊戲失敗:", error);
@@ -42,21 +40,21 @@ export const addGame = async (gameName) => {
 };
 
 // 新增戰績紀錄
-export const addScorecard = async (data) => {
-  try {
-    const response = await apiClient.post("?action=add_scorecard", data);
-    return response.data;
-  } catch (error) {
-    console.error("新增戰績失敗:", error);
-    throw error;
-  }
-};
+// export const addScorecard = async (data) => {
+//   try {
+//     const response = await apiClient.post("?action=add_scorecard", data);
+//     return response.data;
+//   } catch (error) {
+//     console.error("新增戰績失敗:", error);
+//     throw error;
+//   }
+// };
 
 // 取得所有玩家列表
-export const getPlayers = async () => {
-  const response = await apiClient.get("?action=get_players");
-  return response.data;
-};
+// export const getPlayers = async () => {
+//   const response = await apiClient.get("?action=get_players");
+//   return response.data;
+// };
 
 // 取得所有角色列表
 export const getRoles = async () => {

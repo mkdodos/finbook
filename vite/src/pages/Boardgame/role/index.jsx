@@ -4,7 +4,7 @@ import TableView from "./components/TableView";
 import EditForm from "./components/EditForm";
 import { Header, Button, Icon } from "semantic-ui-react";
 
-export default function Game() {
+export default function index() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false); // 控制 Modal 顯示狀態
@@ -34,6 +34,7 @@ export default function Game() {
 
   // 點擊編輯按鈕
   const handleEdit = (item) => {
+    console.log(item);
     setEditingData(item); // 帶入要編輯的資料
     setIsModalOpen(true);
   };
@@ -63,7 +64,7 @@ export default function Game() {
         }}
       >
         <Header as="h2" dividing style={{ borderBottom: "none", margin: 0 }}>
-          Game
+          Role
         </Header>
         <Button primary icon labelPosition="left" onClick={handleAdd}>
           <Icon name="add" />

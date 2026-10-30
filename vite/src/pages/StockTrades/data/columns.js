@@ -35,10 +35,19 @@ export const COLUMNS = [
     name: "trade_type",
     formType: "select",
     options: [
-      { text: "買進", value: "buy" },
-      { text: "賣出", value: "sell" },
+      // style: { color: 'green', fontWeight: 'bold' } // 直接加上 style
+      {
+        text: "買進",
+        value: "buy",
+        style: { color: "#db2828", fontWeight: "bold" },
+      },
+      {
+        text: "賣出",
+        value: "sell",
+        style: { color: "#21ba45", fontWeight: "bold" },
+      },
     ],
-    // 💡 新增 render 函式來呈現分色標籤
+    // render 函式用來表格中呈現分色標籤
     render: (row) => {
       const isBuy = row.trade_type === "buy";
       return React.createElement(
