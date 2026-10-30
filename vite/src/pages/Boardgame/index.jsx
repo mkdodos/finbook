@@ -15,6 +15,7 @@ import { getScorecards, deleteScorecard } from "./api";
 import ScorecardForm from "./ScorecardForm";
 
 import Game from "./game";
+import Player from "./player";
 import Role from "./role";
 import Session from "./session";
 
@@ -85,6 +86,24 @@ function index() {
 
   const panes = [
     {
+      menuItem: "Player",
+      render: () => (
+        <Tab.Pane>
+          <Player />
+        </Tab.Pane>
+      ),
+    },
+    {
+      menuItem: "Game",
+      render: () => (
+        <Tab.Pane>
+          {" "}
+          <Game />
+        </Tab.Pane>
+      ),
+    },
+
+    {
       menuItem: "Role",
       render: () => (
         <Tab.Pane>
@@ -138,15 +157,6 @@ function index() {
         <Tab.Pane>
           <PivotEdit data={scorecards} />
           <PivotTable data={scorecards} />
-        </Tab.Pane>
-      ),
-    },
-    {
-      menuItem: "Game",
-      render: () => (
-        <Tab.Pane>
-          {" "}
-          <Game />
         </Tab.Pane>
       ),
     },
