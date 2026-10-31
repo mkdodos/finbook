@@ -24,7 +24,7 @@ export default function TableView({ data, loading, handleEdit, handleDelete }) {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>id</Table.HeaderCell>
-              <Table.HeaderCell>遊戲名稱</Table.HeaderCell>
+              <Table.HeaderCell>名稱</Table.HeaderCell>
 
               <Table.HeaderCell textAlign="center" style={{ width: "100px" }}>
                 操作
@@ -50,16 +50,6 @@ export default function TableView({ data, loading, handleEdit, handleDelete }) {
                       style={{ marginRight: "5px" }}
                     >
                       <Icon name="edit" />
-                    </Button>
-                    {/* 刪除按鈕 */}
-                    <Button
-                      color="red"
-                      size="mini"
-                      icon
-                      onClick={() => handleDelete(item.id)}
-                      title="刪除"
-                    >
-                      <Icon name="trash" />
                     </Button>
                   </Table.Cell>
                 </Table.Row>

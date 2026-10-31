@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { getData, deleteRow } from "./api";
+import { readRows, deleteRow } from "./api";
 import TableView from "./components/TableView";
 import EditForm from "./components/EditForm";
+import SearchBar from "./components/SearchBar";
 import { Header, Button, Icon } from "semantic-ui-react";
 
 export default function index() {
@@ -13,7 +14,7 @@ export default function index() {
   const fetchData = async (gameFilter = "") => {
     setLoading(true);
     try {
-      const data = await getData(gameFilter);
+      const data = await readRows(gameFilter);
       setData(data);
     } catch (err) {
       console.error("載入戰績失敗:", err);
@@ -71,6 +72,7 @@ export default function index() {
           新增
         </Button>
       </div>
+      <SearchBar fetchData={fetchData} />
       {/* 放置 Modal 表單 */}
       <EditForm
         isOpen={isModalOpen}

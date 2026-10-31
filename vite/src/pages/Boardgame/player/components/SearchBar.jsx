@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Input } from "semantic-ui-react";
+import { Button, Input, Form } from "semantic-ui-react";
 
 export default function SearchBar({ fetchData }) {
   // 搜尋值
@@ -12,8 +12,16 @@ export default function SearchBar({ fetchData }) {
   };
   return (
     <div>
-      <Input value={search} onChange={handleChange} />
-      <Button onClick={handleSearch}>查詢</Button>
+      <Form>
+        <Form.Group>
+          <Form.Field>
+            <Input value={search} onChange={handleChange} />
+          </Form.Field>
+          <Form.Field>
+            <Button onClick={handleSearch}>查詢</Button>
+          </Form.Field>
+        </Form.Group>
+      </Form>
     </div>
   );
 }

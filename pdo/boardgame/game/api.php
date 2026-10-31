@@ -20,40 +20,40 @@ $action = $_GET['action'] ?? $_POST['action'] ?? '';
 // 取得 POST 的 JSON 內容（若有需要傳送資料時使用）
 $inputJSON = file_get_contents('php://input');
 $input = json_decode($inputJSON, true) ?? [];
+$table = "game";
 
 try {
     switch ($action) {
-        case 'get_data':
+        case 'read_rows':
             // 接收前端傳來的搜尋關鍵字
-            $searchGame = $_GET['game'] ?? '';
-            // 查詢所有戰績資料
-            $sql = "SELECT 
-                        *
-                    FROM game";
-                    
+            $search = $_GET['name'] ?? '';          
+            // 查詢所有資料
+            $sql = "SELECT  * FROM `$table` ";                    
 
-          if (!empty($searchGame)) {
+          if (!empty($search)) {
                 // 使用問號 ? 佔位符進行模糊查詢
-                $sql .= " WHERE game.name LIKE ?";
+                $sql .= " WHERE `name` LIKE ?";
                 $stmt = $pdo->prepare($sql);
                 // 透過陣列依序傳入參數與萬用字元
-                $stmt->execute(['%' . $searchGame . '%']);
+                $stmt->execute(['%' . $search . '%']);
             } else {
                 $stmt = $pdo->query($sql);
             }
-            // $stmt = $pdo->query($sql);
+           
             $records = $stmt->fetchAll();
             
             echo json_encode($records, JSON_UNESCAPED_UNICODE);
             break;
 
-        case 'add_game':
+            // 新增一筆資料
+        case 'create_row':
             // 新增遊戲範例
             $name = $input['name'] ?? '';
+            $game_id = $input['game_id'] ?? null;
             if (empty($name)) {
                 throw new Exception("遊戲名稱不能為空");
             }
-            $sql = "INSERT INTO game (name) VALUES (:name)";
+            $sql = "INSERT INTO `$table` (`name`) VALUES (:name)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute(['name' => $name]);
             
@@ -62,45 +62,18 @@ try {
                 "message" => "新增遊戲成功", 
                 "id" => $pdo->lastInsertId()
             ], JSON_UNESCAPED_UNICODE);
-            break;
-
-
-        case 'add_scorecard':
-            $session_id = $input['session_id'] ?? null;
-            $player_id = $input['player_id'] ?? null;
-            $role_id = $input['role_id'] ?? null;
-            $points = $input['points'] ?? 0;
-
-            if (!$session_id || !$player_id || !$role_id) {
-                throw new Exception("必要的關聯 ID 不能為空");
-            }
-
-            $sql = "INSERT INTO scorecard (session_id, player_id, role_id, points) VALUES (:session_id, :player_id, :role_id, :points)";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([
-                'session_id' => $session_id,
-                'player_id' => $player_id,
-                'role_id' => $role_id,
-                'points' => $points
-            ]);
-
-            echo json_encode([
-                "status" => "success",
-                "message" => "新增戰績成功",
-                "id" => $pdo->lastInsertId()
-            ], JSON_UNESCAPED_UNICODE);
-            break;
+            break;       
             
        
             
-            
+            // 刪除
         case 'delete_row':
             $id = $input['id'] ?? null;
             if (!$id) {
                 throw new Exception("缺少要刪除的 ID");
             }
             
-            $sql = "DELETE FROM game WHERE id = :id";
+            $sql = "DELETE FROM `$table` WHERE id = :id";
             $stmt = $pdo->prepare($sql);
             $stmt->execute(['id' => $id]);
             
@@ -110,22 +83,25 @@ try {
             ], JSON_UNESCAPED_UNICODE);
             break;
 
-        case 'update':
+            // 更新
+        case 'update_row':
             $id = $input['id'] ?? null;
             $name = $input['name'] ?? null;
+          
+            
             if (!$id || !$name) {
                 throw new Exception("update必要的 ID 或關聯欄位不能為空");
             }
 
            
 
-            $sql = "UPDATE game 
-                    SET name = :name 
+            $sql = "UPDATE `$table` 
+                    SET name = :name                    
                     WHERE id = :id";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 'id' => $id,
-                'name' => $name
+                'name' => $name               
             ]);
 
            

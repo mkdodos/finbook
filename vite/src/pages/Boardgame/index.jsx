@@ -86,10 +86,10 @@ function index() {
 
   const panes = [
     {
-      menuItem: "Player",
+      menuItem: "Role",
       render: () => (
         <Tab.Pane>
-          <Player />
+          <Role />
         </Tab.Pane>
       ),
     },
@@ -97,21 +97,19 @@ function index() {
       menuItem: "Game",
       render: () => (
         <Tab.Pane>
-          {" "}
           <Game />
         </Tab.Pane>
       ),
     },
-
     {
-      menuItem: "Role",
+      menuItem: "Player",
       render: () => (
         <Tab.Pane>
-          {" "}
-          <Role />
+          <Player />
         </Tab.Pane>
       ),
     },
+
     {
       menuItem: "Pivot1026",
       render: () => (

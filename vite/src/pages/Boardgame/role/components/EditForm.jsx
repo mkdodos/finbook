@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Modal, Icon } from "semantic-ui-react";
-import { getRoles, create, update } from "../api";
+import { createRow, updateRow } from "../api";
 import GameSelect from "../../components/dropdown/GameSelect";
 
 function EditForm({ isOpen, onClose, onSuccess, editData, handleDelete }) {
@@ -36,11 +36,11 @@ function EditForm({ isOpen, onClose, onSuccess, editData, handleDelete }) {
   const handleSubmit = async () => {
     try {
       if (editData) {
-        await update(editData.id, formData);
+        await updateRow(editData.id, formData);
         // alert("戰績更新成功！");
       } else {
         console.log(formData);
-        await create(formData);
+        await createRow(formData);
         // alert("戰績新增成功！");
       }
 
@@ -72,12 +72,7 @@ function EditForm({ isOpen, onClose, onSuccess, editData, handleDelete }) {
             onChange={handleChange}
             required
           />
-          {/* <Form.Input
-            label="遊戲名稱"
-            name="game_id"
-            value={formData.game_id}
-            onChange={handleChange}
-          /> */}
+
           <label>遊戲</label>
           <GameSelect onChange={handleGameChange} value={formData.game_id} />
         </Form>

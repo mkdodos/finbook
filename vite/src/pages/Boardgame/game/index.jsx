@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { getData, deleteRow } from "./api";
+import { readRows, deleteRow } from "./api";
 import TableView from "./components/TableView";
 import EditForm from "./components/EditForm";
+import SearchBar from "./components/SearchBar";
 import { Header, Button, Icon } from "semantic-ui-react";
 
-export default function Game() {
+export default function index() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false); // 控制 Modal 顯示狀態
@@ -13,7 +14,7 @@ export default function Game() {
   const fetchData = async (gameFilter = "") => {
     setLoading(true);
     try {
-      const data = await getData(gameFilter);
+      const data = await readRows(gameFilter);
       setData(data);
     } catch (err) {
       console.error("載入戰績失敗:", err);
@@ -34,22 +35,31 @@ export default function Game() {
 
   // 點擊編輯按鈕
   const handleEdit = (item) => {
+    // console.log(item);
     setEditingData(item); // 帶入要編輯的資料
     setIsModalOpen(true);
   };
 
   // 刪除
   const handleDelete = async (id) => {
-    // if (window.confirm("確定要刪除這筆戰績紀錄嗎？")) {
+    if (!window.confirm("確定要刪除嗎？")) return;
     try {
       await deleteRow(id);
       // 刪除成功後重新載入列表
       fetchData();
+      setIsModalOpen(false);
     } catch (err) {
       console.log(err);
       alert("刪除失敗，請稍後再試");
     }
-    // }
+  };
+
+  const onSuccess = (formData) => {
+    // 將儲存成功的值寫入state
+    setData((prev) =>
+      prev.map((item) => (item.id === formData.id ? formData : item)),
+    );
+    // console.log(formData);
   };
 
   return (
@@ -70,13 +80,15 @@ export default function Game() {
           新增
         </Button>
       </div>
-      {/* 放置 Modal 表單 */}
+      <SearchBar fetchData={fetchData} />
       <EditForm
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSuccess={() => fetchData()} // 儲存成功後維持搜尋條件更新
+        // onSuccess={() => fetchData()}
+        onSuccess={onSuccess}
         // onSuccess={fetchScorecards}
         editData={editingData}
+        handleDelete={handleDelete}
       />
       <TableView
         data={data}

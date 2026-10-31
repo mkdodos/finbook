@@ -14,6 +14,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 require_once '../config.php';
 
+// 資料表名稱
+$table = "role";
+
 // 取得前端傳來的 action 參數（支援 GET 或 POST）
 $action = $_GET['action'] ?? $_POST['action'] ?? '';
 
@@ -21,37 +24,37 @@ $action = $_GET['action'] ?? $_POST['action'] ?? '';
 $inputJSON = file_get_contents('php://input');
 $input = json_decode($inputJSON, true) ?? [];
 
+
 try {
     switch ($action) {
-        case 'get_data':
+        case 'read_rows':
             // 接收前端傳來的搜尋關鍵字
-            $searchGame = $_GET['game'] ?? '';
-            // 查詢所有戰績資料
+            $search = $_GET['role_name'] ?? '';          
             $sql = "SELECT 
             role.id as id,
                         role.name as role_name,
                         role.game_id as game_id,
                         game.name as game_name
                         
-                    FROM `role` LEFT JOIN game ON role.game_id=game.id";
-                    
+                    FROM `role` LEFT JOIN game ON role.game_id=game.id";           
 
-          if (!empty($searchGame)) {
+          if (!empty($search)) {
                 // 使用問號 ? 佔位符進行模糊查詢
                 $sql .= " WHERE role.name LIKE ?";
                 $stmt = $pdo->prepare($sql);
                 // 透過陣列依序傳入參數與萬用字元
-                $stmt->execute(['%' . $searchGame . '%']);
+                $stmt->execute(['%' . $search . '%']);
             } else {
                 $stmt = $pdo->query($sql);
             }
-            // $stmt = $pdo->query($sql);
+           
             $records = $stmt->fetchAll();
             
             echo json_encode($records, JSON_UNESCAPED_UNICODE);
             break;
 
-        case 'create':
+            // 新增一筆資料
+        case 'create_row':
             // 新增遊戲範例
             $name = $input['role_name'] ?? '';
             $game_id = $input['game_id'] ?? null;
@@ -68,20 +71,17 @@ try {
                 "id" => $pdo->lastInsertId()
             ], JSON_UNESCAPED_UNICODE);
             break;
-
-
-        
             
        
             
-            
+            // 刪除
         case 'delete_row':
             $id = $input['id'] ?? null;
             if (!$id) {
                 throw new Exception("缺少要刪除的 ID");
             }
             
-            $sql = "DELETE FROM `role` WHERE id = :id";
+            $sql = "DELETE FROM `$table` WHERE id = :id";
             $stmt = $pdo->prepare($sql);
             $stmt->execute(['id' => $id]);
             
@@ -91,7 +91,8 @@ try {
             ], JSON_UNESCAPED_UNICODE);
             break;
 
-        case 'update':
+            // 更新
+        case 'update_row':
             $id = $input['id'] ?? null;
             $name = $input['role_name'] ?? null;
             $game_id = $input['game_id'] ?? null;
@@ -121,10 +122,6 @@ try {
                 "sql"=>$sql
             ], JSON_UNESCAPED_UNICODE);
             break;
-        // 之後如果需要其他動作，可以直接在此擴充
-        // case 'update_score':
-        //     ...
-        //     break;
 
         default:
             http_response_code(400);
