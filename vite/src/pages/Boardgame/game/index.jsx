@@ -85,7 +85,7 @@ export default function index() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         // onSuccess={() => fetchData()}
-        onSuccess={onSuccess}
+        // onSuccess={onSuccess}
         // onSuccess={fetchScorecards}
         editData={editingData}
         setData={setData}

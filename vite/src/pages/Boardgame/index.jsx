@@ -18,6 +18,7 @@ import Game from "./game";
 import Player from "./player";
 import Role from "./role";
 import Session from "./session";
+import Scorecard from "./scorecard";
 
 import PivotTable from "./components/PivotTable";
 import PivotEdit from "./components/PivotEdit";
@@ -85,6 +86,14 @@ function index() {
   };
 
   const panes = [
+    {
+      menuItem: "Scorecard",
+      render: () => (
+        <Tab.Pane>
+          <Scorecard />
+        </Tab.Pane>
+      ),
+    },
     {
       menuItem: "Role",
       render: () => (

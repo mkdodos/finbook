@@ -79,6 +79,7 @@ export default function index() {
         onSuccess={() => fetchData()} // 儲存成功後維持搜尋條件更新
         // onSuccess={fetchScorecards}
         editData={editingData}
+        setData={setData}
         handleDelete={handleDelete}
       />
       <TableView

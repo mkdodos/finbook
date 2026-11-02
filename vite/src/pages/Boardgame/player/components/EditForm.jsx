@@ -3,7 +3,7 @@ import { Form, Button, Modal, Icon } from "semantic-ui-react";
 import { createRow, updateRow } from "../api";
 import GameSelect from "../../components/dropdown/GameSelect";
 
-function EditForm({ isOpen, onClose, onSuccess, editData, handleDelete }) {
+function EditForm({ isOpen, onClose, editData, handleDelete, setData }) {
   // A component is changing an uncontrolled input to be controlled
   // 需要給表單每個欄位預設值,確保是受控組件
   // 否則會出現上述警告
@@ -34,14 +34,16 @@ function EditForm({ isOpen, onClose, onSuccess, editData, handleDelete }) {
     try {
       if (editData) {
         await updateRow(editData.id, formData);
-        // alert("戰績更新成功！");
+        // 將儲存成功的值寫入state
+        setData((prev) =>
+          prev.map((item) => (item.id === formData.id ? formData : item)),
+        );
       } else {
-        console.log(formData);
-        await createRow(formData);
-        // alert("戰績新增成功！");
+        const res = await createRow(formData);
+        // 將儲存成功的值寫入state
+        setData((prev) => [...prev, { ...formData, id: res.id }]);
       }
 
-      if (onSuccess) onSuccess();
       if (onClose) onClose();
     } catch (err) {
       console.log(err);
