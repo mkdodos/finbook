@@ -11,10 +11,11 @@ const apiClient = axios.create({
 });
 
 // 取得所有資料（若有傳入名稱在後端會進行篩選）
-export const readRows = async (name = "") => {
+export const readRows = async (search) => {
   try {
+    console.log(search);
     const url = "?action=read_rows";
-    const response = await apiClient.get(url, { params: name });
+    const response = await apiClient.get(url, { params: search });
     return response.data;
   } catch (error) {
     console.error("取得資料失敗:", error);

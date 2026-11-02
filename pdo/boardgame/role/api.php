@@ -29,26 +29,40 @@ try {
     switch ($action) {
         case 'read_rows':
             // 接收前端傳來的搜尋關鍵字
-            $search = $_GET['role_name'] ?? '';          
+            $game_name = $_GET['game_name'] ?? '';  
+            $role_name = $_GET['role_name'] ?? '';  
+            // 主要語句       
             $sql = "SELECT 
             role.id as id,
                         role.name as role_name,
                         role.game_id as game_id,
-                        game.name as game_name
-                        
-                    FROM `role` LEFT JOIN game ON role.game_id=game.id";           
-
-          if (!empty($search)) {
-                // 使用問號 ? 佔位符進行模糊查詢
-                $sql .= " WHERE role.name LIKE ?";
-                $stmt = $pdo->prepare($sql);
-                // 透過陣列依序傳入參數與萬用字元
-                $stmt->execute(['%' . $search . '%']);
-            } else {
-                $stmt = $pdo->query($sql);
-            }
+                        game.name as game_name                        
+                    FROM `role` LEFT JOIN game ON role.game_id=game.id";   
            
-            $records = $stmt->fetchAll();
+            // 組合搜尋條件
+            $whereClauses = [];
+            // 搜尋值
+            $params = [];
+            // 檢查 game_name 是否有填
+            if (!empty($game_name)) {
+                $whereClauses[] = "game.name LIKE ?";
+                $params[] = "%" . $game_name . "%"; // 加上 % 才能做模糊查詢
+            }
+
+            // 檢查 role_name 是否有填
+            if (!empty($role_name)) {
+                $whereClauses[] = "role.name LIKE ?"; // 假設角色名稱的欄位是 role.name
+                $params[] = "%" . $role_name . "%";
+            }
+            // 加入 WHERE 條件            
+            if (count($whereClauses) > 0) {
+                // 用 AND 將多個條件串起來
+                $sql .= " WHERE " . implode(" AND ", $whereClauses);
+            }
+            // 準備與執行
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($params); 
+            $records = $stmt->fetchAll(PDO::FETCH_ASSOC);           
             
             echo json_encode($records, JSON_UNESCAPED_UNICODE);
             break;

@@ -88,6 +88,7 @@ export default function index() {
         onSuccess={onSuccess}
         // onSuccess={fetchScorecards}
         editData={editingData}
+        setData={setData}
         handleDelete={handleDelete}
       />
       <TableView
