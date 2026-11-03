@@ -45,8 +45,9 @@ export default function index() {
     if (!window.confirm("確定要刪除嗎？")) return;
     try {
       await deleteRow(id);
+      setData((prev) => prev.filter((item) => item.id !== id));
       // 刪除成功後重新載入列表
-      fetchData();
+      // fetchData();
       setIsModalOpen(false);
     } catch (err) {
       console.log(err);
@@ -80,6 +81,7 @@ export default function index() {
         onSuccess={() => fetchData()} // 儲存成功後維持搜尋條件更新
         // onSuccess={fetchScorecards}
         editData={editingData}
+        setData={setData}
         handleDelete={handleDelete}
       />
       <TableView

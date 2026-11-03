@@ -57,7 +57,7 @@ export default function GameSelect({ onChange, value }) {
       search
       clearable
       options={games}
-      // value={selectedGame}
+      name="game_id"
       value={value}
       onChange={onChange}
       // onChange={handleChange}

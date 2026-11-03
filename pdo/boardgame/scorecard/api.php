@@ -78,6 +78,8 @@ try {
                 // 用 AND 將多個條件串起來
                 $sql .= " WHERE " . implode(" AND ", $whereClauses);
             }
+
+            $sql.= " ORDER BY play_date DESC";
             // 準備與執行
             $stmt = $pdo->prepare($sql);
             $stmt->execute($params); 
@@ -89,12 +91,19 @@ try {
             // 新增一筆資料
         case 'create_row':
             // 新增遊戲範例
+            $session_id = $input['session_id'] ?? null;
             $player_id = $input['player_id'] ?? null;
             $role_id = $input['role_id'] ?? null;
+            $points = $input['points'] ?? null;
             
-            $sql = "INSERT INTO $table (player_id,role_id) VALUES (:player_id,:role_id)";
+            $sql = "INSERT INTO $table (player_id,role_id,session_id,points) VALUES
+             (:player_id,:role_id,:session_id,:points)";
             $stmt = $pdo->prepare($sql);
-            $stmt->execute(['player_id' => $player_id,'role_id'=>$role_id]);
+            $stmt->execute(['player_id' => $player_id,
+            'role_id'=>$role_id,
+            'session_id'=>$session_id,
+            'points'=>$points
+            ]);
             
             echo json_encode([
                 "status" => "success", 
@@ -127,21 +136,25 @@ try {
             $id = $input['id'] ?? null;   
             $player_id = $input['player_id'] ?? null;
             $role_id = $input['role_id'] ?? null;
+            $session_id = $input['session_id'] ?? null;
+            $points = $input['points'] ?? null;
             if (!$id) {
                 throw new Exception("update必要的ID");
-            }
-
-           
+            }           
 
             $sql = "UPDATE $table 
                     SET role_id = :role_id,                     
-                     player_id = :player_id
+                     player_id = :player_id,
+                     session_id = :session_id,
+                     points = :points
                     WHERE id = :id";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 'id' => $id,
                 'role_id' => $role_id,
-                'player_id' => $player_id
+                'player_id' => $player_id,
+                'session_id' => $session_id,
+                'points' => $points
             ]);
 
            

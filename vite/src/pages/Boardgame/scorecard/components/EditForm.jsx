@@ -3,8 +3,9 @@ import { Form, Button, Modal, Icon } from "semantic-ui-react";
 import { createRow, updateRow } from "../api";
 import RoleSelect from "../../components/dropdown/RoleSelect";
 import PlayerSelect from "../../components/dropdown/PlayerSelect";
+import SessionSelect from "../../components/dropdown/SessionSelect";
 
-function EditForm({ isOpen, onClose, onSuccess, editData, handleDelete }) {
+function EditForm({ isOpen, onClose, setData, editData, handleDelete }) {
   // A component is changing an uncontrolled input to be controlled
   // 需要給表單每個欄位預設值,確保是受控組件
   // 否則會出現上述警告
@@ -12,6 +13,7 @@ function EditForm({ isOpen, onClose, onSuccess, editData, handleDelete }) {
   const initialFormData = {
     role_id: "",
     player_id: "",
+    points: "",
   };
   const [formData, setFormData] = useState(initialFormData);
 
@@ -36,17 +38,27 @@ function EditForm({ isOpen, onClose, onSuccess, editData, handleDelete }) {
 
   const handleSubmit = async () => {
     try {
+      // if (editData) {
+      //   const res = await updateRow(editData.id, formData);
+
+      // } else {
+
+      //   await createRow(formData);
+
+      // }
       if (editData) {
-        const res = await updateRow(editData.id, formData);
-        console.log(res);
-        // alert("戰績更新成功！");
+        await updateRow(editData.id, formData);
+        // 將儲存成功的值寫入state
+        setData((prev) =>
+          prev.map((item) => (item.id === formData.id ? formData : item)),
+        );
       } else {
-        console.log(formData);
-        await createRow(formData);
-        // alert("戰績新增成功！");
+        const res = await createRow(formData);
+        // 將儲存成功的值寫入state
+        setData((prev) => [...prev, { ...formData, id: res.id }]);
       }
 
-      if (onSuccess) onSuccess();
+      // if (onSuccess) onSuccess();
       if (onClose) onClose();
     } catch (err) {
       console.log(err);
@@ -67,21 +79,21 @@ function EditForm({ isOpen, onClose, onSuccess, editData, handleDelete }) {
       <Modal.Header>{editData ? "✏️ 編輯" : "📝 新增"}</Modal.Header>
       <Modal.Content>
         <Form onSubmit={handleSubmit} id="scorecard-form">
-          <Form.Input
+          {/* <Form.Input
             label="角色名稱"
             name="role_id"
             value={formData.role_id}
             onChange={handleChange}
             required
-          />
+          /> */}
 
-          {/* 使用 Form.Field 包裝，並加上 label 屬性 */}
-          {/* <Form.Field label="選擇玩家">
-            <PlayerSelect
+          <div className="field">
+            <label>選擇場次</label>
+            <SessionSelect
               onChange={handleDropdownChange}
-              value={formData.player_id}
+              value={formData.session_id}
             />
-          </Form.Field> */}
+          </div>
 
           <div className="field">
             <label>選擇玩家</label>
@@ -98,10 +110,13 @@ function EditForm({ isOpen, onClose, onSuccess, editData, handleDelete }) {
             />
           </div>
 
-          {/* <PlayerSelect
-            onChange={handleDropdownChange}
-            value={formData.player_id}
-          /> */}
+          <Form.Input
+            label="分數"
+            name="points"
+            value={formData.points}
+            onChange={handleChange}
+            required
+          />
         </Form>
       </Modal.Content>
       <Modal.Actions>

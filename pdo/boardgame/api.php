@@ -107,7 +107,10 @@ try {
             break;
             
         case 'get_sessions':
-            $stmt = $pdo->query("SELECT session.id, play_date,game.name FROM `session` JOIN game ON game.id = session.game_id");
+            $stmt = $pdo->query("SELECT session.id, play_date,game.name 
+            FROM `session` JOIN game ON game.id = session.game_id
+            ORDER BY play_date DESC
+            ");
             echo json_encode($stmt->fetchAll(), JSON_UNESCAPED_UNICODE);
             break;
 

@@ -23,8 +23,11 @@ export default function TableView({ data, loading, handleEdit, handleDelete }) {
         <Table celled striped selectable unstackable>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>id</Table.HeaderCell>
+              {/* <Table.HeaderCell>id</Table.HeaderCell>
+              <Table.HeaderCell>遊戲id</Table.HeaderCell> */}
+              <Table.HeaderCell>日期</Table.HeaderCell>
               <Table.HeaderCell>遊戲名稱</Table.HeaderCell>
+
               <Table.HeaderCell>角色名稱</Table.HeaderCell>
               <Table.HeaderCell>玩家</Table.HeaderCell>
 
@@ -40,9 +43,12 @@ export default function TableView({ data, loading, handleEdit, handleDelete }) {
             {data.length > 0 ? (
               data.map((item) => (
                 <Table.Row key={item.id}>
-                  <Table.Cell>{item.id}</Table.Cell>
+                  {/* <Table.Cell>{item.id}</Table.Cell>
+                  <Table.Cell>{item.game_id}</Table.Cell> */}
+                  <Table.Cell>{item.play_date}</Table.Cell>
                   <Table.Cell>{item.game_name}</Table.Cell>
-                  <Table.Cell>{item.role_name || item.role_id}</Table.Cell>
+
+                  <Table.Cell>{item.role_name || " "}</Table.Cell>
                   <Table.Cell>{item.player_name}</Table.Cell>
                   <Table.Cell>{item.points}</Table.Cell>
 
