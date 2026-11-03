@@ -32,6 +32,7 @@ try {
             $game_name = $_GET['game_name'] ?? '';  
             $role_name = $_GET['role_name'] ?? '';  
             $player_id = $_GET['player_id'] ?? '';  
+            $play_date = $_GET['play_date'] ?? '';  
             // 主要語句       
             $sql = "SELECT 
                         scorecard.id AS id,
@@ -67,10 +68,15 @@ try {
                 $params[] = "%" . $role_name . "%";
             }
 
-             // 
+             
             if (!empty($player_id)) {
                 $whereClauses[] = "player_id LIKE ?"; // 假設角色名稱的欄位是 role.name
                 $params[] =  $player_id;
+            }
+
+            if (!empty($play_date)) {
+                $whereClauses[] = "play_date LIKE ?"; // 假設角色名稱的欄位是 role.name
+                $params[] =  $play_date;
             }
 
             // 加入 WHERE 條件            

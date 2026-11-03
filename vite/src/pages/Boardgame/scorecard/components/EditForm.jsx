@@ -79,14 +79,6 @@ function EditForm({ isOpen, onClose, setData, editData, handleDelete }) {
       <Modal.Header>{editData ? "✏️ 編輯" : "📝 新增"}</Modal.Header>
       <Modal.Content>
         <Form onSubmit={handleSubmit} id="scorecard-form">
-          {/* <Form.Input
-            label="角色名稱"
-            name="role_id"
-            value={formData.role_id}
-            onChange={handleChange}
-            required
-          /> */}
-
           <div className="field">
             <label>選擇場次</label>
             <SessionSelect
@@ -113,6 +105,7 @@ function EditForm({ isOpen, onClose, setData, editData, handleDelete }) {
           <Form.Input
             label="分數"
             name="points"
+            type="number"
             value={formData.points}
             onChange={handleChange}
             required

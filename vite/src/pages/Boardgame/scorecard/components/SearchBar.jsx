@@ -4,7 +4,11 @@ import PlayerSelect from "../../components/dropdown/PlayerSelect";
 
 export default function SearchBar({ fetchData }) {
   // 搜尋值
-  const [search, setSearch] = useState({ role_name: "", game_name: "" });
+  const [search, setSearch] = useState({
+    role_name: "",
+    game_name: "",
+    play_date: "",
+  });
   const handleChange = (e) => {
     setSearch((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     // setSearch(e.target.value);
@@ -22,6 +26,14 @@ export default function SearchBar({ fetchData }) {
     <div>
       <Form>
         <Form.Group widths={3}>
+          <Form.Field>
+            <Input
+              type="date"
+              value={search.play_date}
+              onChange={handleChange}
+              name="play_date"
+            />
+          </Form.Field>
           <Form.Field>
             <Input
               placeholder="遊戲名稱"
