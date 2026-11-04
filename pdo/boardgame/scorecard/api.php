@@ -31,7 +31,8 @@ try {
             // 接收前端傳來的搜尋關鍵字
             $game_name = $_GET['game_name'] ?? '';  
             $role_name = $_GET['role_name'] ?? '';  
-            $player_id = $_GET['player_id'] ?? '';  
+            $player_id = $_GET['player_id'] ?? '';
+            $session_id = $_GET['session_id'] ?? '';  
             $play_date = $_GET['play_date'] ?? '';  
             // 主要語句       
             $sql = "SELECT 
@@ -70,8 +71,13 @@ try {
 
              
             if (!empty($player_id)) {
-                $whereClauses[] = "player_id LIKE ?"; // 假設角色名稱的欄位是 role.name
+                $whereClauses[] = "player_id = ?"; // 假設角色名稱的欄位是 role.name
                 $params[] =  $player_id;
+            }
+
+             if (!empty($session_id)) {
+                $whereClauses[] = "session_id = ?"; // 假設角色名稱的欄位是 role.name
+                $params[] =  $session_id;
             }
 
             if (!empty($play_date)) {

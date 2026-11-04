@@ -1,7 +1,10 @@
-import { Table } from "semantic-ui-react";
+import { useState } from "react";
+import { Table, Label } from "semantic-ui-react";
 
 export default function Pivot1026({ data }) {
-  console.log(data);
+  // 顯示平均或總分
+  const [isShowAvg, setIsShowAvg] = useState(false);
+
   // 準備2組資料,分別依角色,場次群組
   const selectedGame = "茂林";
 
@@ -42,6 +45,10 @@ export default function Pivot1026({ data }) {
     groupedData(filteredData, "player_id"),
   );
 
+  const handleToggle = () => {
+    setIsShowAvg(!isShowAvg);
+  };
+
   // console.log(groupedByRole);
   // console.log(groupedBySession);
   return (
@@ -59,6 +66,7 @@ export default function Pivot1026({ data }) {
                 );
               },
             )}
+            <Table.HeaderCell textAlign="center">合計</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -81,18 +89,50 @@ export default function Pivot1026({ data }) {
                       }, 0);
                       //   const points = Number(matched.points) || 0;
                       return (
-                        <Table.Cell key={roleId} textAlign="center">
-                          {/* {matched[0]?.points}
-                          {matched[1] && " + "}
-                          {matched[1]?.points}
-                          {matched[2] && " + "}
-                          {matched[2]?.points} = {groupSum} */}
-                          {matched.length > 0 &&
-                            Math.round(groupSum / matched.length)}
+                        <Table.Cell
+                          key={roleId}
+                          textAlign="center"
+                          style={{ position: "relative" }}
+                        >
+                          {/* 中間的主體內容 */}
+                          <div>
+                            {matched.length > 0 &&
+                              isShowAvg &&
+                              Math.round(groupSum / matched.length)}
+                            {!isShowAvg && groupSum}
+                          </div>
+
+                          {/* 右上角角落的 Label */}
+                          <Label
+                            size="mini" // 可選：讓角標小一點，在儲存格內視覺效果較佳
+                            style={{
+                              position: "absolute",
+                              top: "50%",
+                              transform: "translateY(-50%)",
+                              // top: 20,
+                              right: 2,
+                              margin: 0,
+                            }}
+                          >
+                            {matched.length}
+                          </Label>
                         </Table.Cell>
+                        // <Table.Cell key={roleId} textAlign="center">
+                        //   {matched.length > 0 &&
+                        //     isShowAvg &&
+                        //     Math.round(groupSum / matched.length)}
+                        //   {!isShowAvg && groupSum}
+                        //   <Label>{matched.length}</Label>
+                        // </Table.Cell>
                       );
                     },
                   )}
+                  {/* 列合計 */}
+                  <Table.Cell textAlign="center">
+                    {isShowAvg
+                      ? Math.round(playerTotal / playerData.length)
+                      : playerTotal}
+                  </Table.Cell>
                 </Table.Row>
               );
             },
@@ -101,16 +141,13 @@ export default function Pivot1026({ data }) {
         </Table.Body>
         <Table.Footer>
           <Table.Row>
-            <Table.HeaderCell>平均</Table.HeaderCell>
+            <Table.HeaderCell onClick={handleToggle}>
+              平均/總分
+            </Table.HeaderCell>
             {groupedByRole.map(
               ([roleId, { data: roleData, total: roleTotal }]) => {
                 return (
                   <Table.HeaderCell key={roleId} textAlign="center">
-                    {/* 合計 */}
-                    {/* <div style={{ fontWeight: "bold", fontSize: "1.1em" }}>
-                      {roleTotal}
-                    </div> */}
-
                     {/* 平均：小字、灰色、帶有說明 */}
                     <div
                       style={{
@@ -119,12 +156,17 @@ export default function Pivot1026({ data }) {
                         // color: "#666",
                       }}
                     >
-                      {Math.round(roleTotal / roleData.length)}
+                      {isShowAvg
+                        ? Math.round(roleTotal / roleData.length)
+                        : roleTotal}
                     </div>
                   </Table.HeaderCell>
                 );
               },
             )}
+            <Table.HeaderCell onClick={handleToggle}>
+              {/* {roleTotal} */}
+            </Table.HeaderCell>
           </Table.Row>
         </Table.Footer>
       </Table>

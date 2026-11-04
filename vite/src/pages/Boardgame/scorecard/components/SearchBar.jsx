@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, Input, Form } from "semantic-ui-react";
 import PlayerSelect from "../../components/dropdown/PlayerSelect";
+import SessionSelect from "../../components/dropdown/SessionSelect";
 
 export default function SearchBar({ fetchData }) {
   // 搜尋值
@@ -22,17 +23,26 @@ export default function SearchBar({ fetchData }) {
     setSearch((prev) => ({ ...prev, player_id: value }));
     console.log(value);
   };
+
+  const handleDropdownChange = (e, { name, value }) => {
+    setSearch((prev) => ({ ...prev, [name]: value }));
+    console.log(value);
+  };
+
   return (
     <div>
       <Form>
         <Form.Group widths={3}>
-          <Form.Field>
+          {/* <Form.Field>
             <Input
               type="date"
               value={search.play_date}
               onChange={handleChange}
               name="play_date"
             />
+          </Form.Field> */}
+          <Form.Field>
+            <SessionSelect onChange={handleDropdownChange} />
           </Form.Field>
           <Form.Field>
             <Input
@@ -50,8 +60,9 @@ export default function SearchBar({ fetchData }) {
               name="role_name"
             />
           </Form.Field>
+
           <Form.Field>
-            <PlayerSelect onChange={handlePlayerChange} />
+            <PlayerSelect onChange={handleDropdownChange} />
           </Form.Field>
 
           <Form.Field>
