@@ -88,7 +88,6 @@ const EditForm = ({ state, dispatch }) => {
 
       <Modal.Content>
         <Form>
-          <CateSelect onChange={handleChange} value={formData.category_id} />
           <Form.Input
             label="消費日"
             type="date"
@@ -96,13 +95,17 @@ const EditForm = ({ state, dispatch }) => {
             value={formData.spend_date}
             onChange={handleChange}
           />
-          <Form.Input
+          <div className="field">
+            <label>類別</label>
+            <CateSelect onChange={handleChange} value={formData.category_id} />
+          </div>
+          {/* <Form.Input
             label="類別"
             name="category_id"
             value={formData.category_id ?? ""}
             // value={formData?.category_id}
             onChange={handleChange}
-          />
+          /> */}
           <Form.Input
             label="項目"
             name="note"

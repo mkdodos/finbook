@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useReducer } from "react";
 import { initialState, reducer } from "./data/reducer";
 import { Api } from "./data/api";
-// import SearchBar from "./components/SearchBar";
+
+import PhoneView from "./components/PhoneView";
 import TableView from "./components/TableView";
 import EditForm from "./components/EditForm";
 import SearchBar from "./components/SearchBar";
@@ -10,6 +11,9 @@ import { Button, Form, Grid } from "semantic-ui-react";
 
 export default function index() {
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  // 切換手機版
+  const [isPhone, setIsPhone] = useState(true);
 
   const fetchApiData = async (searchParams) => {
     // console.log(searchParams);
@@ -36,8 +40,8 @@ export default function index() {
   }, []);
 
   return (
-    <div>
-      <Grid columns={2}>
+    <>
+      {/* <Grid columns={2}>
         <Grid.Row>
           <Grid.Column>
             <SearchBar fetchData={fetchApiData} />
@@ -48,10 +52,55 @@ export default function index() {
             </Button>
           </Grid.Column>
         </Grid.Row>
-      </Grid>
+      </Grid> */}
+      {/* <Grid stackable columns={2}>
+        <Grid.Row>
+          <Grid.Column width={16} tablet={10} computer={12}>
+            <SearchBar fetchData={fetchApiData} />
+          </Grid.Column>
+          <Grid.Column
+            width={16}
+            tablet={6}
+            computer={4}
+            className="mobile-button-container"
+          >
+            <Button
+              fluid
+              color="blue"
+              onClick={() => dispatch({ type: "OPEN_FORM" })}
+            >
+              新增
+            </Button>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid> */}
+      <div
+        style={{
+          display: "flex",
+          gap: "8px",
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
+        <div style={{ flex: 1 }}>
+          <SearchBar fetchData={fetchApiData} />
+        </div>
+        <Button
+          color="blue"
+          style={{ flexShrink: 0, whitespace: "nowrap" }}
+          onClick={() => dispatch({ type: "OPEN_FORM" })}
+        >
+          新增
+        </Button>
+      </div>
 
-      <TableView state={state} dispatch={dispatch} />
+      {isPhone ? (
+        <PhoneView state={state} dispatch={dispatch} />
+      ) : (
+        <TableView state={state} dispatch={dispatch} />
+      )}
+
       <EditForm state={state} dispatch={dispatch} />
-    </div>
+    </>
   );
 }

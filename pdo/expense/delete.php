@@ -11,7 +11,7 @@ if (!$id) {
     exit();
 }
 
-$sql = "DELETE FROM transactions WHERE id = :id";
+$sql = "DELETE FROM expense WHERE id = :id";
 
 try {
     $stmt = $pdo->prepare($sql);

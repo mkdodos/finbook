@@ -4,7 +4,7 @@ require_once '../db.php';
 
 // 直接使用 $pdo 查詢
 try {
-    $sql = "SELECT * FROM expense";
+    $sql = "SELECT expense.id,spend_date,note,amount,category_id,categories.name as cate_name FROM expense LEFT JOIN categories ON expense.category_id = categories.id ";
    
     // 接收前端傳來的搜尋關鍵字
             $note = $_GET['note'] ?? '';    

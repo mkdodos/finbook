@@ -7,11 +7,11 @@ $data = json_decode(file_get_contents('php://input'), true);
 
 $categoryId      = $data['category_id'] ?? null;
 $amount          = $data['amount'] ?? 0;
-$transactionDate = $data['transaction_date'] ?? date('Y-m-d');
+$spendDate = $data['spend_date'] ?? date('Y-m-d');
 $note            = $data['note'] ?? '';
 
 // 1. 撰寫 SQL 語法（使用命名占位符 :placeholder）
-$sql = "INSERT INTO expense (category_id, amount, transaction_date, note) 
+$sql = "INSERT INTO expense (category_id, amount, spend_date, note) 
         VALUES (:category_id, :amount, :transaction_date, :note)";
 
 try {
@@ -22,7 +22,7 @@ try {
     $stmt->execute([
         ':category_id'      => $categoryId,
         ':amount'           => $amount,
-        ':transaction_date' => $transactionDate,
+        ':transaction_date' => $spendDate,
         ':note'             => $note
     ]);
 

@@ -3,12 +3,13 @@ import { Table, Button } from "semantic-ui-react";
 
 export default function TableView({ state, dispatch }) {
   return (
-    <Table celled selectable>
+    <Table celled selectable unstackable>
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell>ID</Table.HeaderCell>
           <Table.HeaderCell>消費日</Table.HeaderCell>
           <Table.HeaderCell>品名</Table.HeaderCell>
+          <Table.HeaderCell>類別</Table.HeaderCell>
           <Table.HeaderCell>類別</Table.HeaderCell>
           <Table.HeaderCell>金額</Table.HeaderCell>
 
@@ -25,6 +26,7 @@ export default function TableView({ state, dispatch }) {
             <Table.Cell>{item.spend_date}</Table.Cell>
             <Table.Cell>{item.note}</Table.Cell>
             <Table.Cell>{item.category_id}</Table.Cell>
+            <Table.Cell>{item.cate_name}</Table.Cell>
             <Table.Cell>{item.amount}</Table.Cell>
             {/* <Table.Cell>{item.work_name}</Table.Cell> */}
 
