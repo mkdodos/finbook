@@ -10,7 +10,7 @@ set MYSQL_BIN="C:\xampp\mysql\bin"
 set DB_USER=root
 set DB_PASS=123
 set DB_NAME=minisoft_finbook
-set BACKUP_DIR=C:\Users\user\Dropbox\database
+set BACKUP_DIR=C:\Users\user\Dropbox\database\finbook
 set RETENTION_DAYS=7
 
 :: 取得當前日期與時間 (格式: YYYYMMDD_HHMMSS)
@@ -26,6 +26,7 @@ if not exist "%BACKUP_DIR%" mkdir "%BACKUP_DIR%"
 echo 開始進行 MySQL 備份...
 %MYSQL_BIN%\mysqldump.exe -u%DB_USER% -p%DB_PASS% --databases %DB_NAME% --single-transaction --quick --routines --triggers > "!BACKUP_FILE!"
 
+:: 寫入 log 檔
 if %ERRORLEVEL% equ 0 (
     echo [!DATE_STAMP!] 備份成功: !BACKUP_FILE! >> "%BACKUP_DIR%\backup.log"
 ) else (

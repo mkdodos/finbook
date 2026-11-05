@@ -5,9 +5,14 @@ require_once '../db.php';
 $data = json_decode(file_get_contents('php://input'), true);
 
 $id              = $data['id'] ?? null;
-$categoryId      = $data['category_id'] ?? null;
+// 原本這樣寫,如果是空字串,會存入資料庫,因為 int 欄位屬性變成 0
+// $categoryId      = $data['category_id'] ?? null;
+// 同時判斷空字串、空值或未設定，轉成 null, 欄位屬性設定允許存 null,就可避免上述問題
+$categoryId = ($data['category_id'] !== '' && !empty($data['category_id'])) ? $data['category_id'] : null;
+
 $amount          = $data['amount'] ?? 0;
-$transactionDate = $data['transaction_date'] ?? null;
+
+$transactionDate = $data['spend_date'] ?? null;
 $note            = $data['note'] ?? '';
 
 if (!$id) {
@@ -19,7 +24,7 @@ if (!$id) {
 $sql = "UPDATE expense 
         SET category_id = :category_id, 
             amount = :amount, 
-            transaction_date = :transaction_date, 
+            spend_date = :transaction_date, 
             note = :note 
         WHERE id = :id";
 

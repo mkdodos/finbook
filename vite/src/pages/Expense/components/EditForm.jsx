@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Button, Modal, Form, TextArea } from "semantic-ui-react";
 import { Api } from "../data/api";
 import dayjs from "dayjs";
+// import GameSelect from "./dropdown/GameSelect";
+import CateSelect from "./dropdown/CateSelect";
 
 const EditForm = ({ state, dispatch }) => {
   // 判斷是否為編輯模式（有 dataProcessRow 且含有 id）
@@ -10,9 +12,10 @@ const EditForm = ({ state, dispatch }) => {
 
   const initState = {
     id: "",
-    work_id: "",
-    transaction_date: dayjs().format("YYYY-MM-DD"), // 🎉 自動帶入當天日期，例如 "2026-08-19"
-    arr_note: "",
+    category_id: "",
+    spend_date: dayjs().format("YYYY-MM-DD"), // 🎉 自動帶入當天日期，例如 "2026-08-19"
+    note: "",
+    amount: "",
   };
   // 初始化 State
   const [formData, setFormData] = useState(initState);
@@ -25,7 +28,7 @@ const EditForm = ({ state, dispatch }) => {
       setFormData({
         // 使用 optional chaining ?. 避免 null 崩潰
         id: editingRow.id,
-        transaction_date: editingRow.transaction_date,
+        spend_date: editingRow.spend_date,
         category_id: editingRow?.category_id ?? "",
         amount: editingRow.amount,
         note: editingRow.note,
@@ -85,17 +88,19 @@ const EditForm = ({ state, dispatch }) => {
 
       <Modal.Content>
         <Form>
+          <CateSelect onChange={handleChange} value={formData.category_id} />
           <Form.Input
             label="消費日"
             type="date"
-            name="transaction_date"
-            value={formData.transaction_date}
+            name="spend_date"
+            value={formData.spend_date}
             onChange={handleChange}
           />
           <Form.Input
             label="類別"
             name="category_id"
-            value={formData.category_id}
+            value={formData.category_id ?? ""}
+            // value={formData?.category_id}
             onChange={handleChange}
           />
           <Form.Input

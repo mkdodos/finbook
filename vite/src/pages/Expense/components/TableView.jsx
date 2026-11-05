@@ -22,11 +22,11 @@ export default function TableView({ state, dispatch }) {
           // {state.data.map((item) => (
           <Table.Row key={item.id}>
             <Table.Cell>{item.id}</Table.Cell>
-            <Table.Cell>{item.transaction_date}</Table.Cell>
+            <Table.Cell>{item.spend_date}</Table.Cell>
             <Table.Cell>{item.note}</Table.Cell>
             <Table.Cell>{item.category_id}</Table.Cell>
             <Table.Cell>{item.amount}</Table.Cell>
-            <Table.Cell>{item.work_name}</Table.Cell>
+            {/* <Table.Cell>{item.work_name}</Table.Cell> */}
 
             <Table.Cell>
               <Button

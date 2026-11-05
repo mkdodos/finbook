@@ -4,7 +4,8 @@ import { Api } from "./data/api";
 // import SearchBar from "./components/SearchBar";
 import TableView from "./components/TableView";
 import EditForm from "./components/EditForm";
-import { Button } from "semantic-ui-react";
+import SearchBar from "./components/SearchBar";
+import { Button, Form, Grid } from "semantic-ui-react";
 // import data from "./data/data.json";
 
 export default function index() {
@@ -32,22 +33,23 @@ export default function index() {
 
   useEffect(() => {
     fetchApiData(state.searchParams);
-    // 初始化載入
-    // const initData = async () => {
-    //   try {
-    //     const data = await Api.fetchList();
-    //     dispatch({ type: "LOAD_SUCCESS", payload: { data } });
-    //   } catch (error) {
-    //     console.error("載入報價單失敗:", error);
-    //   }
-    // };
-    // initData();
   }, []);
 
   return (
     <div>
-      <Button onClick={() => dispatch({ type: "OPEN_FORM" })}>新增</Button>
-      {/* <SearchBar state={state} dispatch={dispatch} onSearch={fetchApiData} /> */}
+      <Grid columns={2}>
+        <Grid.Row>
+          <Grid.Column>
+            <SearchBar fetchData={fetchApiData} />
+          </Grid.Column>
+          <Grid.Column>
+            <Button onClick={() => dispatch({ type: "OPEN_FORM" })}>
+              新增
+            </Button>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+
       <TableView state={state} dispatch={dispatch} />
       <EditForm state={state} dispatch={dispatch} />
     </div>

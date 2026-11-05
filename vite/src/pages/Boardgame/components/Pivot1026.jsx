@@ -104,13 +104,13 @@ export default function Pivot1026({ data }) {
 
                           {/* 右上角角落的 Label */}
                           <Label
-                            size="mini" // 可選：讓角標小一點，在儲存格內視覺效果較佳
+                            size="small" // 可選：讓角標小一點，在儲存格內視覺效果較佳
                             style={{
                               position: "absolute",
                               top: "50%",
                               transform: "translateY(-50%)",
                               // top: 20,
-                              right: 2,
+                              right: 5,
                               margin: 0,
                             }}
                           >
