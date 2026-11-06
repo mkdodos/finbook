@@ -115,6 +115,7 @@ const EditForm = ({ state, dispatch }) => {
           <Form.Input
             label="金額"
             name="amount"
+            type="number"
             value={formData.amount}
             onChange={handleChange}
           />

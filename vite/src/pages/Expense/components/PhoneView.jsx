@@ -94,8 +94,9 @@ export default function PhoneView({ state, dispatch }) {
                 </span>
                 <span
                   style={{
-                    color: "#3442c2",
-                    fontSize: "1.2em",
+                    color: "#2391FF",
+
+                    fontSize: "1.1em",
                     fontWeight: "bold",
                   }}
                 >

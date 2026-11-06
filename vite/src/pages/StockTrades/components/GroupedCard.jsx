@@ -62,6 +62,7 @@ const GroupedCard = ({ data }) => {
                     </Label>
                     <Input
                       size="small"
+                      type="number"
                       value={currentPrice}
                       onChange={(e) => setCurrentPrice(e.target.value)}
                       style={{ width: "120px" }}
@@ -106,7 +107,9 @@ const GroupedCard = ({ data }) => {
                       <Table.HeaderCell>日期</Table.HeaderCell>
                       <Table.HeaderCell>類型</Table.HeaderCell>
                       <Table.HeaderCell>{groupShares}股</Table.HeaderCell>
-                      <Table.HeaderCell>單價</Table.HeaderCell>
+                      <Table.HeaderCell>
+                        均價 {(groupTotal / groupShares) * -1}
+                      </Table.HeaderCell>
                       <Table.HeaderCell>{groupTotal}</Table.HeaderCell>
                       {/* <Table.HeaderCell>備註</Table.HeaderCell> */}
                     </Table.Row>

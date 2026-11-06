@@ -38,6 +38,9 @@ export default function App() {
               <Menu.Item as={Link} to="/costco">
                 好市多
               </Menu.Item>
+              <Menu.Item as={Link} to="/expense">
+                日常消費
+              </Menu.Item>
 
               <Menu.Item as={Link} to="/stocks">
                 股票基本資料
