@@ -1,26 +1,33 @@
-import React from "react";
-import { Card, Table, Label, Header } from "semantic-ui-react";
+import React, { useState } from "react";
+import { Card, Table, Label, Input } from "semantic-ui-react";
 
 const GroupedCard = ({ data }) => {
   // 加上防呆，若 data 為空或尚未載入則直接回傳 null 或載入狀態
   if (!data) return null; // 或 return <div>載入中...</div>;
+
+  // 現價
+  const [currentPrice, setCurrentPrice] = useState(3390);
+
   return (
     <Card.Group stackable itemsPerRow={1}>
       {Object.entries(data).map(([key, trades]) => {
         // 從第一筆資料取得股票名稱與代碼（方便卡片標題顯示）
         const stockName = trades[0]?.name || "";
         const stockId = trades[0]?.stock_id || key;
+        console.log(trades);
+        const groupTotal = trades.reduce((acc, item) => {
+          const single =
+            item.trade_type == "buy" ? item.price * -1 : item.price;
+          return acc + Math.round(Number(single * item.shares));
+        }, 0);
 
+        const groupShares = trades.reduce((acc, item) => {
+          const amt = item.trade_type == "buy" ? item.shares : item.shares * -1;
+          return acc + Number(amt);
+        }, 0);
         return (
           <Card key={key} fluid color="blue">
             <Card.Content>
-              {/* <Card.Header>
-                <Label color="teal" size="small" style={{ marginLeft: "10px" }}>
-                  {stockId}
-                </Label>
-                {stockName}
-              
-              </Card.Header> */}
               <Card.Header
                 style={{
                   display: "flex",
@@ -33,6 +40,64 @@ const GroupedCard = ({ data }) => {
                 </Label>
                 <span>{stockName}</span>
               </Card.Header>
+              <Card.Content>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "12px",
+                    marginTop: "10px",
+                  }}
+                >
+                  {/* 標籤與輸入框群組 */}
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "6px",
+                    }}
+                  >
+                    <Label style={{ margin: 0, whiteSpace: "nowrap" }}>
+                      現價
+                    </Label>
+                    <Input
+                      size="small"
+                      value={currentPrice}
+                      onChange={(e) => setCurrentPrice(e.target.value)}
+                      style={{ width: "120px" }}
+                    />
+                  </div>
+
+                  {/* 損益顯示（加上 Number 確保數值正確計算，並加上顏色區分正負） */}
+                  <span style={{ fontSize: "14px", fontWeight: "500" }}>
+                    損益：
+                    <span
+                      style={{
+                        color:
+                          Number(groupTotal) +
+                            Number(currentPrice || 0) * Number(groupShares) >=
+                          0
+                            ? "#52c41a"
+                            : "#ff4d4f",
+                        marginLeft: "4px",
+                      }}
+                    >
+                      {Number(groupTotal) +
+                        Number(currentPrice || 0) * Number(groupShares)}
+                    </span>
+                  </span>
+                </div>
+              </Card.Content>
+              {/* <Card.Content>
+                <Label>現價</Label>
+                <Input
+                  size="small"
+                  value={currentPrice}
+                  onChange={(e) => setCurrentPrice(e.target.value)}
+                  style={{ width: "120px" }} // 限制寬度為 120px
+                />
+                <span>損益{groupTotal + currentPrice * groupShares}</span>
+              </Card.Content> */}
 
               <Card.Description style={{ marginTop: "15px" }}>
                 <Table compact unstackable basic="very">
@@ -40,9 +105,9 @@ const GroupedCard = ({ data }) => {
                     <Table.Row>
                       <Table.HeaderCell>日期</Table.HeaderCell>
                       <Table.HeaderCell>類型</Table.HeaderCell>
-                      <Table.HeaderCell>股數</Table.HeaderCell>
+                      <Table.HeaderCell>{groupShares}股</Table.HeaderCell>
                       <Table.HeaderCell>單價</Table.HeaderCell>
-                      <Table.HeaderCell>金額</Table.HeaderCell>
+                      <Table.HeaderCell>{groupTotal}</Table.HeaderCell>
                       {/* <Table.HeaderCell>備註</Table.HeaderCell> */}
                     </Table.Row>
                   </Table.Header>
@@ -71,7 +136,10 @@ const GroupedCard = ({ data }) => {
                           </Table.Cell>
                           <Table.Cell>{item.shares}</Table.Cell>
                           <Table.Cell>{item.price}</Table.Cell>
-                          <Table.Cell>{totalAmount}</Table.Cell>
+                          <Table.Cell>
+                            {isBuy && "-"}
+                            {totalAmount}
+                          </Table.Cell>
                           {/* <Table.Cell>{item.note || "-"}</Table.Cell> */}
                         </Table.Row>
                       );
