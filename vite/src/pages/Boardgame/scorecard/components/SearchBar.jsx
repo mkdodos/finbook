@@ -9,6 +9,7 @@ export default function SearchBar({ fetchData }) {
     role_name: "",
     game_name: "",
     play_date: "",
+    player_count: "",
   });
   const handleChange = (e) => {
     setSearch((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -58,6 +59,15 @@ export default function SearchBar({ fetchData }) {
               value={search.role_name}
               onChange={handleChange}
               name="role_name"
+            />
+          </Form.Field>
+
+          <Form.Field>
+            <Input
+              placeholder="人數"
+              value={search.player_count}
+              onChange={handleChange}
+              name="player_count"
             />
           </Form.Field>
 

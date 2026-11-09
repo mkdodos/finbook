@@ -25,6 +25,12 @@ $inputJSON = file_get_contents('php://input');
 $input = json_decode($inputJSON, true) ?? [];
 
 
+ $id = $input['id'] ?? null;   
+$game_id = $input['game_id'] ?? null;
+$play_date = $input['play_date'] ?? null;
+$player_count = $input['player_count'] ?? null;
+
+
 try {
     switch ($action) {
         case 'read_rows':
@@ -33,7 +39,7 @@ try {
             $game_id = $_GET['game_id'] ?? '';  
             // 主要語句       
             $sql =
-                 "SELECT session.id as id,game.id as game_id,game.name as game_name,play_date FROM `session`
+                 "SELECT session.id as id,game.id as game_id,game.name as game_name,play_date,player_count FROM `session`
                  LEFT JOIN `game` ON game.id = session.game_id
 
                     ";
@@ -71,12 +77,13 @@ try {
 
             // 新增一筆資料
         case 'create_row':             
-            $game_id = $input['game_id'] ?? null;
-            $play_date = $input['play_date'] ?? null;
+            // $game_id = $input['game_id'] ?? null;
+            // $play_date = $input['play_date'] ?? null;
             
-            $sql = "INSERT INTO $table (game_id,play_date) VALUES (:game_id,:play_date)";
+            $sql = "INSERT INTO $table (game_id,play_date,player_count) 
+                    VALUES (:game_id,:play_date,:player_count)";
             $stmt = $pdo->prepare($sql);
-            $stmt->execute(['game_id' => $game_id,'play_date'=>$play_date]);
+            $stmt->execute(['game_id' => $game_id,'play_date'=>$play_date,'player_count'=>$player_count]);
             
             echo json_encode([
                 "status" => "success", 
@@ -106,9 +113,7 @@ try {
 
             // 更新
         case 'update_row':
-            $id = $input['id'] ?? null;   
-            $game_id = $input['game_id'] ?? null;
-            $play_date = $input['play_date'] ?? null;
+           
 
             if (!$id) {
                 throw new Exception("update必要的ID");
@@ -116,13 +121,15 @@ try {
 
             $sql = "UPDATE $table 
                     SET game_id = :game_id,                     
-                     play_date = :play_date
+                     play_date = :play_date,
+                     player_count = :player_count
                     WHERE id = :id";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 'id' => $id,
                 'game_id' => $game_id,
-                'play_date' => $play_date
+                'play_date' => $play_date,
+                'player_count' => $player_count
             ]);           
 
             echo json_encode([

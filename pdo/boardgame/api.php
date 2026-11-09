@@ -36,7 +36,8 @@ try {
                         session.play_date,
                         player.name AS player_name,
                         role.name AS role_name,
-                        scorecard.points
+                        scorecard.points,
+                        player_count
                     FROM scorecard
                     LEFT JOIN session ON scorecard.session_id = session.id
                     LEFT JOIN game ON session.game_id = game.id

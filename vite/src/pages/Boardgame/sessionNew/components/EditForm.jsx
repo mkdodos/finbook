@@ -69,6 +69,15 @@ function EditForm({ isOpen, onClose, onSuccess, editData, handleDelete }) {
             required
           />
 
+          <Form.Input
+            label="人數"
+            type="number"
+            name="player_count"
+            value={formData.player_count}
+            onChange={handleChange}
+            required
+          />
+
           <div className="field">
             <label>選擇遊戲</label>
             <GameSelect

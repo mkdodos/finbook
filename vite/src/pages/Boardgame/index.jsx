@@ -88,6 +88,14 @@ function index() {
 
   const panes = [
     {
+      menuItem: "Pivot1026",
+      render: () => (
+        <Tab.Pane>
+          <Pivot1026 data={scorecards} />
+        </Tab.Pane>
+      ),
+    },
+    {
       menuItem: "Scorecard",
       render: () => (
         <Tab.Pane>
@@ -129,14 +137,6 @@ function index() {
       ),
     },
 
-    {
-      menuItem: "Pivot1026",
-      render: () => (
-        <Tab.Pane>
-          <Pivot1026 data={scorecards} />
-        </Tab.Pane>
-      ),
-    },
     {
       menuItem: "PivotEasy",
       render: () => (

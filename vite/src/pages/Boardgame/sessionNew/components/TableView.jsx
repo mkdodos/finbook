@@ -11,6 +11,7 @@ import {
 } from "semantic-ui-react";
 
 export default function TableView({ data, loading, handleEdit, handleDelete }) {
+  console.log(data);
   return (
     <div>
       {loading ? (
@@ -27,6 +28,7 @@ export default function TableView({ data, loading, handleEdit, handleDelete }) {
               <Table.HeaderCell>遊戲id</Table.HeaderCell>
               <Table.HeaderCell>遊戲名稱</Table.HeaderCell>
               <Table.HeaderCell>日期</Table.HeaderCell>
+              <Table.HeaderCell>人數</Table.HeaderCell>
 
               <Table.HeaderCell textAlign="center" style={{ width: "100px" }}>
                 操作
@@ -42,6 +44,7 @@ export default function TableView({ data, loading, handleEdit, handleDelete }) {
                   <Table.Cell>{item.game_id}</Table.Cell>
                   <Table.Cell>{item.game_name}</Table.Cell>
                   <Table.Cell>{item.play_date}</Table.Cell>
+                  <Table.Cell>{item.player_count}</Table.Cell>
 
                   <Table.Cell textAlign="center">
                     {/* 編輯按鈕 */}

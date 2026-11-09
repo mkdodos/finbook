@@ -89,13 +89,41 @@ export default function Pivot1026({ data }) {
                       }, 0);
                       //   const points = Number(matched.points) || 0;
                       return (
-                        <Table.Cell key={roleId} textAlign="center">
-                          {matched.length > 0 &&
-                            isShowAvg &&
-                            Math.round(groupSum / matched.length)}
-                          {!isShowAvg && groupSum}
-                          <Label>{matched.length}</Label>
+                        <Table.Cell
+                          key={roleId}
+                          textAlign="center"
+                          style={{ position: "relative" }}
+                        >
+                          {/* 中間的主體內容 */}
+                          <div>
+                            {matched.length > 0 &&
+                              isShowAvg &&
+                              Math.round(groupSum / matched.length)}
+                            {!isShowAvg && groupSum}
+                          </div>
+
+                          {/* 右上角角落的 Label */}
+                          <Label
+                            size="small" // 可選：讓角標小一點，在儲存格內視覺效果較佳
+                            style={{
+                              position: "absolute",
+                              top: "50%",
+                              transform: "translateY(-50%)",
+                              // top: 20,
+                              right: 5,
+                              margin: 0,
+                            }}
+                          >
+                            {matched.length}
+                          </Label>
                         </Table.Cell>
+                        // <Table.Cell key={roleId} textAlign="center">
+                        //   {matched.length > 0 &&
+                        //     isShowAvg &&
+                        //     Math.round(groupSum / matched.length)}
+                        //   {!isShowAvg && groupSum}
+                        //   <Label>{matched.length}</Label>
+                        // </Table.Cell>
                       );
                     },
                   )}
