@@ -29,6 +29,7 @@ $input = json_decode($inputJSON, true) ?? [];
 $game_id = $input['game_id'] ?? null;
 $play_date = $input['play_date'] ?? null;
 $player_count = $input['player_count'] ?? null;
+$section = $input['section'] ?? null;
 
 
 try {
@@ -39,7 +40,7 @@ try {
             $game_id = $_GET['game_id'] ?? '';  
             // 主要語句       
             $sql =
-                 "SELECT session.id as id,game.id as game_id,game.name as game_name,play_date,player_count FROM `session`
+                 "SELECT session.id as id,game.id as game_id,game.name as game_name,play_date,player_count,section FROM `session`
                  LEFT JOIN `game` ON game.id = session.game_id
 
                     ";
@@ -122,14 +123,16 @@ try {
             $sql = "UPDATE $table 
                     SET game_id = :game_id,                     
                      play_date = :play_date,
-                     player_count = :player_count
+                     player_count = :player_count,
+                     section = :section
                     WHERE id = :id";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 'id' => $id,
                 'game_id' => $game_id,
                 'play_date' => $play_date,
-                'player_count' => $player_count
+                'player_count' => $player_count,
+                'section' => $section
             ]);           
 
             echo json_encode([

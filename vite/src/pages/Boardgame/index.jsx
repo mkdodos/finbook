@@ -24,7 +24,7 @@ import SessionNew from "./sessionNew";
 import PivotTable from "./components/PivotTable";
 import PivotEdit from "./components/PivotEdit";
 import PivotTemplate from "./components/PivotTemplate";
-import PivotRole from "./components/PivotRole";
+// import PivotRole from "./components/PivotRole";
 import PivotEasy from "./components/PivotEasy";
 import Pivot1026 from "./components/Pivot1026";
 // import { rows, columns, data } from "./data/score";
@@ -145,14 +145,7 @@ function index() {
         </Tab.Pane>
       ),
     },
-    {
-      menuItem: "PivotRole",
-      render: () => (
-        <Tab.Pane>
-          <PivotRole data={scorecards} />
-        </Tab.Pane>
-      ),
-    },
+
     {
       menuItem: "PivotTemplate",
       render: () => (

@@ -108,7 +108,7 @@ try {
             break;
             
         case 'get_sessions':
-            $stmt = $pdo->query("SELECT session.id, play_date,game.name 
+            $stmt = $pdo->query("SELECT session.id, play_date,game.name,section 
             FROM `session` JOIN game ON game.id = session.game_id
             ORDER BY play_date DESC
             ");

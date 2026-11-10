@@ -12,6 +12,7 @@ function EditForm({ isOpen, onClose, onSuccess, editData, handleDelete }) {
   const initialFormData = {
     game_id: "",
     play_date: "",
+    section: "",
   };
   const [formData, setFormData] = useState(initialFormData);
 
@@ -67,6 +68,14 @@ function EditForm({ isOpen, onClose, onSuccess, editData, handleDelete }) {
             value={formData.play_date}
             onChange={handleChange}
             required
+          />
+
+          <Form.Input
+            label="時段"
+            type="text"
+            name="section"
+            value={formData.section}
+            onChange={handleChange}
           />
 
           <Form.Input

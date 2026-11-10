@@ -33,16 +33,9 @@ export default function SearchBar({ fetchData }) {
   return (
     <div>
       <Form>
-        <Form.Group widths={3}>
-          {/* <Form.Field>
-            <Input
-              type="date"
-              value={search.play_date}
-              onChange={handleChange}
-              name="play_date"
-            />
-          </Form.Field> */}
-          <Form.Field>
+        <Form.Group>
+          {/* 場次 */}
+          <Form.Field width={3}>
             <SessionSelect onChange={handleDropdownChange} />
           </Form.Field>
           <Form.Field>
@@ -71,7 +64,7 @@ export default function SearchBar({ fetchData }) {
             />
           </Form.Field>
 
-          <Form.Field>
+          <Form.Field width={2}>
             <PlayerSelect onChange={handleDropdownChange} />
           </Form.Field>
 

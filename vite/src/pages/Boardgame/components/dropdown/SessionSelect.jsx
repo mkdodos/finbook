@@ -14,11 +14,21 @@ export default function SessionSelect({ onChange, value }) {
 
         // 假設 API 回傳的資料結構為 [{ id: 1, name: "遊戲A" }, ...]
         // 需轉換成 Semantic UI Dropdown 所需的格式：{ key, value, text }
-        const data = response?.map((item) => ({
-          key: item.id,
-          text: item.play_date + " " + item.name,
-          value: item.id,
-        }));
+        // const section = item.section ? item.section : "";
+        // const data = response?.map((item) => ({
+        //   key: item.id,
+        //   text: item.play_date + " " + item.section + item.name,
+        //   value: item.id,
+        // }));
+
+        const data = response?.map((item) => {
+          const section = item.section ? " (" + item.section + ")" : "";
+          return {
+            key: item.id,
+            text: item.play_date + " " + item.name + section,
+            value: item.id,
+          };
+        });
 
         setOptions(data);
       } catch (error) {
