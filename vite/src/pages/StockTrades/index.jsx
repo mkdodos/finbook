@@ -87,17 +87,13 @@ export default function index() {
   // 2. 簡化 panes 設定
   const panes = [
     {
+      menuItem: "股票分組",
+      render: () => renderPane(<GroupedCard data={state.groupedData} />),
+    },
+    {
       menuItem: "手機版",
       render: () =>
         renderPane(<GroupedView data={groupedList} dispatch={dispatch} />),
-      // renderPane(
-      //   <Phone
-      //     rows={state.data}
-      //     dispatch={dispatch}
-      //     state={state}
-      //     columns={COLUMNS}
-      //   />,
-      // ),
     },
     {
       menuItem: "日期分組",
@@ -110,10 +106,6 @@ export default function index() {
         ),
     },
 
-    {
-      menuItem: "股票分組",
-      render: () => renderPane(<GroupedCard data={state.groupedData} />),
-    },
     {
       menuItem: "交易記錄",
       render: () =>

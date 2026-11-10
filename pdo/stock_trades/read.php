@@ -36,8 +36,8 @@ try {
         $sql .= " WHERE " . implode(" AND ", $whereClauses);
     }
 
-    // 💡 加上 ORDER BY（預設依交易日期降冪排列）
-    $sql .= " ORDER BY trade_date DESC, id DESC";
+    // 依交易日期排列）
+    $sql .= " ORDER BY trade_date, id DESC";
 
     // 4. 執行預備語句
     $stmt = $pdo->prepare($sql);
