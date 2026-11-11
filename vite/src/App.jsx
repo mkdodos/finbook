@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import Page from "./pages/Page";
 import Expense from "./pages/Expense";
 import StockTrades from "./pages/StockTrades";
+import StockTrades2 from "./pages/MinisoftFinbook/StockTrades2";
 import Stocks from "./pages/Stocks";
 // import CRUD from "./pages/CURD";
 import Costco from "./pages/Costco";
@@ -76,6 +77,7 @@ export default function App() {
         <Route path="/page" element={<Page />} />
         <Route path="/stocks" element={<Stocks />} />
         <Route path="/stock-trades" element={<StockTrades />} />
+        <Route path="/stock-trades2" element={<StockTrades2 />} />
         <Route path="/expense" element={<Expense />} />
         {/* 預設首頁 (當網址為 / 時顯示 Page) */}
         <Route path="/" element={<Page />} />
