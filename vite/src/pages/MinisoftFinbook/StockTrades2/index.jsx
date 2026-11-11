@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { readRows, deleteRow } from "./data/api";
 import TableView from "./components/TableView";
-// import EditForm from "./components/EditForm";
-// import SearchBar from "./components/SearchBar";
-import { Header, Button, Icon } from "semantic-ui-react";
+import EditForm from "./components/EditForm";
+import { columns } from "./data/columns";
+import { Button, Icon } from "semantic-ui-react";
 
 export default function index() {
   const [data, setData] = useState([]);
@@ -64,11 +64,23 @@ export default function index() {
 
   return (
     <>
+      <Button primary icon labelPosition="left" onClick={handleAdd}>
+        <Icon name="add" />
+        新增
+      </Button>
+      <EditForm
+        onClose={() => setIsModalOpen(false)}
+        columns={columns}
+        isOpen={isModalOpen}
+        editData={editingData}
+        setData={setData}
+      />
       <TableView
         data={data}
         loading={loading}
         handleEdit={handleEdit}
         handleDelete={handleDelete}
+        columns={columns}
       />
     </>
   );

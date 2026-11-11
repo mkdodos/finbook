@@ -9,6 +9,7 @@ import {
   Icon,
   Input,
 } from "semantic-ui-react";
+import { columns } from "../data/columns";
 
 export default function TableView({ data, loading, handleEdit, handleDelete }) {
   return (
@@ -23,8 +24,13 @@ export default function TableView({ data, loading, handleEdit, handleDelete }) {
         <Table celled striped selectable unstackable>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>id</Table.HeaderCell>
-              <Table.HeaderCell>名稱</Table.HeaderCell>
+              {columns.map((col) => {
+                return (
+                  <Table.HeaderCell key={col.field}>
+                    {col.label}
+                  </Table.HeaderCell>
+                );
+              })}
 
               <Table.HeaderCell textAlign="center" style={{ width: "100px" }}>
                 操作
@@ -36,8 +42,11 @@ export default function TableView({ data, loading, handleEdit, handleDelete }) {
             {data.length > 0 ? (
               data.map((item) => (
                 <Table.Row key={item.id}>
-                  <Table.Cell>{item.id}</Table.Cell>
-                  <Table.Cell>{item.stock_id}</Table.Cell>
+                  {columns.map((col) => {
+                    return (
+                      <Table.Cell key={col.field}>{item[col.field]}</Table.Cell>
+                    );
+                  })}
 
                   <Table.Cell textAlign="center">
                     {/* 編輯按鈕 */}

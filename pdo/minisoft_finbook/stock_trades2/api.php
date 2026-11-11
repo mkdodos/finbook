@@ -24,6 +24,11 @@ $input = json_decode($inputJSON, true) ?? [];
 // 資料表名稱
 $table = "stock_trades2";
 
+
+  $id = $input['id'] ?? null;
+  $trade_date = $input['trade_date'] ?? null;         
+  $note = $input['note'] ?? null;
+
 try {
     switch ($action) {
         case 'read_rows':
@@ -50,14 +55,14 @@ try {
             // 新增一筆資料
         case 'create_row':
             // 新增遊戲範例
-            $name = $input['name'] ?? '';
-            $game_id = $input['game_id'] ?? null;
-            if (empty($name)) {
-                throw new Exception("遊戲名稱不能為空");
-            }
-            $sql = "INSERT INTO `$table` (`name`) VALUES (:name)";
+            // $name = $input['name'] ?? '';
+            // $game_id = $input['game_id'] ?? null;
+            // if (empty($name)) {
+            //     throw new Exception("遊戲名稱不能為空");
+            // }
+            $sql = "INSERT INTO `$table` (`trade_date`,`note`) VALUES (:trade_date,:note)";
             $stmt = $pdo->prepare($sql);
-            $stmt->execute(['name' => $name]);
+            $stmt->execute(['trade_date'=>$trade_date,'note' => $note]);
             
             echo json_encode([
                 "status" => "success", 
@@ -87,23 +92,22 @@ try {
 
             // 更新
         case 'update_row':
-            $id = $input['id'] ?? null;
-            $name = $input['name'] ?? null;
+          
           
             
-            if (!$id || !$name) {
+            if (!$id || !$note) {
                 throw new Exception("update必要的 ID 或關聯欄位不能為空");
             }
 
            
 
             $sql = "UPDATE `$table` 
-                    SET name = :name                    
+                    SET note = :note                    
                     WHERE id = :id";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 'id' => $id,
-                'name' => $name               
+                'note' => $note               
             ]);
 
            
