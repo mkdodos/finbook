@@ -24,31 +24,31 @@ $input = json_decode($inputJSON, true) ?? [];
 // 資料表名稱
 $table = "stock_trades2";
 
-
-  $id = $input['id'] ?? null;
-  $trade_date = $input['trade_date'] ?? null;         
-  $note = $input['note'] ?? null;
+// 前端表單送出(用在新增或更新)
+$id = $input['id'] ?? null;
+$trade_date = $input['trade_date'] ?? null;         
+$note = $input['note'] ?? null;
 
 try {
     switch ($action) {
         case 'read_rows':
+            // 預設查詢所有資料
+            $sql = "SELECT  * FROM `$table` ";      
             // 接收前端傳來的搜尋關鍵字
-            $search = $_GET['name'] ?? '';          
-            // 查詢所有資料
-            $sql = "SELECT  * FROM `$table` ";                    
-
+            $search = $_GET['note'] ?? '';          
+                         
+            // 若有查詢,加上 WHERE 條件
           if (!empty($search)) {
                 // 使用問號 ? 佔位符進行模糊查詢
-                $sql .= " WHERE `name` LIKE ?";
+                $sql .= " WHERE `note` LIKE ?";
                 $stmt = $pdo->prepare($sql);
                 // 透過陣列依序傳入參數與萬用字元
                 $stmt->execute(['%' . $search . '%']);
             } else {
                 $stmt = $pdo->query($sql);
             }
-           
-            $records = $stmt->fetchAll();
-            
+           // 將陣列轉成 json 格式傳回
+            $records = $stmt->fetchAll();            
             echo json_encode($records, JSON_UNESCAPED_UNICODE);
             break;
 

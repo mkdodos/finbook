@@ -11,7 +11,7 @@ import {
 } from "semantic-ui-react";
 import { columns } from "../data/columns";
 
-export default function TableView({ data, loading, handleEdit, handleDelete }) {
+export default function TableView({ data, loading, handleEdit, handleAdd }) {
   return (
     <div>
       {loading ? (
@@ -33,7 +33,9 @@ export default function TableView({ data, loading, handleEdit, handleDelete }) {
               })}
 
               <Table.HeaderCell textAlign="center" style={{ width: "100px" }}>
-                操作
+                <Button primary icon onClick={handleAdd} type="button">
+                  <Icon name="add" />
+                </Button>
               </Table.HeaderCell>
             </Table.Row>
           </Table.Header>

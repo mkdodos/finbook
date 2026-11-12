@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { readRows, deleteRow } from "./data/api";
 import TableView from "./components/TableView";
 import EditForm from "./components/EditForm";
+import SearchBar from "./components/SearchBar";
 import { columns } from "./data/columns";
-import { Button, Icon } from "semantic-ui-react";
+import { Button, Icon, Grid, Form } from "semantic-ui-react";
 
 export default function index() {
   const [data, setData] = useState([]);
@@ -64,10 +65,59 @@ export default function index() {
 
   return (
     <>
-      <Button primary icon labelPosition="left" onClick={handleAdd}>
+      <SearchBar fetchData={fetchData} />
+      {/* <div style={{ display: "flex", alignItems: "baseline", gap: "8px" }}>
+       
+        <Button
+          primary
+          icon
+          labelPosition="left"
+          onClick={handleAdd}
+          type="button"
+        >
+          <Icon name="add" />
+          新增
+        </Button>
+      </div> */}
+      {/* <Form
+        inline
+        style={{ display: "flex", alignItems: "center", gap: "8px" }}
+      >
+        <Button
+          primary
+          icon
+          labelPosition="left"
+          onClick={handleAdd}
+          type="button"
+        >
+          <Icon name="add" />
+          新增
+        </Button>
+        <SearchBar fetchData={fetchData} />
+      </Form> */}
+      {/* <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <Button
+          primary
+          icon
+          labelPosition="left"
+          onClick={handleAdd}
+          style={{ marginBottom: 0 }}
+        >
+          <Icon name="add" />
+          新增
+        </Button>
+
+       
+        <div style={{ display: "inline-block", margin: 0 }}>
+          <SearchBar fetchData={fetchData} />
+        </div>
+      </div> */}
+
+      {/* <Button primary icon labelPosition="left" onClick={handleAdd}>
         <Icon name="add" />
         新增
       </Button>
+      <SearchBar fetchData={fetchData} /> */}
       <EditForm
         onClose={() => setIsModalOpen(false)}
         columns={columns}
@@ -79,7 +129,7 @@ export default function index() {
         data={data}
         loading={loading}
         handleEdit={handleEdit}
-        handleDelete={handleDelete}
+        handleAdd={handleAdd}
         columns={columns}
       />
     </>

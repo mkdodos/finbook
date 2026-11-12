@@ -1,11 +1,8 @@
 import axios from "axios";
-
+// API_HOST : finbook/pdo
 import { API_HOST } from "@/global/constants";
 
 // 建立 Axios 實例（請根據您的 PHP 伺服器網址調整 baseURL）
-
-// API_HOST : finbook/pdo
-
 const apiClient = axios.create({
   baseURL: `${API_HOST}/minisoft_finbook/stock_trades2/api.php`,
   headers: {

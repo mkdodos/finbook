@@ -49,6 +49,9 @@ export default function App() {
               <Menu.Item as={Link} to="/stock-trades">
                 股票交易
               </Menu.Item>
+              <Menu.Item as={Link} to="/stock-trades2">
+                股票交易2
+              </Menu.Item>
             </DropdownMenu>
           </Dropdown>
         </Menu>
