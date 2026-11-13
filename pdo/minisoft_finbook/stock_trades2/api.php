@@ -26,47 +26,72 @@ $table = "stock_trades2";
 
 // 前端表單送出(用在新增或更新)
 $id = $input['id'] ?? null;
-$trade_date = $input['trade_date'] ?? null;         
+$trade_date = $input['trade_date'] ?? null; 
+$stock_id = $input['stock_id'] ?? null;    
 $note = $input['note'] ?? null;
+
+ // 1. 準備要寫入的資料陣列
+            $data = [
+                'trade_date' => $trade_date,
+                'stock_id'   => $stock_id,
+                'note'       => $note
+            ];
 
 try {
     switch ($action) {
         case 'read_rows':
-            // 預設查詢所有資料
-            $sql = "SELECT  * FROM `$table` ";      
-            // 接收前端傳來的搜尋關鍵字
-            $search = $_GET['note'] ?? '';          
-                         
-            // 若有查詢,加上 WHERE 條件
-          if (!empty($search)) {
-                // 使用問號 ? 佔位符進行模糊查詢
+            // 1. 建立基礎 SQL 語句
+            // $sql = "SELECT * FROM `$table`";   
+            $sql = "SELECT stock_trades2.*,stocks.name as stock_name
+              FROM stock_trades2 LEFT JOIN stocks ON stock_id = symbol";   
+            $params = []; // 用來存放綁定的參數
+
+            // 2. 接收前端傳來的搜尋關鍵字
+            $search = $_GET['note'] ?? '';         
+                    
+            // 3. 若有查詢，動態加上 WHERE 條件
+            if (!empty($search)) {
                 $sql .= " WHERE `note` LIKE ?";
-                $stmt = $pdo->prepare($sql);
-                // 透過陣列依序傳入參數與萬用字元
-                $stmt->execute(['%' . $search . '%']);
-            } else {
-                $stmt = $pdo->query($sql);
+                $params[] = '%' . $search . '%';
             }
-           // 將陣列轉成 json 格式傳回
-            $records = $stmt->fetchAll();            
+
+            // 4. 統一加上排序條件
+            $sql .= " ORDER BY `trade_date` DESC";
+
+            // 5. 統一進行 prepare 與 execute
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($params);
+
+            // 6. 取得資料並轉成 JSON 傳回
+            $records = $stmt->fetchAll();          
             echo json_encode($records, JSON_UNESCAPED_UNICODE);
             break;
+       
 
             // 新增一筆資料
         case 'create_row':
             // 新增遊戲範例
-            // $name = $input['name'] ?? '';
-            // $game_id = $input['game_id'] ?? null;
-            // if (empty($name)) {
-            //     throw new Exception("遊戲名稱不能為空");
-            // }
-            $sql = "INSERT INTO `$table` (`trade_date`,`note`) VALUES (:trade_date,:note)";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute(['trade_date'=>$trade_date,'note' => $note]);
+           
+            // $sql = "INSERT INTO `$table` (`trade_date`,`stock_id`,`note`) VALUES (:trade_date,:stock_id,:note)";
+            // $stmt = $pdo->prepare($sql);
+            // $stmt->execute(['trade_date'=>$trade_date,'stock_id'=>$stock_id,'note' => $note]);
+           
             
+           
+
+            // 2. 動態組合欄位名稱與佔位符
+            $fields = implode("`, `", array_keys($data));
+            $placeholders = ":" . implode(", :", array_keys($data));
+
+            $sql = "INSERT INTO `$table` (`$fields`) VALUES ($placeholders)";
+
+            // 3. 預處理並直接帶入整包資料執行
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($data);
+
             echo json_encode([
                 "status" => "success", 
-                "message" => "新增遊戲成功", 
+                "message" => "新增成功", 
                 "id" => $pdo->lastInsertId()
             ], JSON_UNESCAPED_UNICODE);
             break;       
@@ -75,7 +100,7 @@ try {
             
             // 刪除
         case 'delete_row':
-            $id = $input['id'] ?? null;
+            // $id = $input['id'] ?? null;
             if (!$id) {
                 throw new Exception("缺少要刪除的 ID");
             }
@@ -89,39 +114,46 @@ try {
                 "message" => "刪除成功"
             ], JSON_UNESCAPED_UNICODE);
             break;
+        /************************************* */    
+        // 更新
+        case 'update_row':    
+            if (empty($id)) {
+                throw new Exception("update必要的 ID 不能為空");
+            }         
 
-            // 更新
-        case 'update_row':
-          
-          
-            
-            if (!$id || !$note) {
-                throw new Exception("update必要的 ID 或關聯欄位不能為空");
+            // 1. 定義要更新的欄位與對應變數
+            // $data = [
+            //     'trade_date' => $trade_date,
+            //     'stock_id'   => $stock_id,
+            //     'note'       => $note
+            // ];
+
+            // 2. 動態組合 SET 子句 (轉成 `trade_date` = :trade_date, `stock_id` = :stock_id...)
+            $set_parts = [];
+            foreach (array_keys($data) as $field) {
+                $set_parts[] = "`$field` = :$field";
             }
+            $set_string = implode(", ", $set_parts);
 
-           
+            // 3. 組合完整的 SQL 語句
+            $sql = "UPDATE `$table` SET $set_string WHERE `id` = :id";
 
-            $sql = "UPDATE `$table` 
-                    SET note = :note                    
-                    WHERE id = :id";
+            // 4. 合併資料與 ID 參數陣列
+            $params = $data;
+            $params['id'] = $id; // 加上 WHERE 條件需要的 id
+
+            // 5. 預處理並執行
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([
-                'id' => $id,
-                'note' => $note               
-            ]);
-
-           
+            $stmt->execute($params);            
 
             echo json_encode([
-                "status" => "success",
+                "status"  => "success",
                 "message" => "更新成功",
-                "sql"=>$sql
+                "sql"     => $sql
             ], JSON_UNESCAPED_UNICODE);
             break;
-        // 之後如果需要其他動作，可以直接在此擴充
-        // case 'update_score':
-        //     ...
-        //     break;
+      
+       
 
         default:
             http_response_code(400);

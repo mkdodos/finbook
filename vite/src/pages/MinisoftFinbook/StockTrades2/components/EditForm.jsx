@@ -17,23 +17,6 @@ function EditForm({
 
   console.log(editData);
 
-  // 動態產生 initialFormData
-  // const initialFormData = columns
-  //   .filter((col) => col.formShow) // 通常只抓需要在表單顯示的欄位
-  //   .reduce((acc, col) => {
-  //     if (col.type === "date")
-  //       // 日期欄位(預設當天)
-  //       acc[col.field] = new Date().toISOString().substring(0, 10);
-  //     // 優先使用 JSON 裡的 defaultValue，如果沒有則根據型別給預設值
-  //     if (col.defaultValue !== undefined) {
-  //       acc[col.field] = col.defaultValue;
-  //     } else {
-  //       acc[col.field] = "";
-  //       // col.type === "number" || col.type === "decimal" ? 0 : "";
-  //     }
-  //     return acc;
-  //   }, {});
-
   const initialFormData = columns
     .filter((col) => col.formShow)
     .reduce((acc, col) => {
@@ -77,18 +60,19 @@ function EditForm({
     setFormData({ ...formData, [name]: value });
   };
 
+  // 儲存
   const handleSubmit = async () => {
     try {
       if (editData) {
+        // 更新
         await updateRow(editData.id, formData);
-        // 將儲存成功的值寫入state
         setData((prev) =>
           prev.map((item) => (item.id === formData.id ? formData : item)),
         );
       } else {
+        // 新增
         const res = await createRow(formData);
-        // 將儲存成功的值寫入state
-        setData((prev) => [...prev, { ...formData, id: res.id }]);
+        setData((prev) => [{ ...formData, id: res.id }, ...prev]);
       }
 
       if (onClose) onClose();
@@ -147,7 +131,6 @@ function EditForm({
         <Button
           floated="left"
           color="red"
-          size="mini"
           icon
           onClick={() => handleDelete(formData.id)}
           title="刪除"

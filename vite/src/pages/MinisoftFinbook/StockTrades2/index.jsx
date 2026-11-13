@@ -66,64 +66,14 @@ export default function index() {
   return (
     <>
       <SearchBar fetchData={fetchData} />
-      {/* <div style={{ display: "flex", alignItems: "baseline", gap: "8px" }}>
-       
-        <Button
-          primary
-          icon
-          labelPosition="left"
-          onClick={handleAdd}
-          type="button"
-        >
-          <Icon name="add" />
-          新增
-        </Button>
-      </div> */}
-      {/* <Form
-        inline
-        style={{ display: "flex", alignItems: "center", gap: "8px" }}
-      >
-        <Button
-          primary
-          icon
-          labelPosition="left"
-          onClick={handleAdd}
-          type="button"
-        >
-          <Icon name="add" />
-          新增
-        </Button>
-        <SearchBar fetchData={fetchData} />
-      </Form> */}
-      {/* <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-        <Button
-          primary
-          icon
-          labelPosition="left"
-          onClick={handleAdd}
-          style={{ marginBottom: 0 }}
-        >
-          <Icon name="add" />
-          新增
-        </Button>
 
-       
-        <div style={{ display: "inline-block", margin: 0 }}>
-          <SearchBar fetchData={fetchData} />
-        </div>
-      </div> */}
-
-      {/* <Button primary icon labelPosition="left" onClick={handleAdd}>
-        <Icon name="add" />
-        新增
-      </Button>
-      <SearchBar fetchData={fetchData} /> */}
       <EditForm
         onClose={() => setIsModalOpen(false)}
         columns={columns}
         isOpen={isModalOpen}
         editData={editingData}
         setData={setData}
+        handleDelete={handleDelete}
       />
       <TableView
         data={data}

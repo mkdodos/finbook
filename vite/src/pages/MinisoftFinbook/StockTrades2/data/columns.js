@@ -1,3 +1,5 @@
+import { Label } from "semantic-ui-react";
+
 export const columns = [
   {
     field: "id",
@@ -11,7 +13,7 @@ export const columns = [
   },
   {
     field: "trade_date",
-    label: "交易日期",
+    label: "日期",
     type: "date",
     required: true,
     tableShow: true,
@@ -19,17 +21,23 @@ export const columns = [
   },
   {
     field: "stock_id",
-    label: "股票代號",
+    label: "代號",
     type: "text",
-    required: true,
     placeholder: "請輸入股票代號（例如 2330）",
     tableShow: true,
     formShow: true,
     component: "input",
   },
   {
+    field: "stock_name",
+    label: "名稱",
+    type: "text",
+    tableShow: true,
+    formShow: false,
+  },
+  {
     field: "trade_type",
-    label: "交易類型",
+    label: "類型",
     type: "select",
     required: true,
     options: [
@@ -40,10 +48,20 @@ export const columns = [
     tableShow: true,
     formShow: true,
     component: "select",
+    // 💡 關鍵：在這裡定義該欄位專屬的表格呈現方式
+    // render: (value, item) => {
+    //   const isBuy = value === "buy";
+    //   // 如果還有配息等其他狀況，也可以在這裡細分
+    //   return (
+    //     <Label basic color={isBuy ? "red" : "green"}>
+    //       {isBuy ? "買" : "賣"}
+    //     </Label>
+    //   );
+    // },
   },
   {
     field: "qty",
-    label: "交易股數",
+    label: "股數",
     type: "number",
     required: true,
     defaultValue: 0,
@@ -53,7 +71,7 @@ export const columns = [
   },
   {
     field: "price",
-    label: "成交單價",
+    label: "單價",
     type: "decimal",
     required: true,
     defaultValue: "0.00",
