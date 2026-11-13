@@ -22,11 +22,13 @@ export const columns = [
   {
     field: "stock_id",
     label: "代號",
-    type: "text",
+    // type: "text",
     placeholder: "請輸入股票代號（例如 2330）",
+    type: "select",
+    options: [],
     tableShow: true,
     formShow: true,
-    component: "input",
+    component: "select",
   },
   {
     field: "stock_name",
@@ -41,23 +43,13 @@ export const columns = [
     type: "select",
     required: true,
     options: [
-      { value: "buy", text: "買入" },
-      { value: "sell", text: "賣出" },
-      { value: "dividend", text: "配息" },
+      // { value: "buy", text: "買入" },
+      // { value: "sell", text: "賣出" },
+      // { value: "dividend", text: "配息" },
     ],
     tableShow: true,
     formShow: true,
     component: "select",
-    // 💡 關鍵：在這裡定義該欄位專屬的表格呈現方式
-    // render: (value, item) => {
-    //   const isBuy = value === "buy";
-    //   // 如果還有配息等其他狀況，也可以在這裡細分
-    //   return (
-    //     <Label basic color={isBuy ? "red" : "green"}>
-    //       {isBuy ? "買" : "賣"}
-    //     </Label>
-    //   );
-    // },
   },
   {
     field: "qty",

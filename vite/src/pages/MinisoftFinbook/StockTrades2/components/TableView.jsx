@@ -10,37 +10,15 @@ import {
   Input,
   Label,
 } from "semantic-ui-react";
-import { columns } from "../data/columns";
+// import { columns } from "../data/columns";
 
-export default function TableView({ data, loading, handleEdit, handleAdd }) {
-  // 核心轉換函式：根據 col 的設定與資料值轉出對應文字
-  // const renderCellContent = (item, col) => {
-  //   const value = item[col.field];
-
-  //   // 如果該欄位有定義 options（例如 select 類型），則嘗試找出對應的 text
-  //   if (col.options && Array.isArray(col.options)) {
-  //     const matchedOption = col.options.find((opt) => opt.value === value);
-  //     return matchedOption ? matchedOption.text : value; // 找不到就退回顯示原始 value
-  //   }
-
-  //   return value;
-  // };
-  // const renderCellContent = (item, col) => {
-  //   const value = item[col.field];
-
-  //   // 1. 如果 columns 設定裡有提供客製化的 render 函式，直接呼叫它
-  //   if (typeof col.render === "function") {
-  //     return col.render(value, item);
-  //   }
-
-  //   // 2. 預設的 options 轉換邏輯
-  //   if (col.options && Array.isArray(col.options)) {
-  //     const matched = col.options.find((opt) => opt.value === value);
-  //     return matched ? matched.text : value;
-  //   }
-
-  //   return value;
-  // };
+export default function TableView({
+  columns,
+  data,
+  loading,
+  handleEdit,
+  handleAdd,
+}) {
   // 渲染儲存格內容的函式
   const renderCellContent = (item, col) => {
     const value = item[col.field];
