@@ -30,7 +30,7 @@ $trade_date = $input['trade_date'] ?? null;
 $stock_id = $input['stock_id'] ?? null;    
 $note = $input['note'] ?? null;
 
- // 1. 準備要寫入的資料陣列
+ // 準備要寫入的資料陣列
             $data = [
                 'trade_date' => $trade_date,
                 'stock_id'   => $stock_id,
@@ -39,7 +39,23 @@ $note = $input['note'] ?? null;
 
 try {
     switch ($action) {
-        case 'read_rows':
+        
+    // 取得所有股票資料
+    case 'read_stocks':
+           
+            $sql = "SELECT * FROM stocks ";               
+
+            // 進行 prepare 與 execute
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute();
+
+            // 6. 取得資料並轉成 JSON 傳回
+            $records = $stmt->fetchAll();          
+            echo json_encode($records, JSON_UNESCAPED_UNICODE);
+            break;
+    
+    
+    case 'read_rows':
             // 1. 建立基礎 SQL 語句
             // $sql = "SELECT * FROM `$table`";   
             $sql = "SELECT stock_trades2.*,stocks.name as stock_name
@@ -121,12 +137,7 @@ try {
                 throw new Exception("update必要的 ID 不能為空");
             }         
 
-            // 1. 定義要更新的欄位與對應變數
-            // $data = [
-            //     'trade_date' => $trade_date,
-            //     'stock_id'   => $stock_id,
-            //     'note'       => $note
-            // ];
+            
 
             // 2. 動態組合 SET 子句 (轉成 `trade_date` = :trade_date, `stock_id` = :stock_id...)
             $set_parts = [];

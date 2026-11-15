@@ -15,8 +15,6 @@ function EditForm({
   // 需要給表單每個欄位預設值,確保是受控組件
   // 否則會出現上述警告
 
-  console.log(editData);
-
   const initialFormData = columns
     .filter((col) => col.formShow)
     .reduce((acc, col) => {
@@ -56,6 +54,8 @@ function EditForm({
     }
   }, [isOpen, editData]);
 
+  /*********************** */
+
   const handleChange = (e, { name, value }) => {
     setFormData({ ...formData, [name]: value });
   };
@@ -91,8 +91,8 @@ function EditForm({
           {columns
             .filter((col) => col.formShow)
             .map((col) => {
-              // 根據 component 類型渲染不同的 Semantic UI 元件
-              if (col.component === "select") {
+              //
+              if (col.type === "select") {
                 return (
                   <Form.Select
                     key={col.field}
@@ -102,6 +102,7 @@ function EditForm({
                     options={col.options}
                     onChange={handleChange}
                     required={col.required}
+                    search
                   />
                 );
               }

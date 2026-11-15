@@ -94,8 +94,11 @@ export default function TableView({
                     return (
                       <Table.Cell key={col.field}>
                         {/* 透過共用函式渲染特定欄位格式 */}
-                        {renderCellContent(item, col)}
+                        {/* {renderCellContent(item, col)} */}
                         {/* {item[col.field]} */}
+                        {col.render
+                          ? col.render(item[col.field], item)
+                          : item[col.field]}
                       </Table.Cell>
                     );
                   })}

@@ -10,6 +10,25 @@ const apiClient = axios.create({
   },
 });
 
+// 取得所有股票資料
+export const readStocks = async () => {
+  try {
+    const url = "?action=read_stocks";
+    const response = await apiClient.get(url);
+    return response.data.map((item) => {
+      return {
+        key: item.id,
+        text: `${item.symbol} ${item.name}`,
+        value: item.symbol,
+      };
+    });
+    // return response.data;
+  } catch (error) {
+    console.error("取得資料失敗:", error);
+    throw error;
+  }
+};
+
 // 取得所有資料（若有傳入名稱在後端會進行篩選）
 export const readRows = async (search) => {
   try {
