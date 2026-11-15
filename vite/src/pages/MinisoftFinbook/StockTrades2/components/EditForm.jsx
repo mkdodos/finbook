@@ -87,11 +87,11 @@ function EditForm({
       <Modal.Header>{editData ? "✏️ 編輯" : "📝 新增"}</Modal.Header>
       <Modal.Content>
         <Form onSubmit={handleSubmit} id="scorecard-form">
-          {/* 4. 透過 map 走訪 JSON 動態產生對應的表單欄位 */}
+          {/* 透過 map 走訪 JSON 動態產生對應的表單欄位 */}
           {columns
             .filter((col) => col.formShow)
             .map((col) => {
-              //
+              // 下拉選單
               if (col.type === "select") {
                 return (
                   <Form.Select
@@ -116,7 +116,6 @@ function EditForm({
                   type={col.type}
                   // 關鍵在這裡：如果 formData[col.field] 是 null 或 undefined，就強制轉成 ""
                   value={formData[col.field] ?? ""}
-                  // value={formData[col.field]}
                   onChange={handleChange}
                   required={col.required}
                 />

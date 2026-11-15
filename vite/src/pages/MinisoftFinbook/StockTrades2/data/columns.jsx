@@ -23,10 +23,7 @@ export const columns = [
   {
     field: "stock_id",
     label: "代號",
-    // type: "text",
-    placeholder: "請輸入股票代號",
     type: "select",
-    // options: [],
     options: await readStocks(),
     tableShow: true,
     formShow: true,
@@ -59,17 +56,23 @@ export const columns = [
     tableShow: true,
     formShow: true,
     render: (value, row) => {
-      const text =
-        value == "buy" ? (
-          <Label basic color="red">
-            買入
-          </Label>
-        ) : (
-          <Label basic color="green">
-            賣出
-          </Label>
-        );
-      return text;
+      const isBuy = value === "buy";
+      return (
+        <Label basic color={isBuy ? "red" : "green"}>
+          {isBuy ? "買" : "賣"}
+        </Label>
+      );
+      // const text =
+      //   value == "buy" ? (
+      //     <Label basic color="red">
+      //       買入
+      //     </Label>
+      //   ) : (
+      //     <Label basic color="green">
+      //       賣出
+      //     </Label>
+      //   );
+      // return text;
     },
   },
   {
