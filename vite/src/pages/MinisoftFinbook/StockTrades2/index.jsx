@@ -3,6 +3,7 @@ import { readRows, deleteRow } from "./data/api";
 import TableView from "./components/TableView";
 import EditForm from "./components/EditForm";
 import SearchBar from "./components/SearchBar";
+import PhoneView from "./components/PhoneView";
 import { columns } from "./data/columns";
 import { Button, Icon, Grid, Form } from "semantic-ui-react";
 
@@ -65,6 +66,7 @@ export default function index() {
 
   return (
     <>
+      <PhoneView data={data} />
       <SearchBar fetchData={fetchData} columns={columns} />
 
       <EditForm

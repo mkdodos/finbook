@@ -27,15 +27,19 @@ $table = "stock_trades2";
 // 前端表單送出(用在新增或更新)
 $id = $input['id'] ?? null;
 $trade_date = $input['trade_date'] ?? null; 
-$stock_id = $input['stock_id'] ?? null;    
+$stock_id = $input['stock_id'] ?? null; 
+$price = $input['price'] ?? null;   
+$qty = $input['qty'] ?? null;  
 $note = $input['note'] ?? null;
 
  // 準備要寫入的資料陣列
-            $data = [
-                'trade_date' => $trade_date,
-                'stock_id'   => $stock_id,
-                'note'       => $note
-            ];
+$data = [
+    'trade_date' => $trade_date,
+    'stock_id'   => $stock_id,
+    'price'   => $price,
+    'qty'   => $qty,
+    'note'       => $note
+];
 
 try {
     switch ($action) {
@@ -90,6 +94,8 @@ try {
 
             // 4. 統一加上排序條件
             $sql .= " ORDER BY `trade_date` DESC";
+            // 限制筆數
+            $sql .= " LIMIT 3";
 
             // 5. 統一進行 prepare 與 execute
             $stmt = $pdo->prepare($sql);
@@ -107,8 +113,7 @@ try {
            
             // $sql = "INSERT INTO `$table` (`trade_date`,`stock_id`,`note`) VALUES (:trade_date,:stock_id,:note)";
             // $stmt = $pdo->prepare($sql);
-            // $stmt->execute(['trade_date'=>$trade_date,'stock_id'=>$stock_id,'note' => $note]);
-           
+            // $stmt->execute(['trade_date'=>$trade_date,'stock_id'=>$stock_id,'note' => $note]);          
             
            
 
