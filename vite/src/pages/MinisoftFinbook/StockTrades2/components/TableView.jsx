@@ -120,7 +120,7 @@ export default function TableView({
             ) : (
               <Table.Row>
                 <Table.Cell colSpan="5" textAlign="center">
-                  目前沒有任何戰績紀錄
+                  目前沒有任何紀錄
                 </Table.Cell>
               </Table.Row>
             )}

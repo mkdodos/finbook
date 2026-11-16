@@ -19,6 +19,7 @@ export const columns = [
     required: true,
     tableShow: true,
     formShow: true,
+    searchShow: true,
   },
   {
     field: "stock_id",
@@ -27,6 +28,7 @@ export const columns = [
     options: await readStocks(),
     tableShow: true,
     formShow: true,
+    searchShow: true,
   },
   {
     field: "stock_name",
@@ -62,17 +64,6 @@ export const columns = [
           {isBuy ? "買" : "賣"}
         </Label>
       );
-      // const text =
-      //   value == "buy" ? (
-      //     <Label basic color="red">
-      //       買入
-      //     </Label>
-      //   ) : (
-      //     <Label basic color="green">
-      //       賣出
-      //     </Label>
-      //   );
-      // return text;
     },
   },
   {
@@ -115,7 +106,7 @@ export const columns = [
     required: false,
     tableShow: false,
     formShow: true,
-    component: "textarea",
+    searchShow: true,
   },
   // {
   //   field: "created_at",

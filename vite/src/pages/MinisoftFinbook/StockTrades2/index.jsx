@@ -65,7 +65,7 @@ export default function index() {
 
   return (
     <>
-      <SearchBar fetchData={fetchData} />
+      <SearchBar fetchData={fetchData} columns={columns} />
 
       <EditForm
         onClose={() => setIsModalOpen(false)}

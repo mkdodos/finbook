@@ -56,19 +56,36 @@ try {
     
     
     case 'read_rows':
-            // 1. 建立基礎 SQL 語句
-            // $sql = "SELECT * FROM `$table`";   
+            // 建立基礎 SQL 語句            
             $sql = "SELECT stock_trades2.*,stocks.name as stock_name
               FROM stock_trades2 LEFT JOIN stocks ON stock_id = symbol";   
-            $params = []; // 用來存放綁定的參數
+            $whereClauses = []; // 存放 where 語句
+            $params = []; // 存放綁定的參數
 
-            // 2. 接收前端傳來的搜尋關鍵字
-            $search = $_GET['note'] ?? '';         
+            // 接收前端傳來的搜尋內容
+            $trade_date = $_GET['trade_date'] ?? ''; 
+            $stock_id = $_GET['stock_id'] ?? '';   
+            $note = $_GET['note'] ?? '';         
                     
-            // 3. 若有查詢，動態加上 WHERE 條件
-            if (!empty($search)) {
-                $sql .= " WHERE `note` LIKE ?";
-                $params[] = '%' . $search . '%';
+            // 若有查詢，動態加上 WHERE 條件
+            if (!empty($trade_date)) {
+                $whereClauses[] = "`trade_date` = ?";                
+                $params[] = $trade_date;
+            }
+
+            if (!empty($stock_id)) {
+                $whereClauses[] = "`stock_id` = ?";                
+                $params[] = $stock_id;
+            }
+
+            if (!empty($note)) {               
+                $whereClauses[] = "`note` LIKE ?";
+                $params[] = '%' . $note . '%';
+            }
+
+            // 組合 where 語句
+            if (!empty($whereClauses)) {
+                $sql .= " WHERE " . implode(" AND ", $whereClauses);
             }
 
             // 4. 統一加上排序條件
