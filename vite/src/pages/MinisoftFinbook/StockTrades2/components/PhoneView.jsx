@@ -1,14 +1,23 @@
 import React from "react";
-import { Table, Label } from "semantic-ui-react";
+import { Table, Label, Button, Icon } from "semantic-ui-react";
 
-export default function PhoneView({ data }) {
+export default function PhoneView({ data, handleEdit, handleAdd }) {
   return (
     <div>
-      <Table unstackable>
+      <Table unstackable columns={4}>
         <Table.Header>
-          <Table.Row>
-            {/* <Table.HeaderCell>第一列欄名</Table.HeaderCell> */}
-            <Table.HeaderCell>#</Table.HeaderCell>
+          <Table.Row textAlign="right">
+            <Table.HeaderCell textAlign="left">
+              <Button
+                size="mini"
+                primary
+                icon
+                onClick={handleAdd}
+                type="button"
+              >
+                <Icon name="add" />
+              </Button>
+            </Table.HeaderCell>
             <Table.HeaderCell>單價</Table.HeaderCell>
             <Table.HeaderCell>股數</Table.HeaderCell>
             <Table.HeaderCell>小計</Table.HeaderCell>
@@ -16,11 +25,14 @@ export default function PhoneView({ data }) {
         </Table.Header>
         <Table.Body>
           {data.map((item) => (
-            <Table.Row>
-              <Table.Cell>
-                <div style={{ fontWeight: "bold" }}>{item.stock_name}</div>
+            <Table.Row textAlign="right" onClick={() => handleEdit(item)}>
+              <Table.Cell textAlign="left">
+                <div style={{ fontWeight: "bold" }}>
+                  {/* <Label>{item.stock_id}</Label> */}
+                  {item.stock_name}
+                </div>
                 <div style={{ color: "#666", fontSize: "0.9em" }}>
-                  {item.stock_id}
+                  {item.trade_date.substring(5, 10)}
                 </div>
               </Table.Cell>
 
@@ -34,21 +46,26 @@ export default function PhoneView({ data }) {
                   {item.qty}
                 </Label>
               </Table.Cell>
-              <Table.Cell>
+              <Table.Cell textAlign="right">
                 <span
                   style={{
                     color: item.trade_type == "buy" ? "#DB2828" : "#21BA45",
                   }}
                 >
-                  {(item.qty * item.price).toLocaleString()}
+                  {Math.round(item.qty * item.price).toLocaleString()}
                 </span>
               </Table.Cell>
             </Table.Row>
           ))}
-          {/* <Table.Row>
-            <Table.Cell>內容</Table.Cell>
-          </Table.Row> */}
         </Table.Body>
+        <Table.Footer>
+          <Table.Row>
+            <Table.HeaderCell>合計列</Table.HeaderCell>
+            <Table.HeaderCell colSpan="3" textAlign="right">
+              1,234
+            </Table.HeaderCell>
+          </Table.Row>
+        </Table.Footer>
       </Table>
     </div>
   );

@@ -33,8 +33,8 @@ function EditForm({
       }
       // 3. 其他型別的預設空值
       else {
-        acc[col.field] =
-          col.type === "number" || col.type === "decimal" ? 0 : "";
+        acc[col.field] = "";
+        // col.type === "number" || col.type === "decimal" ? 0 : "";
       }
 
       return acc;

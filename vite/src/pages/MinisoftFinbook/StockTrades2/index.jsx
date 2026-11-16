@@ -66,9 +66,24 @@ export default function index() {
 
   return (
     <>
-      <PhoneView data={data} />
-      <SearchBar fetchData={fetchData} columns={columns} />
+      {/* <PhoneView data={data} /> */}
+      {/* <SearchBar fetchData={fetchData} columns={columns} /> */}
 
+      <div className="mobile-only">
+        <PhoneView data={data} handleEdit={handleEdit} handleAdd={handleAdd} />
+      </div>
+
+      {/* 僅在電腦螢幕（769px 以上）顯示 */}
+      <div className="desktop-only">
+        <SearchBar fetchData={fetchData} columns={columns} />
+        <TableView
+          data={data}
+          loading={loading}
+          handleEdit={handleEdit}
+          handleAdd={handleAdd}
+          columns={columns}
+        />
+      </div>
       <EditForm
         onClose={() => setIsModalOpen(false)}
         columns={columns}
@@ -76,13 +91,6 @@ export default function index() {
         editData={editingData}
         setData={setData}
         handleDelete={handleDelete}
-      />
-      <TableView
-        data={data}
-        loading={loading}
-        handleEdit={handleEdit}
-        handleAdd={handleAdd}
-        columns={columns}
       />
     </>
   );

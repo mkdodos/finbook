@@ -71,17 +71,15 @@ export const columns = [
     label: "股數",
     type: "number",
     required: true,
-    defaultValue: 0,
     tableShow: true,
     formShow: true,
-    component: "input-number",
   },
   {
     field: "price",
     label: "單價",
     type: "decimal",
     required: true,
-    defaultValue: "0.00",
+    // defaultValue: "0.00",
     tableShow: true,
     formShow: true,
     render: (value, row) => {

@@ -95,7 +95,7 @@ try {
             // 4. 統一加上排序條件
             $sql .= " ORDER BY `trade_date` DESC";
             // 限制筆數
-            $sql .= " LIMIT 3";
+            $sql .= " LIMIT 10";
 
             // 5. 統一進行 prepare 與 execute
             $stmt = $pdo->prepare($sql);

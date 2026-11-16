@@ -75,10 +75,7 @@ export default function TableView({
                 );
               })}
 
-              <Table.HeaderCell
-              // textAlign="center"
-              //  style={{ width: "100px" }}
-              >
+              <Table.HeaderCell>
                 <Button primary icon onClick={handleAdd} type="button">
                   <Icon name="add" />
                 </Button>
