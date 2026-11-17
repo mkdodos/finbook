@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Modal, Icon } from "semantic-ui-react";
 import { createRow, updateRow } from "../data/api";
-// import GameSelect from "../../components/dropdown/GameSelect";
 
 function EditForm({
   isOpen,
@@ -10,37 +9,11 @@ function EditForm({
   handleDelete,
   setData,
   columns,
+  formData,
+  setFormData,
+  initialFormData,
 }) {
-  // A component is changing an uncontrolled input to be controlled
-  // 需要給表單每個欄位預設值,確保是受控組件
-  // 否則會出現上述警告
-
-  const initialFormData = columns
-    .filter((col) => col.formShow)
-    .reduce((acc, col) => {
-      // 1. 優先檢查 JSON 裡有沒有寫死的 defaultValue
-      if (col.defaultValue !== undefined && col.defaultValue !== null) {
-        acc[col.field] = col.defaultValue;
-      }
-      // 2. 如果沒有，但它是日期型別，就自動產生「本地時間」的今天 (YYYY-MM-DD)
-      else if (col.type === "date") {
-        const now = new Date();
-        // 使用本地時間的年月日，避免 UTC 時區誤差
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, "0");
-        const day = String(now.getDate()).padStart(2, "0");
-        acc[col.field] = `${year}-${month}-${day}`;
-      }
-      // 3. 其他型別的預設空值
-      else {
-        acc[col.field] = "";
-        // col.type === "number" || col.type === "decimal" ? 0 : "";
-      }
-
-      return acc;
-    }, {});
-
-  const [formData, setFormData] = useState(initialFormData);
+  // const [formData, setFormData] = useState(initialFormData);
 
   useEffect(() => {
     if (editData) {
@@ -50,7 +23,7 @@ function EditForm({
         // name: editData.name || "",
       );
     } else {
-      setFormData(initialFormData);
+      // setFormData(initialFormData);
     }
   }, [isOpen, editData]);
 
