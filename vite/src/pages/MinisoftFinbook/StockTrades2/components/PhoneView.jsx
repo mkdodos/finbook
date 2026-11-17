@@ -1,23 +1,15 @@
 import React from "react";
-import { Table, Label, Button, Icon, Card } from "semantic-ui-react";
+import { Table, Tab, Button, Icon, Card } from "semantic-ui-react";
 import { groupedData } from "../data/utils";
 
 export default function PhoneView({ data, handleEdit, handleAdd }) {
   // 準備群組資料
   // if (!data) return;
+  const groupedByStock = Object.entries(groupedData(data, "stock_id"));
   const groupedByDate = Object.entries(groupedData(data, "trade_date"));
   // ['日期',{data:[],total:0}]
-  // console.log(groupedByRole[0]);
 
-  // groupedByDate.map(([trade_date, { data, total }]) => {
-
-  //   console.log(trade_date, total);
-  //   data.map((item) => console.log(item.stock_name, item.price));
-  // });
-
-  // return;
-
-  const table = (gData, total) => {
+  const table = (gData, total, gkey) => {
     return (
       <Table unstackable columns={4} basic="very">
         <Table.Header>
@@ -27,8 +19,9 @@ export default function PhoneView({ data, handleEdit, handleAdd }) {
                 size="mini"
                 primary
                 icon
-                onClick={() => handleAdd(gData[0].trade_date)}
+                onClick={() => handleAdd(gData[0][gkey])}
                 type="button"
+                basic
               >
                 <Icon name="add" />
               </Button>
@@ -46,9 +39,14 @@ export default function PhoneView({ data, handleEdit, handleAdd }) {
               onClick={() => handleEdit(item)}
             >
               <Table.Cell textAlign="left">
-                <div style={{ fontWeight: "bold" }}>{item.stock_name}</div>
+                <div style={{ fontWeight: "bold" }}>
+                  {/* 第一欄顯示日期或名稱 */}
+                  {gkey == "stock_name"
+                    ? item[gkey]
+                    : item[gkey].substring(5, 10)}
+                </div>
                 <div style={{ color: "#666", fontSize: "0.9em" }}>
-                  {item.stock_id}
+                  {/* {item[gkey]} */}
                 </div>
               </Table.Cell>
 
@@ -86,21 +84,80 @@ export default function PhoneView({ data, handleEdit, handleAdd }) {
     );
   };
 
+  // 定義統一樣式(去掉外框和陰影)
+  const renderPane = (children) => (
+    <Tab.Pane style={{ border: "none", boxShadow: "none" }}>
+      {children}
+    </Tab.Pane>
+  );
+
+  const panes = [
+    {
+      menuItem: "股票分組",
+      render: () => renderPane(groupedByStockPane()),
+      // render: () => <Tab.Pane>這裡顯示個人資料設定...</Tab.Pane>,
+    },
+    {
+      menuItem: "日期分組",
+      render: () => renderPane(groupedByDatePane()),
+      // render: () => <Tab.Pane>這裡顯示個人資料設定...</Tab.Pane>,
+    },
+  ];
+
+  const groupedByStockPane = () => {
+    return groupedByStock.map(([trade_date, { data, total }]) => {
+      return (
+        <Card fluid key={trade_date}>
+          <Card.Content>
+            <Card.Header>{data[0].stock_name}</Card.Header>
+          </Card.Content>
+          <Card.Content>{table(data, total, "trade_date")}</Card.Content>
+        </Card>
+      );
+    });
+  };
+
+  const groupedByDatePane = () => {
+    return groupedByDate.map(([trade_date, { data, total }]) => {
+      return (
+        <Card fluid key={trade_date}>
+          <Card.Content>
+            <Card.Header>{data[0].trade_date}</Card.Header>
+          </Card.Content>
+          <Card.Content>{table(data, total, "stock_name")}</Card.Content>
+        </Card>
+      );
+    });
+  };
+
   return (
     <>
-      {groupedByDate.map(([trade_date, { data, total }]) => {
-        // console.log(data[0]?.stock_name);
-        // console.log(trade_date, total);
+      <Tab
+        panes={panes}
+        menu={{ secondary: true, pointing: true, widths: 2, color: "teal" }}
+      />
+      {/* 股票分組 */}
+      {/* {groupedByStock.map(([trade_date, { data, total }]) => {
+        return (
+          <Card fluid key={trade_date}>
+            <Card.Content>
+              <Card.Header>{data[0].stock_name}</Card.Header>
+            </Card.Content>
+            <Card.Content>{table(data, total, "trade_date")}</Card.Content>
+          </Card>
+        );
+      })} */}
+      {/* 日期分組 */}
+      {/* {groupedByDate.map(([trade_date, { data, total }]) => {
         return (
           <Card fluid key={trade_date}>
             <Card.Content>
               <Card.Header>{trade_date.substring(5, 10)}</Card.Header>
             </Card.Content>
-            <Card.Content>{table(data, total)}</Card.Content>
+            <Card.Content>{table(data, total, "stock_name")}</Card.Content>
           </Card>
         );
-        data.map((item) => console.log(item.stock_name, item.price));
-      })}
+      })} */}
     </>
   );
 }

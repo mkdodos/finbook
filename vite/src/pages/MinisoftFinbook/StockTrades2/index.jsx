@@ -34,23 +34,6 @@ export default function index() {
     fetchData();
   }, []);
 
-  // 點擊新增按鈕
-  // const handleAdd = (customDate = null) => {
-  //   setEditingData(null); // 清空代表是新增
-
-  //   // 三元運算子：如果有傳 customDate 就用它；沒有傳就自動抓今天日期
-  //   const targetDate = customDate ? customDate : getTodayDate();
-
-  //   console.log(getTodayDate());
-
-  //   // 初始化表單並帶入日期
-  //   setFormData({
-  //     trade_date: targetDate,
-  //   });
-
-  //   setIsModalOpen(true);
-  // };
-
   // 讓參數預設值直接就是今天的日期！
   const handleAdd = (customDate = null) => {
     setEditingData(null); // 清空代表是新增
@@ -89,25 +72,32 @@ export default function index() {
     }
   };
 
-  const onSuccess = (formData) => {
-    // 將儲存成功的值寫入state
-    setData((prev) =>
-      prev.map((item) => (item.id === formData.id ? formData : item)),
-    );
-    // console.log(formData);
-  };
-
   return (
     <>
-      {/* <PhoneView data={data} /> */}
-      {/* <SearchBar fetchData={fetchData} columns={columns} /> */}
-
       <div className="mobile-only">
+        {/* 按鈕容器：設定靠右對齊 */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            marginBottom: "10px",
+          }}
+        >
+          <Button primary icon type="button" onClick={handleAdd}>
+            <Icon name="add" />
+          </Button>
+        </div>
+
+        {/* 下方維持原本的 PhoneView */}
+        <PhoneView data={data} handleEdit={handleEdit} handleAdd={handleAdd} />
+      </div>
+
+      {/* <div className="mobile-only">
         <Button size="mini" primary icon onClick={handleAdd} type="button">
           <Icon name="add" />
         </Button>
         <PhoneView data={data} handleEdit={handleEdit} handleAdd={handleAdd} />
-      </div>
+      </div> */}
 
       {/* 僅在電腦螢幕（769px 以上）顯示 */}
       <div className="desktop-only">

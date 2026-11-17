@@ -77,7 +77,7 @@ export const columns = [
   {
     field: "price",
     label: "單價",
-    type: "decimal",
+    type: "number",
     required: true,
     // defaultValue: "0.00",
     tableShow: true,
