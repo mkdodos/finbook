@@ -17,11 +17,11 @@ export default function index() {
   // formData 直接由父組件管理
   const [formData, setFormData] = useState(initialFormData);
 
-  // 修改：載入資料時可帶入遊戲名稱進行後端過濾
-  const fetchData = async (gameFilter = "") => {
+  // 載入資料時帶入條件進行後端過濾
+  const fetchData = async (search = "") => {
     setLoading(true);
     try {
-      const data = await readRows(gameFilter);
+      const data = await readRows(search);
       setData(data);
     } catch (err) {
       console.error("載入戰績失敗:", err);
@@ -72,11 +72,131 @@ export default function index() {
     }
   };
 
+  const searchForm = () => {
+    return (
+      <Form style={{ marginBottom: "10px", marginTop: "20px" }}>
+        <Form.Group
+          unstackable
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            justifyContent: "space-between",
+          }}
+        >
+          <Form.Field style={{ width: "250px" }}>
+            <Form.Select
+              // label="代碼"
+              options={columns[2].options}
+              onChange={(e, { value }) => fetchData({ stock_id: value })}
+              search
+              clearable
+              placeholder="股票查詢"
+            />
+          </Form.Field>
+          <Form.Field>
+            {/* <label>&nbsp;</label>
+    <Button onClick={() => fetchData()}>顯示全部</Button> */}
+            <Button primary icon type="button" onClick={handleAdd}>
+              <Icon name="add" />
+            </Button>
+          </Form.Field>
+        </Form.Group>
+        {/* <Form.Group
+          unstackable
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Form.Field style={{ flex: 1, marginRight: "10px" }}>
+            <Form.Select
+              // label="代碼"
+              options={columns[2].options}
+              onChange={(e, { value }) => fetchData({ stock_id: value })}
+              search
+              clearable
+              placeholder="股票查詢"
+            />
+          </Form.Field>
+          <Form.Field style={{ flexShrink: 0 }}>
+           
+            <Button primary icon type="button" onClick={handleAdd}>
+              <Icon name="add" />
+            </Button>
+          </Form.Field>
+        </Form.Group> */}
+        {/* <Form.Group unstackable>
+          <Form.Field width={10}>
+            <Form.Select
+              // label="代碼"
+              options={columns[2].options}
+              onChange={(e, { value }) => fetchData({ stock_id: value })}
+              search
+              clearable
+              placeholder="股票查詢"
+            />
+          </Form.Field>
+          <Form.Field width={2}>
+            <Button primary icon fluid type="button" onClick={handleAdd}>
+              <Icon name="add" />
+            </Button>
+          </Form.Field>
+        </Form.Group> */}
+        {/* <Form.Group
+          unstackable
+          style={{ display: "flex", flexWrap: "nowrap", alignItems: "center" }}
+        >
+          <Form.Field style={{ flex: 1, marginRight: "10px" }}>
+            <Form.Select
+              options={columns[2].options}
+              onChange={(e, { value }) => fetchData({ stock_id: value })}
+              search
+              clearable
+              placeholder="股票查詢"
+            />
+          </Form.Field>
+          <Form.Field style={{ flex: "0 0 auto" }}>
+            <Button primary icon type="button" onClick={handleAdd}>
+              <Icon name="add" />
+            </Button>
+          </Form.Field>
+        </Form.Group> */}
+      </Form>
+      // <Form style={{ marginBottom: "10px", marginTop: "20px" }}>
+      //   <Form.Group
+      //     widths="equal"
+      //     unstackable
+      //     style={{ justifyContent: "space-between" }}
+      //   >
+      //     <Form.Field>
+      //       <Form.Select
+      //         // label="代碼"
+      //         options={columns[2].options}
+      //         onChange={(e, { value }) => fetchData({ stock_id: value })}
+      //         search
+      //         clearable
+      //         placeholder="股票查詢"
+      //       />
+      //     </Form.Field>
+      //     <Form.Field>
+      //       {/* <label>&nbsp;</label>
+      //       <Button onClick={() => fetchData()}>顯示全部</Button> */}
+      //       <Button primary icon type="button" onClick={handleAdd}>
+      //         <Icon name="add" />
+      //       </Button>
+      //     </Form.Field>
+      //   </Form.Group>
+      // </Form>
+    );
+  };
+
   return (
     <>
       <div className="mobile-only">
         {/* 按鈕容器：設定靠右對齊 */}
-        <div
+        {/* <div
           style={{
             display: "flex",
             justifyContent: "flex-end",
@@ -86,8 +206,9 @@ export default function index() {
           <Button primary icon type="button" onClick={handleAdd}>
             <Icon name="add" />
           </Button>
-        </div>
+        </div> */}
 
+        {searchForm()}
         {/* 下方維持原本的 PhoneView */}
         <PhoneView data={data} handleEdit={handleEdit} handleAdd={handleAdd} />
       </div>

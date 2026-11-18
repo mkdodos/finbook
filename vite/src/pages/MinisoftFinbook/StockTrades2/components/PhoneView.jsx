@@ -15,16 +15,17 @@ export default function PhoneView({ data, handleEdit, handleAdd }) {
         <Table.Header>
           <Table.Row textAlign="right">
             <Table.HeaderCell textAlign="left">
-              <Button
+              {gkey == "trade_date" ? "日期" : "名稱"}
+              {/* <Button
                 size="mini"
                 primary
                 icon
-                onClick={() => handleAdd(gData[0][gkey])}
+                onClick={() => handleAdd(gData[0].trade_date)}
                 type="button"
                 basic
               >
                 <Icon name="add" />
-              </Button>
+              </Button> */}
             </Table.HeaderCell>
             <Table.HeaderCell>單價</Table.HeaderCell>
             <Table.HeaderCell>股數</Table.HeaderCell>
@@ -45,9 +46,7 @@ export default function PhoneView({ data, handleEdit, handleAdd }) {
                     ? item[gkey]
                     : item[gkey].substring(5, 10)}
                 </div>
-                <div style={{ color: "#666", fontSize: "0.9em" }}>
-                  {/* {item[gkey]} */}
-                </div>
+                <div style={{ color: "#666", fontSize: "0.9em" }}></div>
               </Table.Cell>
 
               <Table.Cell>{Number(item.price).toLocaleString()}</Table.Cell>
@@ -134,30 +133,8 @@ export default function PhoneView({ data, handleEdit, handleAdd }) {
     <>
       <Tab
         panes={panes}
-        menu={{ secondary: true, pointing: true, widths: 2, color: "teal" }}
+        menu={{ secondary: true, pointing: true, widths: 2, color: "blue" }}
       />
-      {/* 股票分組 */}
-      {/* {groupedByStock.map(([trade_date, { data, total }]) => {
-        return (
-          <Card fluid key={trade_date}>
-            <Card.Content>
-              <Card.Header>{data[0].stock_name}</Card.Header>
-            </Card.Content>
-            <Card.Content>{table(data, total, "trade_date")}</Card.Content>
-          </Card>
-        );
-      })} */}
-      {/* 日期分組 */}
-      {/* {groupedByDate.map(([trade_date, { data, total }]) => {
-        return (
-          <Card fluid key={trade_date}>
-            <Card.Content>
-              <Card.Header>{trade_date.substring(5, 10)}</Card.Header>
-            </Card.Content>
-            <Card.Content>{table(data, total, "stock_name")}</Card.Content>
-          </Card>
-        );
-      })} */}
     </>
   );
 }
