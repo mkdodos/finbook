@@ -4,7 +4,7 @@ import { createRow, updateRow } from "../data/api";
 
 function EditForm({
   isOpen,
-  onClose,
+  setIsModalOpen,
   editData,
   handleDelete,
   setData,
@@ -47,8 +47,6 @@ function EditForm({
         const res = await createRow(formData);
         setData((prev) => [{ ...formData, id: res.id }, ...prev]);
       }
-
-      if (onClose) onClose();
     } catch (err) {
       console.log(err);
       alert("儲存失敗，請檢查輸入內容");
@@ -56,7 +54,7 @@ function EditForm({
   };
 
   return (
-    <Modal open={isOpen} onClose={onClose} size="small">
+    <Modal open={isOpen} size="small">
       <Modal.Header>{editData ? "✏️ 編輯" : "📝 新增"}</Modal.Header>
       <Modal.Content>
         <Form onSubmit={handleSubmit} id="scorecard-form">
@@ -97,7 +95,7 @@ function EditForm({
         </Form>
       </Modal.Content>
       <Modal.Actions>
-        <Button onClick={onClose}>取消</Button>
+        <Button onClick={() => setIsModalOpen(false)}>取消</Button>
         <Button primary type="submit" form="scorecard-form">
           儲存
         </Button>

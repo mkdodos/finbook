@@ -80,13 +80,12 @@ export default function index() {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "10px",
+
             justifyContent: "space-between",
           }}
         >
-          <Form.Field style={{ width: "250px" }}>
+          <Form.Field style={{ width: "150px" }}>
             <Form.Select
-              // label="代碼"
               options={columns[2].options}
               onChange={(e, { value }) => fetchData({ stock_id: value })}
               search
@@ -94,101 +93,18 @@ export default function index() {
               placeholder="股票查詢"
             />
           </Form.Field>
+          <Form.Field style={{ display: "flex", marginLeft: "60px" }}>
+            <Button primary icon basic type="button" onClick={fetchData}>
+              <Icon name="refresh" />
+            </Button>
+          </Form.Field>
           <Form.Field>
-            {/* <label>&nbsp;</label>
-    <Button onClick={() => fetchData()}>顯示全部</Button> */}
             <Button primary icon type="button" onClick={handleAdd}>
               <Icon name="add" />
             </Button>
           </Form.Field>
         </Form.Group>
-        {/* <Form.Group
-          unstackable
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Form.Field style={{ flex: 1, marginRight: "10px" }}>
-            <Form.Select
-              // label="代碼"
-              options={columns[2].options}
-              onChange={(e, { value }) => fetchData({ stock_id: value })}
-              search
-              clearable
-              placeholder="股票查詢"
-            />
-          </Form.Field>
-          <Form.Field style={{ flexShrink: 0 }}>
-           
-            <Button primary icon type="button" onClick={handleAdd}>
-              <Icon name="add" />
-            </Button>
-          </Form.Field>
-        </Form.Group> */}
-        {/* <Form.Group unstackable>
-          <Form.Field width={10}>
-            <Form.Select
-              // label="代碼"
-              options={columns[2].options}
-              onChange={(e, { value }) => fetchData({ stock_id: value })}
-              search
-              clearable
-              placeholder="股票查詢"
-            />
-          </Form.Field>
-          <Form.Field width={2}>
-            <Button primary icon fluid type="button" onClick={handleAdd}>
-              <Icon name="add" />
-            </Button>
-          </Form.Field>
-        </Form.Group> */}
-        {/* <Form.Group
-          unstackable
-          style={{ display: "flex", flexWrap: "nowrap", alignItems: "center" }}
-        >
-          <Form.Field style={{ flex: 1, marginRight: "10px" }}>
-            <Form.Select
-              options={columns[2].options}
-              onChange={(e, { value }) => fetchData({ stock_id: value })}
-              search
-              clearable
-              placeholder="股票查詢"
-            />
-          </Form.Field>
-          <Form.Field style={{ flex: "0 0 auto" }}>
-            <Button primary icon type="button" onClick={handleAdd}>
-              <Icon name="add" />
-            </Button>
-          </Form.Field>
-        </Form.Group> */}
       </Form>
-      // <Form style={{ marginBottom: "10px", marginTop: "20px" }}>
-      //   <Form.Group
-      //     widths="equal"
-      //     unstackable
-      //     style={{ justifyContent: "space-between" }}
-      //   >
-      //     <Form.Field>
-      //       <Form.Select
-      //         // label="代碼"
-      //         options={columns[2].options}
-      //         onChange={(e, { value }) => fetchData({ stock_id: value })}
-      //         search
-      //         clearable
-      //         placeholder="股票查詢"
-      //       />
-      //     </Form.Field>
-      //     <Form.Field>
-      //       {/* <label>&nbsp;</label>
-      //       <Button onClick={() => fetchData()}>顯示全部</Button> */}
-      //       <Button primary icon type="button" onClick={handleAdd}>
-      //         <Icon name="add" />
-      //       </Button>
-      //     </Form.Field>
-      //   </Form.Group>
-      // </Form>
     );
   };
 
@@ -232,7 +148,8 @@ export default function index() {
         />
       </div>
       <EditForm
-        onClose={() => setIsModalOpen(false)}
+        // onClose={() => setIsModalOpen(false)}
+        setIsModalOpen={setIsModalOpen}
         columns={columns}
         isOpen={isModalOpen}
         editData={editingData}

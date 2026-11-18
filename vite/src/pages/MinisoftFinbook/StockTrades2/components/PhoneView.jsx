@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Tab, Button, Icon, Card } from "semantic-ui-react";
+import { Table, Tab, Button, Icon, Card, Label } from "semantic-ui-react";
 import { groupedData } from "../data/utils";
 
 export default function PhoneView({ data, handleEdit, handleAdd }) {
@@ -16,19 +16,11 @@ export default function PhoneView({ data, handleEdit, handleAdd }) {
           <Table.Row textAlign="right">
             <Table.HeaderCell textAlign="left">
               {gkey == "trade_date" ? "日期" : "名稱"}
-              {/* <Button
-                size="mini"
-                primary
-                icon
-                onClick={() => handleAdd(gData[0].trade_date)}
-                type="button"
-                basic
-              >
-                <Icon name="add" />
-              </Button> */}
             </Table.HeaderCell>
-            <Table.HeaderCell>單價</Table.HeaderCell>
+            <Table.HeaderCell textAlign="center">類型</Table.HeaderCell>
             <Table.HeaderCell>股數</Table.HeaderCell>
+            <Table.HeaderCell>單價</Table.HeaderCell>
+
             <Table.HeaderCell>小計</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
@@ -40,7 +32,8 @@ export default function PhoneView({ data, handleEdit, handleAdd }) {
               onClick={() => handleEdit(item)}
             >
               <Table.Cell textAlign="left">
-                <div style={{ fontWeight: "bold" }}>
+                {/* <div style={{ fontWeight: "bold" }}> */}
+                <div>
                   {/* 第一欄顯示日期或名稱 */}
                   {gkey == "stock_name"
                     ? item[gkey]
@@ -49,22 +42,39 @@ export default function PhoneView({ data, handleEdit, handleAdd }) {
                 <div style={{ color: "#666", fontSize: "0.9em" }}></div>
               </Table.Cell>
 
-              <Table.Cell>{Number(item.price).toLocaleString()}</Table.Cell>
+              {/* 類型 */}
+              <Table.Cell>
+                <Label
+                  // 強制文字不換行
+                  style={{ whiteSpace: "nowrap" }}
+                  color={item.trade_type == "buy" ? "red" : "green"}
+                  basic
+                >
+                  {item.trade_type == "buy" ? "買進" : "賣出"}
+                </Label>
+              </Table.Cell>
+
+              {/* 股數 */}
               <Table.Cell>
                 <span
-                  style={{
-                    color: item.trade_type == "buy" ? "red" : "#21BA45",
-                  }}
+                // style={{
+                //   color: item.trade_type == "buy" ? "#DB2828" : "#21BA45",
+                // }}
                 >
                   {item.qty}
                 </span>
               </Table.Cell>
+              {/* 單價 */}
+              <Table.Cell>{Number(item.price).toLocaleString()}</Table.Cell>
+              {/* 小計 */}
               <Table.Cell textAlign="right">
                 <span
                   style={{
-                    color: item.trade_type == "buy" ? "red" : "#21BA45",
+                    color: item.trade_type == "buy" ? "#DB2828" : "#21BA45",
                   }}
                 >
+                  {/* 賣出維持正數，買入加上負號 */}
+                  {item.trade_type == "buy" ? "-" : ""}
                   {Math.round(item.qty * item.price).toLocaleString()}
                 </span>
               </Table.Cell>
@@ -72,9 +82,15 @@ export default function PhoneView({ data, handleEdit, handleAdd }) {
           ))}
         </Table.Body>
         <Table.Footer>
-          <Table.Row>
-            <Table.HeaderCell>合計</Table.HeaderCell>
-            <Table.HeaderCell colSpan="3" textAlign="right">
+          <Table.Row style={{ fontWeight: "bold" }}>
+            <Table.HeaderCell style={{ fontWeight: "bold" }}>
+              合計
+            </Table.HeaderCell>
+            <Table.HeaderCell
+              style={{ fontWeight: "bold" }}
+              colSpan="4"
+              textAlign="right"
+            >
               {total.toLocaleString()}
             </Table.HeaderCell>
           </Table.Row>
