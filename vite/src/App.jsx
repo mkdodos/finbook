@@ -4,6 +4,7 @@ import Page from "./pages/Page";
 import Expense from "./pages/Expense";
 import StockTrades from "./pages/StockTrades";
 import StockTrades2 from "./pages/MinisoftFinbook/StockTrades2";
+import Stocks2 from "./pages/MinisoftFinbook/Stocks2";
 import Stocks from "./pages/Stocks";
 // import CRUD from "./pages/CURD";
 import Costco from "./pages/Costco";
@@ -57,16 +58,6 @@ export default function App() {
         </Menu>
       </div>
 
-      {/* 導覽選單 (可選) */}
-      {/* <nav style={{ padding: "10px", marginBottom: "20px" }}>
-        <Link to="/page" style={{ marginRight: "10px" }}>
-          Page 頁面
-        </Link>
-        <Link to="/expense">Expense 頁面</Link>
-        <Link to="/stocks">股票基本資料</Link>
-        <Link to="/stock-trades">股票交易</Link>       
-      </nav> */}
-
       {/* 依據網址路徑切換渲染對應組件 */}
       <Routes>
         <Route path="/boardgame" element={<Boardgame />} />
@@ -76,9 +67,10 @@ export default function App() {
         <Route path="/receipt-records" element={<ReceiptRecords />} />
         <Route path="/employee" element={<Employee />} />
         <Route path="/costco" element={<Costco />} />
-        {/* <Route path="/crud" element={<CRUD />} /> */}
+
         <Route path="/page" element={<Page />} />
         <Route path="/stocks" element={<Stocks />} />
+        <Route path="/stocks2" element={<Stocks2 />} />
         <Route path="/stock-trades" element={<StockTrades />} />
         <Route path="/stock-trades2" element={<StockTrades2 />} />
         <Route path="/expense" element={<Expense />} />

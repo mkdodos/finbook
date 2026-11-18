@@ -1,0 +1,43 @@
+export const columns = [
+  {
+    field: "id",
+    label: "id",
+    type: "number",
+    required: true,
+    tableShow: true,
+    formShow: false,
+  },
+  {
+    field: "symbol",
+    label: "代號",
+    type: "text",
+    required: true,
+    tableShow: true,
+    formShow: true,
+    searchShow: true,
+  },
+  {
+    field: "name",
+    label: "名稱",
+    type: "text",
+    tableShow: true,
+    formShow: true,
+    searchShow: true,
+  },
+  {
+    field: "buy_day",
+    label: "扣款日",
+    type: "text",
+    tableShow: true,
+    formShow: true,
+    searchShow: true,
+  },
+  {
+    field: "amt",
+    label: "金額",
+    type: "text",
+    tableShow: true,
+    formShow: true,
+    searchShow: true,
+  },
+];
