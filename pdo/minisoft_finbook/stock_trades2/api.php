@@ -46,6 +46,23 @@ $data = [
 try {
     switch ($action) {
         
+    // 月份統計資料
+    case 'read_month_sum':
+           
+            $sql = "SELECT YEAR(trade_date) AS y, MONTH(trade_date) AS m,
+             ROUND(SUM(CASE WHEN trade_type = 'BUY' THEN price * qty ELSE 0 END),0) AS buy_amt, 
+             ROUND(SUM(CASE WHEN trade_type = 'SELL' THEN price * qty ELSE 0 END),0) AS sell_amt
+              FROM stock_trades2 GROUP BY YEAR(trade_date), MONTH(trade_date) ORDER BY y, m";               
+
+            // 進行 prepare 與 execute
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute();
+
+            // 6. 取得資料並轉成 JSON 傳回
+            $records = $stmt->fetchAll();          
+            echo json_encode($records, JSON_UNESCAPED_UNICODE);
+            break;
+
     // 取得所有股票資料
     case 'read_stocks':
            

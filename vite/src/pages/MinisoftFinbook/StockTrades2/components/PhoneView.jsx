@@ -1,6 +1,7 @@
 import React from "react";
 import { Table, Tab, Button, Icon, Card, Label } from "semantic-ui-react";
 import { groupedData } from "../data/utils";
+import MonthView from "./MonthView";
 
 export default function PhoneView({ data, handleEdit, handleAdd }) {
   // 準備群組資料
@@ -147,6 +148,10 @@ export default function PhoneView({ data, handleEdit, handleAdd }) {
 
   const panes = [
     {
+      menuItem: "月份統計",
+      render: () => renderPane(<MonthView />),
+    },
+    {
       menuItem: "日期分組",
       render: () => renderPane(groupedByDatePane()),
     },
@@ -190,7 +195,7 @@ export default function PhoneView({ data, handleEdit, handleAdd }) {
     <>
       <Tab
         panes={panes}
-        menu={{ secondary: true, pointing: true, widths: 2, color: "blue" }}
+        menu={{ secondary: true, pointing: true, widths: 3, color: "blue" }}
       />
     </>
   );

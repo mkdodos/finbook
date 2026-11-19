@@ -10,6 +10,18 @@ const apiClient = axios.create({
   },
 });
 
+// 取得月份統計資料
+export const readMonthSum = async () => {
+  try {
+    const url = "?action=read_month_sum";
+    const response = await apiClient.get(url);
+    return response.data;
+  } catch (error) {
+    console.error("取得資料失敗:", error);
+    throw error;
+  }
+};
+
 // 取得所有股票資料
 export const readStocks = async () => {
   try {
