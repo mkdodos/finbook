@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import TableView from "./components/TableView";
+import PhoneView from "./components/PhoneView";
 import EditForm from "./components/EditForm";
 import { columns } from "./data/columns";
 import { readRows, deleteRow } from "./data/api";
@@ -71,13 +72,28 @@ export default function index() {
 
   return (
     <div>
-      <TableView
-        data={data}
-        loading={loading}
-        handleEdit={handleEdit}
-        handleAdd={handleAdd}
-        columns={columns}
-      />
+      <div className="mobile-only">
+        <PhoneView
+          data={data}
+          setData={setData}
+          loading={loading}
+          handleEdit={handleEdit}
+          handleAdd={handleAdd}
+          columns={columns}
+          fetchData={fetchData}
+        />
+      </div>
+
+      <div className="desktop-only">
+        <TableView
+          data={data}
+          loading={loading}
+          handleEdit={handleEdit}
+          handleAdd={handleAdd}
+          columns={columns}
+        />
+      </div>
+
       <EditForm
         // onClose={() => setIsModalOpen(false)}
         setIsModalOpen={setIsModalOpen}

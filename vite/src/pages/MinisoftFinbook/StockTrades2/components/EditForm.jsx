@@ -47,6 +47,7 @@ function EditForm({
         const res = await createRow(formData);
         setData((prev) => [{ ...formData, id: res.id }, ...prev]);
       }
+      setIsModalOpen(false);
     } catch (err) {
       console.log(err);
       alert("儲存失敗，請檢查輸入內容");

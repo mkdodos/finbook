@@ -33,6 +33,18 @@ export default function App() {
           </Menu.Item>
           <Dropdown item text="Manager">
             <DropdownMenu>
+              <Menu.Item as={Link} to="/stocks">
+                股票基本資料
+              </Menu.Item>
+              <Menu.Item as={Link} to="/stocks2">
+                股票基本資料2
+              </Menu.Item>
+              <Menu.Item as={Link} to="/stock-trades">
+                股票交易
+              </Menu.Item>
+              <Menu.Item as={Link} to="/stock-trades2">
+                股票交易2
+              </Menu.Item>
               <Menu.Item as={Link} to="/generic-page">
                 通用頁面
               </Menu.Item>
@@ -42,16 +54,6 @@ export default function App() {
               </Menu.Item>
               <Menu.Item as={Link} to="/expense">
                 日常消費
-              </Menu.Item>
-
-              <Menu.Item as={Link} to="/stocks">
-                股票基本資料
-              </Menu.Item>
-              <Menu.Item as={Link} to="/stock-trades">
-                股票交易
-              </Menu.Item>
-              <Menu.Item as={Link} to="/stock-trades2">
-                股票交易2
               </Menu.Item>
             </DropdownMenu>
           </Dropdown>

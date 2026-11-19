@@ -49,7 +49,7 @@ try {
     // 取得所有股票資料
     case 'read_stocks':
            
-            $sql = "SELECT * FROM stocks ";               
+            $sql = "SELECT * FROM stocks2 ";               
 
             // 進行 prepare 與 execute
             $stmt = $pdo->prepare($sql);
@@ -97,7 +97,7 @@ try {
             // 4. 統一加上排序條件
             $sql .= " ORDER BY `trade_date` DESC";
             // 限制筆數
-            $sql .= " LIMIT 30";
+            // $sql .= " LIMIT 30";
 
             // 5. 統一進行 prepare 與 execute
             $stmt = $pdo->prepare($sql);

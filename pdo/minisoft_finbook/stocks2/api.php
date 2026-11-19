@@ -51,7 +51,7 @@ try {
 
             // 接收前端傳來的搜尋內容
             $trade_date = $_GET['trade_date'] ?? ''; 
-            $stock_id = $_GET['stock_id'] ?? '';   
+            $symbol = $_GET['symbol'] ?? '';   
             $note = $_GET['note'] ?? '';         
                     
             // 若有查詢，動態加上 WHERE 條件
@@ -60,9 +60,9 @@ try {
                 $params[] = $trade_date;
             }
 
-            if (!empty($stock_id)) {
-                $whereClauses[] = "`stock_id` = ?";                
-                $params[] = $stock_id;
+            if (!empty($symbol)) {
+                $whereClauses[] = "`symbol` = ?";                
+                $params[] = $symbol;
             }
 
             if (!empty($note)) {               

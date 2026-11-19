@@ -9,7 +9,40 @@ export default function PhoneView({ data, handleEdit, handleAdd }) {
   const groupedByDate = Object.entries(groupedData(data, "trade_date"));
   // ['日期',{data:[],total:0}]
 
-  const table = (gData, total, gkey) => {
+  console.log(groupedByStock);
+
+  // 依買或賣顯示不同色
+  const colorCell = (item) => {
+    return (
+      <Table.Cell textAlign="right">
+        <span
+        // style={{
+        //   color: item.trade_type == "buy" ? "#DB2828" : "#21BA45",
+        // }}
+        >
+          {/* 賣出維持正數，買入加上負號 */}
+          {item.trade_type == "buy" ? "-" : ""}
+          {Math.round(item.qty * item.price).toLocaleString()}
+        </span>
+      </Table.Cell>
+    );
+  };
+
+  const colorPrice = (item) => {
+    return (
+      <Table.Cell textAlign="right">
+        <span
+          style={{
+            color: item.trade_type == "buy" ? "#DB2828" : "#21BA45",
+          }}
+        >
+          {Number(item.price).toLocaleString()}
+        </span>
+      </Table.Cell>
+    );
+  };
+
+  const table = (gData, total, totalQty, gkey) => {
     return (
       <Table unstackable columns={4} basic="very">
         <Table.Header>
@@ -41,7 +74,6 @@ export default function PhoneView({ data, handleEdit, handleAdd }) {
                 </div>
                 <div style={{ color: "#666", fontSize: "0.9em" }}></div>
               </Table.Cell>
-
               {/* 類型 */}
               <Table.Cell>
                 <Label
@@ -53,7 +85,6 @@ export default function PhoneView({ data, handleEdit, handleAdd }) {
                   {item.trade_type == "buy" ? "買進" : "賣出"}
                 </Label>
               </Table.Cell>
-
               {/* 股數 */}
               <Table.Cell>
                 <span
@@ -65,19 +96,20 @@ export default function PhoneView({ data, handleEdit, handleAdd }) {
                 </span>
               </Table.Cell>
               {/* 單價 */}
-              <Table.Cell>{Number(item.price).toLocaleString()}</Table.Cell>
+              {colorPrice(item)}
+              {/* <Table.Cell>{Number(item.price).toLocaleString()}</Table.Cell> */}
               {/* 小計 */}
-              <Table.Cell textAlign="right">
+              {colorCell(item)}
+              {/* <Table.Cell textAlign="right">
                 <span
                   style={{
                     color: item.trade_type == "buy" ? "#DB2828" : "#21BA45",
                   }}
                 >
-                  {/* 賣出維持正數，買入加上負號 */}
                   {item.trade_type == "buy" ? "-" : ""}
                   {Math.round(item.qty * item.price).toLocaleString()}
                 </span>
-              </Table.Cell>
+              </Table.Cell> */}
             </Table.Row>
           ))}
         </Table.Body>
@@ -87,8 +119,15 @@ export default function PhoneView({ data, handleEdit, handleAdd }) {
               合計
             </Table.HeaderCell>
             <Table.HeaderCell
+              colSpan="2"
               style={{ fontWeight: "bold" }}
-              colSpan="4"
+              textAlign="right"
+            >
+              {gkey == "trade_date" && totalQty}
+            </Table.HeaderCell>
+            <Table.HeaderCell
+              style={{ fontWeight: "bold" }}
+              colSpan="3"
               textAlign="right"
             >
               {total.toLocaleString()}
@@ -108,38 +147,40 @@ export default function PhoneView({ data, handleEdit, handleAdd }) {
 
   const panes = [
     {
-      menuItem: "股票分組",
-      render: () => renderPane(groupedByStockPane()),
-      // render: () => <Tab.Pane>這裡顯示個人資料設定...</Tab.Pane>,
-    },
-    {
       menuItem: "日期分組",
       render: () => renderPane(groupedByDatePane()),
-      // render: () => <Tab.Pane>這裡顯示個人資料設定...</Tab.Pane>,
+    },
+    {
+      menuItem: "股票分組",
+      render: () => renderPane(groupedByStockPane()),
     },
   ];
 
   const groupedByStockPane = () => {
-    return groupedByStock.map(([trade_date, { data, total }]) => {
+    return groupedByStock.map(([trade_date, { data, total, totalQty }]) => {
       return (
         <Card fluid key={trade_date}>
           <Card.Content>
             <Card.Header>{data[0].stock_name}</Card.Header>
           </Card.Content>
-          <Card.Content>{table(data, total, "trade_date")}</Card.Content>
+          <Card.Content>
+            {table(data, total, totalQty, "trade_date")}
+          </Card.Content>
         </Card>
       );
     });
   };
 
   const groupedByDatePane = () => {
-    return groupedByDate.map(([trade_date, { data, total }]) => {
+    return groupedByDate.map(([trade_date, { data, total, totalQty }]) => {
       return (
         <Card fluid key={trade_date}>
           <Card.Content>
             <Card.Header>{data[0].trade_date}</Card.Header>
           </Card.Content>
-          <Card.Content>{table(data, total, "stock_name")}</Card.Content>
+          <Card.Content>
+            {table(data, total, totalQty, "stock_name")}
+          </Card.Content>
         </Card>
       );
     });

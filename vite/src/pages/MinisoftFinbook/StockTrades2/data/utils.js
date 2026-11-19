@@ -2,12 +2,17 @@
 export const groupedData = (targetData, key) => {
   return targetData.reduce((acc, item) => {
     let sum = Math.round(Number(item.price * item.qty)) || 0;
+    let sumQty = Number(item.qty);
     const groupKey = item[key];
-    acc[groupKey] ||= { data: [], total: 0 };
+    acc[groupKey] ||= { data: [], total: 0, totalQty: 0 };
     acc[groupKey].data.push(item);
     // 依買賣加減金額
     sum = item.trade_type == "buy" ? sum * -1 : sum;
+    sumQty = item.trade_type == "buy" ? sumQty : sumQty * -1;
     acc[groupKey].total += sum;
+    acc[groupKey].totalQty += sumQty;
+    // 依買賣加減股數
+
     return acc;
   }, {});
 };

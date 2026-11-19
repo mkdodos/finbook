@@ -111,30 +111,10 @@ export default function index() {
   return (
     <>
       <div className="mobile-only">
-        {/* 按鈕容器：設定靠右對齊 */}
-        {/* <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            marginBottom: "10px",
-          }}
-        >
-          <Button primary icon type="button" onClick={handleAdd}>
-            <Icon name="add" />
-          </Button>
-        </div> */}
-
         {searchForm()}
         {/* 下方維持原本的 PhoneView */}
         <PhoneView data={data} handleEdit={handleEdit} handleAdd={handleAdd} />
       </div>
-
-      {/* <div className="mobile-only">
-        <Button size="mini" primary icon onClick={handleAdd} type="button">
-          <Icon name="add" />
-        </Button>
-        <PhoneView data={data} handleEdit={handleEdit} handleAdd={handleAdd} />
-      </div> */}
 
       {/* 僅在電腦螢幕（769px 以上）顯示 */}
       <div className="desktop-only">

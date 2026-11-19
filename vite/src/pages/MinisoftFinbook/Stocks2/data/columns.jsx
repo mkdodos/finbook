@@ -35,7 +35,7 @@ export const columns = [
   {
     field: "amt",
     label: "金額",
-    type: "text",
+    type: "number",
     tableShow: true,
     formShow: true,
     searchShow: true,
