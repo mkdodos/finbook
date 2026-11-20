@@ -113,7 +113,14 @@ export default function index() {
       <div className="mobile-only">
         {searchForm()}
         {/* 下方維持原本的 PhoneView */}
-        <PhoneView data={data} handleEdit={handleEdit} handleAdd={handleAdd} />
+        <PhoneView
+          data={data}
+          // 讓 MonthView 可進行篩選
+          // setData={setData}
+          fetchData={fetchData}
+          handleEdit={handleEdit}
+          handleAdd={handleAdd}
+        />
       </div>
 
       {/* 僅在電腦螢幕（769px 以上）顯示 */}

@@ -2,25 +2,32 @@ import React, { useState, useEffect } from "react";
 import { readMonthSum } from "../data/api";
 import { Table } from "semantic-ui-react";
 
-export default function MonthView() {
+export default function MonthView({ fetchData, setActiveIndex }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   // 載入資料
-  const fetchData = async (search = "") => {
+  const fetchMonthData = async (search = "") => {
     setLoading(true);
     try {
       const data = await readMonthSum(search);
       setData(data);
     } catch (err) {
-      console.error("載入戰績失敗:", err);
+      console.error("載入失敗:", err);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchData();
+    fetchMonthData();
   }, []);
+
+  // 點選月份進行資料篩選
+  const handleSearch = (month) => {
+    console.log(month);
+    fetchData({ month });
+    setActiveIndex(1);
+  };
 
   return (
     <div>
@@ -36,7 +43,11 @@ export default function MonthView() {
         </Table.Header>
         <Table.Body>
           {data.map((item, index) => (
-            <Table.Row key={index} textAlign="right">
+            <Table.Row
+              key={index}
+              textAlign="right"
+              onClick={() => handleSearch(item.m)}
+            >
               {/* <Table.Cell>{item.y}</Table.Cell> */}
               <Table.Cell>{item.m}</Table.Cell>
               <Table.Cell>{item.buy_amt}</Table.Cell>

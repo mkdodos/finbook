@@ -88,9 +88,15 @@ try {
             // 接收前端傳來的搜尋內容
             $trade_date = $_GET['trade_date'] ?? ''; 
             $stock_id = $_GET['stock_id'] ?? '';   
-            $note = $_GET['note'] ?? '';         
+            $note = $_GET['note'] ?? '';
+            $month = $_GET['month'] ?? '';         
                     
             // 若有查詢，動態加上 WHERE 條件
+            if (!empty($month)) {
+                $whereClauses[] = "Month(trade_date) = ?";                
+                $params[] = $month;
+            }
+
             if (!empty($trade_date)) {
                 $whereClauses[] = "`trade_date` = ?";                
                 $params[] = $trade_date;

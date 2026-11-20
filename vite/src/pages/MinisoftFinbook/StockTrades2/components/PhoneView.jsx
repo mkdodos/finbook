@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Table, Tab, Button, Icon, Card, Label } from "semantic-ui-react";
 import { groupedData } from "../data/utils";
 import MonthView from "./MonthView";
 
-export default function PhoneView({ data, handleEdit, handleAdd }) {
+export default function PhoneView({ data, handleEdit, handleAdd, fetchData }) {
   // 準備群組資料
   // if (!data) return;
   const groupedByStock = Object.entries(groupedData(data, "stock_id"));
@@ -146,10 +146,16 @@ export default function PhoneView({ data, handleEdit, handleAdd }) {
     </Tab.Pane>
   );
 
+  // 0: 月份統計, 1: 日期分組, 2: 股票分組
+  const [activeIndex, setActiveIndex] = useState(0);
+
   const panes = [
     {
       menuItem: "月份統計",
-      render: () => renderPane(<MonthView />),
+      render: () =>
+        renderPane(
+          <MonthView fetchData={fetchData} setActiveIndex={setActiveIndex} />,
+        ),
     },
     {
       menuItem: "日期分組",
@@ -160,6 +166,12 @@ export default function PhoneView({ data, handleEdit, handleAdd }) {
       render: () => renderPane(groupedByStockPane()),
     },
   ];
+
+  // 把取出的 activeIndex 重新命名為 nextIndex，避免跟外層存在的 state 變數 activeIndex 撞名
+  // activeIndex 是由 onTabChange 事件傳入
+  const handleTabChange = (e, { activeIndex: nextIndex }) => {
+    setActiveIndex(nextIndex);
+  };
 
   const groupedByStockPane = () => {
     return groupedByStock.map(([trade_date, { data, total, totalQty }]) => {
@@ -195,6 +207,8 @@ export default function PhoneView({ data, handleEdit, handleAdd }) {
     <>
       <Tab
         panes={panes}
+        activeIndex={activeIndex}
+        onTabChange={handleTabChange}
         menu={{ secondary: true, pointing: true, widths: 3, color: "blue" }}
       />
     </>

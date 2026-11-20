@@ -1,7 +1,6 @@
 import React from "react";
 import { Table, Button, Icon, Form } from "semantic-ui-react";
 import { columns as columnsTrade } from "../../StockTrades2/data/columns";
-import { FaPiggyBank } from "react-icons/fa";
 
 export default function PhoneView({
   columns,
