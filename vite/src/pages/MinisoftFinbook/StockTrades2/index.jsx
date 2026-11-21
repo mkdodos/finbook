@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { readRows, deleteRow } from "./data/api";
 import TableView from "./components/TableView";
 import EditForm from "./components/EditForm";
@@ -6,6 +6,7 @@ import SearchBar from "./components/SearchBar";
 import PhoneView from "./components/PhoneView";
 import { columns } from "./data/columns";
 import { Button, Icon, Grid, Form } from "semantic-ui-react";
+import { createRow, updateRow } from "./data/api";
 import { initialFormData, getTodayDate } from "./data/utils";
 
 export default function index() {
@@ -24,31 +25,61 @@ export default function index() {
       const data = await readRows(search);
       setData(data);
     } catch (err) {
-      console.error("載入戰績失敗:", err);
+      console.error("載入失敗:", err);
     } finally {
       setLoading(false);
     }
   };
 
+  // 載入資料
   useEffect(() => {
     fetchData();
   }, []);
 
-  // 讓參數預設值直接就是今天的日期！
+  const lastTradeDateRef = useRef(null); // 記錄上次使用的日期
+
   const handleAdd = (customDate = null) => {
     setEditingData(null); // 清空代表是新增
 
-    // 如果從按鈕點擊傳進來的是「事件物件 (Event)」，我們需要過濾掉它
-    // 判斷方式：如果 customDate 不是字串（例如它是物件），就強制換成今天日期
+    // 若 customDate 是非空字串（非 Event 物件），優先採用並更新記錄；
+    // 否則沿用上次操作/修改的日期；若首次使用則退回今天日期。
     const targetDate =
-      typeof customDate === "string" ? customDate : getTodayDate();
+      typeof customDate === "string" && customDate
+        ? customDate
+        : lastTradeDateRef.current || getTodayDate();
 
-    // 初始化表單
+    lastTradeDateRef.current = targetDate;
+
     setFormData({
       trade_date: targetDate,
     });
 
     setIsModalOpen(true);
+  };
+
+  const handleSubmit = async () => {
+    try {
+      // 如果有 editData,代表更新
+      if (editingData) {
+        // 更新
+        await updateRow(editingData.id, formData);
+        // 更新後,將資料 state 更新
+        setData((prev) =>
+          prev.map((item) => (item.id === formData.id ? formData : item)),
+        );
+      } else {
+        // 新增
+        const res = await createRow(formData);
+        setData((prev) => [{ ...formData, id: res.id }, ...prev]);
+      }
+      // 關閉表單
+      setIsModalOpen(false);
+      // 記錄日期,讓新增時使用
+      lastTradeDateRef.current = formData.trade_date;
+    } catch (err) {
+      console.log(err);
+      alert("儲存失敗，請檢查輸入內容");
+    }
   };
 
   // 點擊編輯按鈕
@@ -99,6 +130,7 @@ export default function index() {
             </Button>
           </Form.Field>
           <Form.Field>
+            {/* 新增鈕 */}
             <Button primary icon type="button" onClick={handleAdd}>
               <Icon name="add" />
             </Button>
@@ -110,6 +142,7 @@ export default function index() {
 
   return (
     <>
+      {lastTradeDateRef.current}
       <div className="mobile-only">
         {searchForm()}
         {/* 下方維持原本的 PhoneView */}
@@ -135,16 +168,14 @@ export default function index() {
         />
       </div>
       <EditForm
-        // onClose={() => setIsModalOpen(false)}
         setIsModalOpen={setIsModalOpen}
         columns={columns}
         isOpen={isModalOpen}
+        onSaveSuccess={handleSubmit}
         editData={editingData}
-        setData={setData}
         handleDelete={handleDelete}
         formData={formData}
         setFormData={setFormData}
-        initialFormData={initialFormData}
       />
     </>
   );

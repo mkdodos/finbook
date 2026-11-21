@@ -80,8 +80,8 @@ try {
     
     case 'read_rows':
             // 建立基礎 SQL 語句            
-            $sql = "SELECT stock_trades2.*,stocks.name as stock_name
-              FROM stock_trades2 LEFT JOIN stocks ON stock_id = symbol";   
+            $sql = "SELECT stock_trades2.*,stocks2.name as stock_name
+              FROM stock_trades2 LEFT JOIN stocks2 ON stock_id = symbol";   
             $whereClauses = []; // 存放 where 語句
             $params = []; // 存放綁定的參數
 

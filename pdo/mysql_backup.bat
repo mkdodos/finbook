@@ -11,7 +11,7 @@ set DB_USER=root
 set DB_PASS=123
 set DB_NAME=minisoft_finbook
 set BACKUP_DIR=C:\Users\user\Dropbox\database\finbook
-set RETENTION_DAYS=7
+set RETENTION_DAYS=30
 
 :: 取得當前日期與時間 (格式: YYYYMMDD_HHMMSS)
 for /f "tokens=*" %%a in ('powershell -Command "Get-Date -Format 'yyyyMMdd_HHmmss'"') do set DATE_STAMP=%%a

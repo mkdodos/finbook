@@ -10,7 +10,7 @@ export default function PhoneView({ data, handleEdit, handleAdd, fetchData }) {
   const groupedByDate = Object.entries(groupedData(data, "trade_date"));
   // ['日期',{data:[],total:0}]
 
-  console.log(groupedByStock);
+  console.log(groupedByDate);
 
   // 依買或賣顯示不同色
   const colorCell = (item) => {
